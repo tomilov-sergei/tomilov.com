@@ -1,0 +1,341 @@
+:root {
+  color-scheme: light dark;
+  --page-bg: hsl(38 3% 73%);
+  --panel-bg: #fff;
+  --header-text: #fff;
+  --text: #000;
+  --muted: hsl(0 1% 48%);
+  --line: rgba(255, 255, 255, 0.5);
+  --shadow: 0 0.7px 1.6px -1.3px rgb(0 0 0 / 0.19),
+    0 2.7px 6px -2.7px rgb(0 0 0 / 0.17),
+    0 12px 26.4px -4px rgb(0 0 0 / 0.05);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --page-bg: hsl(38 2% 30%);
+    --panel-bg: rgb(23, 23, 23);
+    --header-text: rgb(208, 205, 205);
+    --text: rgb(226, 217, 217);
+    --muted: hsl(0 2% 58%);
+    --line: rgba(221, 207, 207, 0.5);
+  }
+}
+
+* {
+  box-sizing: border-box;
+}
+
+h1,
+h2,
+p,
+ol {
+  margin: 0;
+}
+
+html {
+  min-height: 100%;
+  background: var(--page-bg);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  min-height: 100vh;
+  margin: 0;
+  background: var(--page-bg);
+  color: var(--text);
+  font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.page {
+  width: min(100%, 1200px);
+  min-height: 100vh;
+  margin: 0 auto;
+  padding: 8px 32px 32px;
+}
+
+.site-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 47px;
+  padding: 8px;
+  color: var(--header-text);
+}
+
+.brand {
+  font-family: Manrope, Inter, system-ui, sans-serif;
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 1px;
+  line-height: 2;
+}
+
+.path {
+  font-family: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 1.5;
+  white-space: nowrap;
+}
+
+.mobile-name {
+  display: none;
+}
+
+.path a:hover,
+.brand:hover {
+  color: #000;
+}
+
+.shell {
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--panel-bg);
+  box-shadow: var(--shadow);
+}
+
+.home-embed {
+  height: 90vh;
+  min-height: 520px;
+  background: #f4f4f4;
+}
+
+.home-embed iframe {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
+
+.about-shell {
+  padding: 100px 0;
+}
+
+.work-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.work-item {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 40px;
+  justify-content: center;
+  width: 100%;
+  min-height: 180px;
+  margin: 0 auto;
+  padding: 40px;
+}
+
+.media {
+  position: relative;
+  flex: 0 0 320px;
+  overflow: hidden;
+  height: 180px;
+  border-radius: 20px;
+  background: #d8d7d4 url("./assets/card-backdrop.png") center / cover no-repeat;
+}
+
+.media-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+}
+
+.video {
+  position: relative;
+  display: block;
+  width: 100%;
+  height: 100%;
+  min-height: 180px;
+  padding: 0;
+  overflow: hidden;
+  border: 0;
+  background: #111;
+  cursor: pointer;
+}
+
+.video img,
+.video iframe {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border: 0;
+  object-fit: cover;
+}
+
+.play {
+  position: absolute;
+  inset: 50% auto auto 50%;
+  display: grid;
+  width: 68px;
+  height: 48px;
+  transform: translate(-50%, -50%);
+  place-items: center;
+}
+
+.play svg {
+  display: block;
+  width: 68px;
+  height: 48px;
+}
+
+.video:hover .play path:first-child {
+  fill: #f00;
+  fill-opacity: 1;
+}
+
+.content {
+  display: flex;
+  flex: 0 0 320px;
+  flex-direction: column;
+  justify-content: flex-start;
+  gap: 20px;
+  padding: 0;
+}
+
+.content h1 {
+  max-width: 320px;
+  font-family: Lora, Georgia, serif;
+  font-size: 36px;
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+.content h2 {
+  max-width: 270px;
+  color: var(--muted);
+  font-family: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+  line-height: 1.4;
+}
+
+.content p,
+.content li {
+  max-width: 270px;
+  color: var(--text);
+  font-family: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1.55;
+}
+
+.content ol {
+  display: grid;
+  gap: 10px;
+  margin: 0;
+  padding-left: 20px;
+}
+
+.button {
+  width: fit-content;
+  margin-top: 8px;
+  padding: 13px 18px 14px;
+  border-radius: 999px;
+  background: #000;
+  color: #fff;
+  font-family: Manrope, Inter, system-ui, sans-serif;
+  font-size: 14px;
+  font-weight: 800;
+  line-height: 1;
+}
+
+.button:hover {
+  transform: translateY(-1px);
+}
+
+.not-found {
+  display: grid;
+  min-height: 70vh;
+  place-items: center;
+  text-align: center;
+}
+
+.not-found h1 {
+  font-family: Lora, Georgia, serif;
+  font-size: 52px;
+  margin: 0 0 12px;
+}
+
+@media (max-width: 1199px) {
+  .page {
+    width: min(100%, 390px);
+    padding: 8px 12px 32px;
+  }
+
+  .site-header {
+    padding: 8px;
+  }
+
+  .path .desktop-label,
+  .path .desktop-name {
+    display: none;
+  }
+
+  .mobile-name {
+    display: inline;
+  }
+
+  .home-embed {
+    min-height: 640px;
+  }
+
+  .about-shell {
+    padding: 0;
+  }
+
+  .work-item {
+    flex-direction: column;
+    flex-wrap: nowrap;
+    align-items: stretch;
+    gap: 0;
+    width: 100%;
+    min-height: 0;
+    padding: 0;
+  }
+
+  .media,
+  .video {
+    flex-basis: auto;
+    min-height: 244px;
+    border-radius: 0;
+  }
+
+  .media-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .media-grid .video {
+    min-height: 180px;
+  }
+
+  .content {
+    flex-basis: auto;
+    padding: 32px 24px 40px;
+  }
+
+  .content h1 {
+    max-width: none;
+    font-size: 24px;
+    letter-spacing: -0.5px;
+  }
+
+  .content h2 {
+    max-width: none;
+    font-size: 14px;
+  }
+
+  .content p,
+  .content li {
+    max-width: none;
+  }
+}
