@@ -1,0 +1,16 @@
+location = /telegram/webhook {
+    proxy_pass http://127.0.0.1:8787/telegram/webhook;
+    proxy_http_version 1.1;
+    proxy_set_header Host $host;
+    proxy_set_header X-Real-IP $remote_addr;
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_set_header X-Forwarded-Proto $scheme;
+}
+
+location ^~ /assets/telegram/live/ {
+    proxy_pass https://s3.twcstorage.ru/00df5bd5-137f-492a-8d95-c7ee2cc2d851/assets/telegram/live/;
+    proxy_set_header Host s3.twcstorage.ru;
+    proxy_ssl_server_name on;
+    expires 30d;
+    add_header Cache-Control "public, immutable";
+}
