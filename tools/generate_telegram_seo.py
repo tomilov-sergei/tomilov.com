@@ -246,12 +246,16 @@ def render_rich_text(post):
 
 def render_reactions(reactions):
     items = "\n              ".join(
-        f"<span>{shared.escape_html(f'{reaction.get('emoji')} {reaction.get('count')}')}</span>"
+        f"<span>{shared.escape_html(reaction_label(reaction))}</span>"
         for reaction in reactions
     )
     return f"""<div class="screenshot-reactions">
               {items}
             </div>"""
+
+
+def reaction_label(reaction):
+    return f"{reaction.get('emoji')} {reaction.get('count')}"
 
 
 def render_sitemap(posts, photos):
