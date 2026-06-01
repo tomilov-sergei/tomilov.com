@@ -40,6 +40,13 @@ Full deploy:
 2. `tools/generate-seo-pages.mjs` regenerates screenshots pages, photo pages, RSS feeds, and `sitemap.xml`.
 3. The deploy script publishes a timestamped release and symlinks shared media directories.
 
+Telegram live import:
+
+1. Telegram sends a channel update to `POST /telegram/webhook`.
+2. `tools/telegram_live_importer.py` updates shared `assets/telegram/posts.json` and uploads live media.
+3. The service runs `tools/generate_telegram_seo.py`.
+4. Production refreshes `/screenshots/<id>/`, `/screenshots/posts/`, `/screenshots/feed.xml`, `/feed.xml`, and `sitemap.xml` inside the current release.
+
 Photo upload:
 
 1. Apple Shortcut sends the original file to `POST /photos/upload`.
@@ -77,5 +84,5 @@ Recheck both dashboards after major content or sitemap changes.
 - Add topic/tag pages or another discovery layer for `/screenshots/`.
 - Add related-post links to post pages.
 - Add image derivatives or thumbnails for `/photos/` if original files become too heavy for the feed.
-- Consider a Telegram post-import regeneration hook if live Telegram posts need immediate static pages without waiting for deploy.
+- Add monitoring around the Telegram post-import regeneration hook.
 - Add a recurring check that `sitemap.xml`, RSS feeds, and key canonical pages return HTTP 200.

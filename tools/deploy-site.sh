@@ -176,5 +176,8 @@ systemctl reload nginx
 if systemctl list-unit-files tomilov-photo-upload.service --no-legend 2>/dev/null | grep -q tomilov-photo-upload.service; then
   systemctl restart tomilov-photo-upload.service
 fi
+if systemctl list-unit-files tomilov-telegram-live-importer.service --no-legend 2>/dev/null | grep -q tomilov-telegram-live-importer.service; then
+  systemctl restart tomilov-telegram-live-importer.service
+fi
 printf 'Deployed release %s\n' \"\$stamp\"
 find $REMOTE_ROOT/current -maxdepth 3 -type f | sort"

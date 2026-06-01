@@ -20,6 +20,7 @@
 - `tools/photo_upload_server.py` — upload-endpoint для Apple Shortcut.
 - `tools/import-telegram-export.mjs` — повторяемый импорт Telegram Desktop export.
 - `tools/generate-seo-pages.mjs` — генерация статических страниц постов, индексов, RSS и `sitemap.xml`.
+- `tools/generate_telegram_seo.py` — production refresh страниц блога, RSS и `sitemap.xml` после Telegram webhook.
 - `tools/generate_photo_seo.py` — production refresh фото-страниц, RSS и `sitemap.xml` после upload.
 - `tools/telegram_live_importer.py` — webhook-сервис для новых постов из Telegram.
 - `tools/deploy-site.sh` — production deploy и data-only refresh для фото.
@@ -145,7 +146,7 @@ TELEGRAM_WEBHOOK_URL=https://tomilov.com/telegram/webhook \
   ./tools/set-telegram-webhook.sh
 ```
 
-Сервис обновляет тот же `assets/telegram/posts.json`, а новые медиа кладёт в S3 под `assets/telegram/live/...`.
+Сервис обновляет тот же `assets/telegram/posts.json`, новые медиа кладёт в S3 под `assets/telegram/live/...`, а затем запускает production SEO-генератор `tools/generate_telegram_seo.py`. Новые посты получают постоянные страницы `/screenshots/<id>/`, попадают в `/screenshots/posts/`, `/screenshots/feed.xml`, `/feed.xml` и `sitemap.xml` без ожидания следующего полного деплоя.
 Путь `POSTS_JSON_PATH` в `/etc/tomilov-telegram-live.env` должен совпадать с shared storage, на который указывает публичный `/var/www/tomilov.com/current/assets/telegram`.
 Для live-медиа nginx проксирует `/assets/telegram/live/...` в Timeweb S3; пример location лежит в `ops/nginx-telegram-webhook.conf.example`.
 

@@ -6,6 +6,8 @@ import mimetypes
 import os
 import queue
 import re
+import shutil
+import subprocess
 import sys
 import tempfile
 import threading
@@ -40,6 +42,7 @@ class Config:
     s3_access_key = os.environ.get("S3_ACCESS_KEY", "")
     s3_secret_access_key = os.environ.get("S3_SECRET_ACCESS_KEY", "")
     upload_posts_json_to_s3 = os.environ.get("UPLOAD_POSTS_JSON_TO_S3", "1") != "0"
+    seo_generator_path = Path(os.environ.get("TELEGRAM_SEO_GENERATOR_PATH", ROOT_DIR / "tools/generate_telegram_seo.py")).resolve()
 
 
 CONFIG = Config()
@@ -141,6 +144,8 @@ def process_update(update):
 
     if CONFIG.upload_posts_json_to_s3:
         upload_posts_json_to_s3()
+
+    regenerate_seo_pages()
 
 
 def upsert_post(db, message, text, media, is_edit):
@@ -337,6 +342,59 @@ def write_posts_json(db):
 
 def upload_posts_json_to_s3():
     upload_file_to_s3(f"{CONFIG.s3_prefix}/posts.json", CONFIG.posts_json_path)
+
+
+def regenerate_seo_pages():
+    if not CONFIG.seo_generator_path.exists():
+        print(f"Telegram SEO generation skipped: {CONFIG.seo_generator_path} was not found", file=sys.stderr, flush=True)
+        return
+
+    command = get_seo_generator_command()
+
+    if not command:
+        print(f"Telegram SEO generation skipped: unsupported generator {CONFIG.seo_generator_path}", file=sys.stderr, flush=True)
+        return
+
+    try:
+        result = subprocess.run(
+            command,
+            cwd=ROOT_DIR,
+            check=True,
+            timeout=120,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            text=True,
+        )
+        if result.stdout:
+            print(result.stdout, end="", flush=True)
+        if result.stderr:
+            print(result.stderr, file=sys.stderr, end="", flush=True)
+    except subprocess.TimeoutExpired:
+        print("Telegram SEO generation failed: timeout", file=sys.stderr, flush=True)
+    except subprocess.CalledProcessError as error:
+        print("Telegram SEO generation failed", file=sys.stderr, flush=True)
+        if error.stdout:
+            print(error.stdout, file=sys.stderr, flush=True)
+        if error.stderr:
+            print(error.stderr, file=sys.stderr, flush=True)
+
+
+def get_seo_generator_command():
+    suffix = CONFIG.seo_generator_path.suffix.lower()
+
+    if suffix == ".py":
+        return [sys.executable, str(CONFIG.seo_generator_path)]
+
+    if suffix == ".mjs":
+        node = shutil.which("node")
+
+        if not node:
+            print("Telegram SEO generation skipped: node was not found", file=sys.stderr, flush=True)
+            return None
+
+        return [node, str(CONFIG.seo_generator_path)]
+
+    return None
 
 
 def upload_bytes_to_s3(key, body, content_type):

@@ -34,6 +34,7 @@ Product direction for `/screenshots/`: a public collection of observations about
 - `tools/import-telegram-export.mjs` - one-off/repeatable Telegram Desktop export importer.
 - `tools/telegram_live_importer.py` - Telegram Bot API webhook importer for new posts.
 - `tools/photo_upload_server.py` - token-protected Apple Shortcut upload endpoint.
+- `tools/generate_telegram_seo.py` - production refresh for blog pages, RSS, and sitemap after Telegram webhook updates.
 - `tools/deploy-site.sh` - production deployment script.
 - `ops/` - nginx/systemd/env examples for live Telegram import and photo upload.
 
@@ -45,7 +46,7 @@ Telegram content currently flows into the site in two ways:
    Telegram Desktop export -> `tools/import-telegram-export.mjs` -> `assets/telegram/posts.json` and local media.
 
 2. Live import:
-   Telegram Bot API webhook -> nginx `/telegram/webhook` -> Python service on `127.0.0.1:8787` -> `posts.json` and media upload.
+   Telegram Bot API webhook -> nginx `/telegram/webhook` -> Python service on `127.0.0.1:8787` -> `posts.json`, media upload, and `tools/generate_telegram_seo.py`.
 
 Production serves live Telegram media through nginx `/assets/telegram/live/...` proxying to Timeweb S3.
 The live importer's `POSTS_JSON_PATH` must point to the same shared `assets/telegram/posts.json` that nginx exposes through `/var/www/tomilov.com/current/assets/telegram`.
@@ -56,7 +57,7 @@ Apple Photos share sheet -> Apple Shortcut -> `/photos/upload` -> Python service
 
 Photo originals are intentionally stored without canvas processing, resizing, or transcoding so HDR/Ultra HDR metadata and gain maps can survive. The Shortcut must not use image transform actions. The upload service validates the token and file signature, then stores the original bytes. The browser is responsible for actual HDR display support.
 
-Static SEO pages, sitemap, and RSS are generated from `assets/telegram/posts.json` and `assets/photos/photos.json`. The full deploy path uses `tools/generate-seo-pages.mjs`; the production photo upload path uses `tools/generate_photo_seo.py` so new photos update `/photos/feed.xml` and `/feed.xml` immediately even when Node.js is unavailable on the VPS.
+Static SEO pages, sitemap, and RSS are generated from `assets/telegram/posts.json` and `assets/photos/photos.json`. The full deploy path uses `tools/generate-seo-pages.mjs`. The production Telegram webhook path uses `tools/generate_telegram_seo.py` so new posts update `/screenshots/<id>/`, `/screenshots/feed.xml`, `/feed.xml`, and `sitemap.xml` immediately. The production photo upload path uses `tools/generate_photo_seo.py` so new photos update `/photos/feed.xml` and `/feed.xml` immediately. Both production refresh generators are Python-only, so they do not require Node.js on the VPS.
 
 ## Telegram Storage Policy
 
@@ -69,6 +70,7 @@ Production shared storage is the source of truth for live Telegram content:
 - Media deploys are additive by default and do not use `--delete`, so server-side live media is not removed by an older local copy.
 - Use `SYNC_MEDIA_FROM_REMOTE=1` when the local media mirror should catch up with production.
 - Use `PULL_REMOTE_POSTS=0 PUSH_LOCAL_TELEGRAM=1` only after an intentional local Telegram import that should replace production `posts.json`.
+- After each live import, `tools/generate_telegram_seo.py` mutates the current release to keep static post pages, RSS, and sitemap fresh.
 
 ## Photo Storage Policy
 

@@ -41,7 +41,8 @@
 
 - [ ] Verify live importer status on production.
 - [ ] Document how to rotate Telegram bot secrets and S3 credentials.
-- [ ] Decide whether generated static pages should be built after each live import.
+- [x] Build generated static pages after each live import.
+- [ ] Add monitoring or logs review for Telegram SEO regeneration failures.
 
 ## Infra / Deploy
 

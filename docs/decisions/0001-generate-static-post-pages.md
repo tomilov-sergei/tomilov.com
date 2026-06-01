@@ -43,3 +43,5 @@ Implemented with `tools/generate-seo-pages.mjs`.
 The generator reads `assets/telegram/posts.json`, writes one page per post under `/screenshots/<post-id>/`, writes a complete static index at `/screenshots/posts/`, regenerates `sitemap.xml` with post URLs and `lastmod` values, and writes `/screenshots/feed.xml`.
 
 `tools/deploy-site.sh` runs the generator before packaging the static site.
+
+Live Telegram import also runs `tools/generate_telegram_seo.py` as a best-effort production refresh after `posts.json` changes, so new posts get static pages, RSS entries, and sitemap entries without waiting for the next full deploy.
