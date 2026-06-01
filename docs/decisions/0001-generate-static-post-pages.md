@@ -6,12 +6,12 @@ Accepted
 
 ## Context
 
-The `/screenshots/` archive currently loads all Telegram posts from `assets/telegram/posts.json` with client-side JavaScript.
+At the time of this decision, the `/screenshots/` archive loaded all Telegram posts from `assets/telegram/posts.json` with client-side JavaScript.
 
 This is pleasant enough for a feed UI, but weak for search engines and LLM crawlers:
 
 - Individual posts have no canonical URLs.
-- The production sitemap lists only top-level pages.
+- The production sitemap listed only top-level pages.
 - Crawlers may not execute all JavaScript.
 - Crawlers do not click the "load more" button.
 
@@ -40,6 +40,6 @@ Costs:
 
 Implemented with `tools/generate-seo-pages.mjs`.
 
-The generator reads `assets/telegram/posts.json`, writes one page per post under `/screenshots/<post-id>/`, writes a complete static index at `/screenshots/posts/`, and regenerates `sitemap.xml` with post URLs and `lastmod` values.
+The generator reads `assets/telegram/posts.json`, writes one page per post under `/screenshots/<post-id>/`, writes a complete static index at `/screenshots/posts/`, regenerates `sitemap.xml` with post URLs and `lastmod` values, and writes `/screenshots/feed.xml`.
 
 `tools/deploy-site.sh` runs the generator before packaging the static site.

@@ -34,6 +34,7 @@
 - [x] Add token-protected upload endpoint for Apple Shortcut publishing.
 - [x] Preserve originals for HDR/Ultra HDR display.
 - [x] Add static per-photo URLs and SEO metadata.
+- [x] Make `PHOTOS_ONLY=1` a data-only production photo refresh that does not redeploy blog pages.
 - [ ] Verify HDR rendering on a real HDR phone/display after production deploy.
 
 ## Telegram Import
@@ -46,6 +47,7 @@
 
 - [ ] Document production nginx config beyond the examples in `ops/`.
 - [ ] Add a deploy verification checklist.
+- [ ] Add a lightweight production smoke test for photo upload rejection/acceptance paths.
 - [ ] Consider cache headers for generated HTML, JSON, CSS, JS, and media.
 
 ## Project Memory

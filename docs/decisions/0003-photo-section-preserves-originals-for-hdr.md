@@ -14,9 +14,9 @@ The production runtime is still a static site with small Python services only wh
 
 ## Decision
 
-Photos are stored as original uploaded files under `assets/photos/originals/**`. Publishing happens through Apple Shortcut rather than a public upload form on the site. The upload service updates `assets/photos/photos.json` and does not resize, draw to canvas, strip metadata, or transcode images.
+Photos are stored as original uploaded files under `assets/photos/originals/**`. Publishing happens through Apple Shortcut rather than a public upload form on the site. The upload service validates the token and file signature, updates `assets/photos/photos.json`, and does not resize, draw to canvas, strip metadata, or transcode images.
 
-The public page renders the manifest as a lazy-loaded photo feed. The detail viewer opens the same original file and uses `dynamic-range-limit: no-limit` as a progressive enhancement for browsers and displays that support HDR.
+The public page has static photo cards for crawlers and a JavaScript-enhanced lazy-loaded photo feed for people. The detail viewer opens the same original file and uses `dynamic-range-limit: no-limit` as a progressive enhancement for browsers and displays that support HDR.
 
 Production deploys symlink `assets/photos` to shared storage, matching the Telegram media policy, so phone uploads survive code releases.
 

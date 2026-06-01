@@ -14,13 +14,16 @@
 - `styles.css` — общий дизайн, сетки, адаптив и темы.
 - `script.js` — включение YouTube-видео по клику, лента Telegram-архива и фотолента.
 - `assets/` — favicon, OG-картинка и превью видео.
-- `assets/photos/photos.json` и `assets/photos/originals/**` — манифест и оригиналы личных фото.
+- `assets/photos/photos.json` — манифест личных фото; оригиналы лежат в `assets/photos/originals/**`, игнорируются git и живут в shared storage.
 - `assets/telegram/posts.json` и `assets/telegram/**` — импортированные посты и медиа из Telegram.
 - `feed.xml`, `screenshots/feed.xml`, `photos/feed.xml` — RSS-фиды сайта, блога и фотоленты.
 - `tools/photo_upload_server.py` — upload-endpoint для Apple Shortcut.
 - `tools/import-telegram-export.mjs` — повторяемый импорт Telegram Desktop export.
 - `tools/generate-seo-pages.mjs` — генерация статических страниц постов, индексов, RSS и `sitemap.xml`.
+- `tools/generate_photo_seo.py` — production refresh фото-страниц, RSS и `sitemap.xml` после upload.
 - `tools/telegram_live_importer.py` — webhook-сервис для новых постов из Telegram.
+- `tools/deploy-site.sh` — production deploy и data-only refresh для фото.
+- `ops/` — примеры nginx/systemd/env для Telegram importer и photo upload.
 
 ## Локальный запуск
 
@@ -41,9 +44,10 @@ python3 -m http.server 4173
 Скрипт упаковывает только чистый сайт из корня проекта, отправляет архив на сервер и переключает `/var/www/tomilov.com/current` на новый release.
 Production-хранилище по умолчанию лежит на втором диске: `/mnt/tomilov-data/tomilov.com`.
 Telegram-архив живёт отдельно в `/mnt/tomilov-data/tomilov.com/shared/assets/telegram/`, чтобы не упаковывать 10+ GB медиа в каждый release.
-Публичный путь остаётся прежним через symlink: `/var/www/tomilov.com/current/assets/telegram`.
+Фото живут в `/mnt/tomilov-data/tomilov.com/shared/assets/photos/`, по той же модели shared storage.
+Публичные пути остаются прежними через symlink: `/var/www/tomilov.com/current/assets/telegram` и `/var/www/tomilov.com/current/assets/photos`.
 
-По умолчанию production shared storage считается источником правды для `posts.json`: перед SEO-генерацией деплой скачивает свежий `/mnt/tomilov-data/tomilov.com/shared/assets/telegram/posts.json`, создаёт страницы постов и `sitemap.xml`, а затем выкладывает новый release. Это нужно, чтобы live-посты из Telegram не терялись при обычном деплое.
+По умолчанию production shared storage считается источником правды для `posts.json` и `photos.json`: перед SEO-генерацией деплой скачивает свежие JSON из `/mnt/tomilov-data/tomilov.com/shared/assets/**`, создаёт страницы, RSS и `sitemap.xml`, а затем выкладывает новый release. Это нужно, чтобы live-посты из Telegram и новые фото с телефона не терялись при обычном деплое.
 
 Медиа синхронизируются в сторону сервера аддитивно, без `--delete`, и без перезаписи `posts.json`. Это защищает live-медиа, которые появились на сервере после Telegram webhook.
 

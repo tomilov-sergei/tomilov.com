@@ -1,63 +1,63 @@
 # SEO and LLM Indexing Plan
 
-## Current Production State
+Last updated: 2026-06-01.
 
-Checked on production `https://tomilov.com` on 2026-05-26:
+## Current Production Shape
+
+`tomilov.com` is now crawlable as a static site, not just as JavaScript-fed feeds.
 
 - `robots.txt` is open and points to `https://tomilov.com/sitemap.xml`.
-- `sitemap.xml` lists only `/`, `/about`, and `/screenshots/`.
-- `/screenshots/` returns a small HTML shell with `Загружаю посты...`.
-- Blog posts are loaded client-side from `/assets/telegram/posts.json`.
-- The production JSON contains 629 posts.
-- The feed renders the first 18 posts automatically; older posts require clicking `Показать ещё`.
-- Individual post URLs such as `/screenshots/1993/` return 404.
+- `sitemap.xml` includes top-level pages, `/screenshots/posts/`, every `/screenshots/<id>/` page, `/photos/`, `/photos/archive/`, and every `/photos/<id>/` page.
+- The current generated sitemap has 648 URLs and 9 image sitemap entries for photo pages.
+- `/screenshots/` still has a JavaScript-enhanced feed UI, but every post also has standalone HTML.
+- `/photos/` has static content for crawlers before JavaScript runs, plus a JavaScript photo viewer for people.
+- RSS feeds exist at `/feed.xml`, `/screenshots/feed.xml`, and `/photos/feed.xml`.
 
-## Indexing Problem
+## Indexing Model
 
-The blog is visible to people, but not reliably visible to crawlers:
+The site exposes two indexable content collections:
 
-- Search engines receive a mostly empty archive page before JavaScript runs.
-- Crawlers do not click "load more" buttons to discover hidden content.
-- LLM crawlers and answer engines usually prefer plain HTML documents with stable URLs.
-- The sitemap does not expose individual posts.
-- Fragments such as `/screenshots/#post-1993` are not separate canonical URLs.
+1. Screenshot of the Day:
+   - canonical post URLs: `/screenshots/<post-id>/`;
+   - complete static link graph: `/screenshots/posts/`;
+   - `BlogPosting` JSON-LD on post pages;
+   - RSS freshness signal: `/screenshots/feed.xml`.
 
-## Target State
+2. Photos:
+   - canonical photo URLs: `/photos/<photo-id>/`;
+   - complete static link graph: `/photos/archive/`;
+   - `ImageObject` JSON-LD on photo pages;
+   - image sitemap metadata with title, caption, and CC BY 4.0 license;
+   - RSS freshness signal: `/photos/feed.xml`.
 
-Each Telegram post should become a normal indexable web document:
+The combined `/feed.xml` mixes recent posts and photos.
 
-- Stable URL, for example `/screenshots/1993/`.
-- Full post text in server-served/static HTML.
-- Canonical URL.
-- Useful `<title>` and `<meta name="description">`.
-- Open Graph and Twitter metadata.
-- JSON-LD using `BlogPosting` or `Article`.
-- Linked from archive pages.
-- Included in `sitemap.xml` with `lastmod`.
+## Generation Flow
 
-## Recommended Actions
+Full deploy:
 
-1. Add a static generation script that reads `assets/telegram/posts.json`.
-2. Generate one HTML page per post under `screenshots/<id>/index.html`.
-3. Generate paginated archive pages or static archive sections that link to all post pages.
-4. Update `sitemap.xml` during generation.
-5. Preserve the existing visual design for the feed and post pages.
-6. Add redirects or canonical handling for slash/non-slash URL variants where needed.
-7. Submit the updated sitemap in Google Search Console and Yandex Webmaster.
-8. Decide which AI crawlers are allowed in `robots.txt`.
+1. `tools/deploy-site.sh` pulls production `assets/telegram/posts.json` and `assets/photos/photos.json`.
+2. `tools/generate-seo-pages.mjs` regenerates screenshots pages, photo pages, RSS feeds, and `sitemap.xml`.
+3. The deploy script publishes a timestamped release and symlinks shared media directories.
 
-## AI Crawler Policy To Decide
+Photo upload:
 
-Separate these two goals:
+1. Apple Shortcut sends the original file to `POST /photos/upload`.
+2. `tools/photo_upload_server.py` validates the token and file signature, stores the original, and updates shared `assets/photos/photos.json`.
+3. The service runs the configured SEO generator.
+4. Production defaults to `tools/generate_photo_seo.py`, which refreshes `/photos/**`, `/photos/feed.xml`, `/feed.xml`, and `sitemap.xml` inside the current release.
 
-- Discovery in AI search/answers: generally allow search crawlers such as OpenAI's search crawler.
-- Model training: decide intentionally whether to allow training crawlers such as GPTBot, ClaudeBot, or Google-Extended.
+Photo-only refresh:
 
-Default recommendation: allow discovery crawlers, make a deliberate separate decision on training crawlers.
+```sh
+PHOTOS_ONLY=1 ./tools/deploy-site.sh
+```
+
+This is a data refresh, not a code deploy. It runs the production Python generator in the current release and does not package local `screenshots/**`.
 
 ## AI Crawler Policy
 
-Implemented on 2026-05-26 in `robots.txt` and updated after product decision:
+Implemented in `robots.txt`:
 
 - Allow regular crawling for the whole site.
 - Allow AI search and answer discovery crawlers: `OAI-SearchBot`, `ChatGPT-User`, `Claude-SearchBot`, `Claude-User`, and `PerplexityBot`.
@@ -65,19 +65,17 @@ Implemented on 2026-05-26 in `robots.txt` and updated after product decision:
 
 Rationale: the owner explicitly allows models to train on this expert content.
 
-## Implementation Status
+## Webmaster Status
 
-Implemented on 2026-05-26:
+- Google Search Console accepted `https://tomilov.com/sitemap.xml`.
+- Yandex Webmaster ownership was verified with `yandex_251bf4498768ab1a.html`; the sitemap was submitted.
 
-Sitemap submission on 2026-05-26:
+Recheck both dashboards after major content or sitemap changes.
 
-- Google Search Console accepted `https://tomilov.com/sitemap.xml`; the first table status was `Couldn't fetch`, while direct Googlebot-style fetch returned HTTP 200 and 633 URLs. Recheck processing status later.
-- Yandex Webmaster ownership was verified with `yandex_251bf4498768ab1a.html`; `https://tomilov.com/sitemap.xml` was added to the processing queue.
+## Open Improvements
 
-
-- `tools/generate-seo-pages.mjs` reads `assets/telegram/posts.json`.
-- The generator writes `/screenshots/<id>/index.html` for every Telegram post.
-- Each post page includes canonical URL, description, Open Graph/Twitter metadata, and `BlogPosting` JSON-LD.
-- `/screenshots/posts/` is a complete static link graph for all generated post pages.
-- `sitemap.xml` is regenerated with `/screenshots/posts/` and every post URL.
-- `tools/deploy-site.sh` runs the generator before packaging the site.
+- Add topic/tag pages or another discovery layer for `/screenshots/`.
+- Add related-post links to post pages.
+- Add image derivatives or thumbnails for `/photos/` if original files become too heavy for the feed.
+- Consider a Telegram post-import regeneration hook if live Telegram posts need immediate static pages without waiting for deploy.
+- Add a recurring check that `sitemap.xml`, RSS feeds, and key canonical pages return HTTP 200.

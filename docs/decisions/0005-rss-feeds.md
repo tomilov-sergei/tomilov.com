@@ -14,7 +14,7 @@ Generate RSS from the same data sources:
 
 Pages expose the relevant feed with `<link rel="alternate" type="application/rss+xml">`.
 
-The full deploy generator writes all three feeds. The production photo upload generator writes `/photos/feed.xml` and refreshes `/feed.xml` after every successful photo upload.
+The full deploy generator writes all three feeds. The production photo upload generator writes `/photos/feed.xml`, refreshes `/feed.xml`, and updates photo sitemap entries after every successful photo upload.
 
 ## Consequences
 

@@ -35,7 +35,7 @@ Product direction for `/screenshots/`: a public collection of observations about
 - `tools/telegram_live_importer.py` - Telegram Bot API webhook importer for new posts.
 - `tools/photo_upload_server.py` - token-protected Apple Shortcut upload endpoint.
 - `tools/deploy-site.sh` - production deployment script.
-- `ops/` - nginx/systemd/env examples for live Telegram import.
+- `ops/` - nginx/systemd/env examples for live Telegram import and photo upload.
 
 ## Content Flow
 
@@ -54,7 +54,7 @@ Photo content flows through a token-protected Apple Shortcut endpoint:
 
 Apple Photos share sheet -> Apple Shortcut -> `/photos/upload` -> Python service on `127.0.0.1:8788` -> `assets/photos/photos.json` and `assets/photos/originals/**`.
 
-Photo originals are intentionally stored without canvas processing, resizing, or transcoding so HDR/Ultra HDR metadata and gain maps can survive. The Shortcut must not use image transform actions. The browser is responsible for actual HDR display support.
+Photo originals are intentionally stored without canvas processing, resizing, or transcoding so HDR/Ultra HDR metadata and gain maps can survive. The Shortcut must not use image transform actions. The upload service validates the token and file signature, then stores the original bytes. The browser is responsible for actual HDR display support.
 
 Static SEO pages, sitemap, and RSS are generated from `assets/telegram/posts.json` and `assets/photos/photos.json`. The full deploy path uses `tools/generate-seo-pages.mjs`; the production photo upload path uses `tools/generate_photo_seo.py` so new photos update `/photos/feed.xml` and `/feed.xml` immediately even when Node.js is unavailable on the VPS.
 
@@ -70,13 +70,25 @@ Production shared storage is the source of truth for live Telegram content:
 - Use `SYNC_MEDIA_FROM_REMOTE=1` when the local media mirror should catch up with production.
 - Use `PULL_REMOTE_POSTS=0 PUSH_LOCAL_TELEGRAM=1` only after an intentional local Telegram import that should replace production `posts.json`.
 
+## Photo Storage Policy
+
+Production shared storage is also the source of truth for photos:
+
+- `shared/assets/photos/photos.json` is the photo manifest used by the public feed and generators.
+- `shared/assets/photos/originals/**` stores original uploaded files.
+- Git tracks `assets/photos/photos.json` as a small reproducible manifest snapshot.
+- Git ignores `assets/photos/originals/**` so original photo binaries stay in shared storage, not in the repository.
+- Use `PULL_REMOTE_PHOTOS=0 PUSH_LOCAL_PHOTOS=1` only when the local photo copy should intentionally replace production photo storage.
+
 ## Deployment
 
-The deploy script packages the static site, uploads it to the VPS, creates a timestamped release, and switches `/var/www/tomilov.com/current` to the new release.
+Normal deploy packages the static site, uploads it to the VPS, creates a timestamped release, and switches `/var/www/tomilov.com/current` to the new release.
 
 Telegram media is synced separately into shared storage so large media files are not packed into every release.
 
 Photo media also lives in shared storage. Releases symlink `assets/photos` to `shared/assets/photos`, and the deploy script pulls production `photos.json` by default before packaging.
+
+`PHOTOS_ONLY=1 ./tools/deploy-site.sh` is not a full deploy. It runs production `tools/generate_photo_seo.py` inside the current release and refreshes only photo pages, photo RSS, the combined RSS feed, and `sitemap.xml`.
 
 ## Project Memory Rule
 

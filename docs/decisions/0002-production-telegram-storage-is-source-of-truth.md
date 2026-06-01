@@ -14,6 +14,8 @@ If deploy uses an older local `assets/telegram/posts.json`, generated SEO pages 
 
 Production shared storage is the default authority for Telegram archive data.
 
+The current production shared storage root is `/mnt/tomilov-data/tomilov.com`, mounted separately from `/var/www/tomilov.com/current`.
+
 The deploy flow should:
 
 1. Pull production `shared/assets/telegram/posts.json` into the local workspace.
