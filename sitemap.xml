@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
   <url>
     <loc>https://tomilov.com/</loc>
   </url>
@@ -10,8 +11,24 @@
     <loc>https://tomilov.com/screenshots/</loc>
   </url>
   <url>
+    <loc>https://tomilov.com/photos/</loc>
+    <lastmod>2026-05-31</lastmod>
+  </url>
+  <url>
+    <loc>https://tomilov.com/photos/archive/</loc>
+    <lastmod>2026-05-31</lastmod>
+  </url>
+  <url>
     <loc>https://tomilov.com/screenshots/posts/</loc>
-    <lastmod>2026-05-27</lastmod>
+    <lastmod>2026-05-31</lastmod>
+  </url>
+  <url>
+    <loc>https://tomilov.com/screenshots/2008/</loc>
+    <lastmod>2026-05-31</lastmod>
+  </url>
+  <url>
+    <loc>https://tomilov.com/screenshots/2004/</loc>
+    <lastmod>2026-05-29</lastmod>
   </url>
   <url>
     <loc>https://tomilov.com/screenshots/2003/</loc>
@@ -2536,5 +2553,95 @@
   <url>
     <loc>https://tomilov.com/screenshots/2/</loc>
     <lastmod>2023-05-29</lastmod>
+  </url>
+  <url>
+    <loc>https://tomilov.com/photos/20260531-173136-e90ccf67/</loc>
+    <lastmod>2026-05-31</lastmod>
+    <image:image>
+      <image:loc>https://tomilov.com/assets/photos/originals/2026/05/20260531-173136-e90ccf67-shortcut-upload.jpg</image:loc>
+      <image:title>Пушкино, Московская область · Apple iPhone 17 Pro Max · 4 мая 2026 г.</image:title>
+      <image:caption>Пушкино, Московская область · Apple iPhone 17 Pro Max · 4 мая 2026 г.</image:caption>
+      <image:license>https://creativecommons.org/licenses/by/4.0/</image:license>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://tomilov.com/photos/20260530-122524-c785fa9c/</loc>
+    <lastmod>2026-05-30</lastmod>
+    <image:image>
+      <image:loc>https://tomilov.com/assets/photos/originals/2026/05/20260530-122524-c785fa9c-shortcut-upload.jpg</image:loc>
+      <image:title>Дворяниново, Тульская область · Apple iPhone 11 Pro · 4 апреля 2020 г.</image:title>
+      <image:caption>Дворяниново, Тульская область · Apple iPhone 11 Pro · 4 апреля 2020 г.</image:caption>
+      <image:license>https://creativecommons.org/licenses/by/4.0/</image:license>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://tomilov.com/photos/20260530-122352-15c66ea8/</loc>
+    <lastmod>2026-05-30</lastmod>
+    <image:image>
+      <image:loc>https://tomilov.com/assets/photos/originals/2026/05/20260530-122352-15c66ea8-shortcut-upload.jpg</image:loc>
+      <image:title>район Хамовники, Москва · Apple iPhone 13 Pro Max · 2 октября 2021 г.</image:title>
+      <image:caption>район Хамовники, Москва · Apple iPhone 13 Pro Max · 2 октября 2021 г.</image:caption>
+      <image:license>https://creativecommons.org/licenses/by/4.0/</image:license>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://tomilov.com/photos/20260530-122137-753aa9f1/</loc>
+    <lastmod>2026-05-30</lastmod>
+    <image:image>
+      <image:loc>https://tomilov.com/assets/photos/originals/2026/05/20260530-122137-753aa9f1-shortcut-upload.jpg</image:loc>
+      <image:title>Quartiere 5, Флоренция, Тоскана · Apple iPhone 13 Pro Max · 7 октября 2022 г.</image:title>
+      <image:caption>Quartiere 5, Флоренция, Тоскана · Apple iPhone 13 Pro Max · 7 октября 2022 г.</image:caption>
+      <image:license>https://creativecommons.org/licenses/by/4.0/</image:license>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://tomilov.com/photos/20260530-122114-3dff70a3/</loc>
+    <lastmod>2026-05-30</lastmod>
+    <image:image>
+      <image:loc>https://tomilov.com/assets/photos/originals/2026/05/20260530-122114-3dff70a3-shortcut-upload.jpg</image:loc>
+      <image:title>Quartiere 5, Флоренция, Тоскана · Apple iPhone 13 Pro Max · 7 октября 2022 г.</image:title>
+      <image:caption>Quartiere 5, Флоренция, Тоскана · Apple iPhone 13 Pro Max · 7 октября 2022 г.</image:caption>
+      <image:license>https://creativecommons.org/licenses/by/4.0/</image:license>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://tomilov.com/photos/20260530-122033-cf7742ed/</loc>
+    <lastmod>2026-05-30</lastmod>
+    <image:image>
+      <image:loc>https://tomilov.com/assets/photos/originals/2026/05/20260530-122033-cf7742ed-shortcut-upload.jpg</image:loc>
+      <image:title>Centovalli, Тичино · Apple iPhone 14 Pro Max · 26 августа 2023 г.</image:title>
+      <image:caption>Centovalli, Тичино · Apple iPhone 14 Pro Max · 26 августа 2023 г.</image:caption>
+      <image:license>https://creativecommons.org/licenses/by/4.0/</image:license>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://tomilov.com/photos/20260530-080345-e511ad91/</loc>
+    <lastmod>2026-05-30</lastmod>
+    <image:image>
+      <image:loc>https://tomilov.com/assets/photos/originals/2026/05/20260530-080345-e511ad91-shortcut-upload.jpg</image:loc>
+      <image:title>Leica M6 — плёнка · 30 мая 2026 г.</image:title>
+      <image:caption>Leica M6 — плёнка · 30 мая 2026 г.</image:caption>
+      <image:license>https://creativecommons.org/licenses/by/4.0/</image:license>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://tomilov.com/photos/20260529-235543-6a57f1cb/</loc>
+    <lastmod>2026-05-29</lastmod>
+    <image:image>
+      <image:loc>https://tomilov.com/assets/photos/originals/2026/05/20260529-235543-6a57f1cb-shortcut-upload.jpg</image:loc>
+      <image:title>Яучиммон, Гонконг, Цзюлун · Apple iPhone 16 Pro Max · 3 октября 2025 г.</image:title>
+      <image:caption>Яучиммон, Гонконг, Цзюлун · Apple iPhone 16 Pro Max · 3 октября 2025 г.</image:caption>
+      <image:license>https://creativecommons.org/licenses/by/4.0/</image:license>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://tomilov.com/photos/20260529-235227-c5697f57/</loc>
+    <lastmod>2026-05-29</lastmod>
+    <image:image>
+      <image:loc>https://tomilov.com/assets/photos/originals/2026/05/20260529-235227-c5697f57-shortcut-upload.jpg</image:loc>
+      <image:title>Leica M6 — плёнка · 8 ноября 2025 г.</image:title>
+      <image:caption>Leica M6 — плёнка · 8 ноября 2025 г.</image:caption>
+      <image:license>https://creativecommons.org/licenses/by/4.0/</image:license>
+    </image:image>
   </url>
 </urlset>

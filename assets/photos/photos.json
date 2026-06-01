@@ -1,0 +1,432 @@
+{
+  "source": "Photo upload service",
+  "updatedAt": "2026-05-31T17:35:15.672431Z",
+  "photos": [
+    {
+      "id": "20260531-173136-e90ccf67",
+      "date": "2026-05-04T14:38:01Z",
+      "src": "/assets/photos/originals/2026/05/20260531-173136-e90ccf67-shortcut-upload.jpg",
+      "width": 1926,
+      "height": 2696,
+      "caption": "",
+      "alt": "",
+      "hdr": false,
+      "mimeType": "image/jpeg",
+      "size": 843221,
+      "location": {
+        "name": null,
+        "latitude": 56.012983,
+        "longitude": 37.912381,
+        "label": "Пушкино, Московская область"
+      },
+      "technical": {
+        "hasExif": true,
+        "camera": "Apple iPhone 17 Pro Max",
+        "cameraLine": "Apple iPhone 17 Pro Max",
+        "lensLine": "Main Camera — 24 mm ƒ1,8",
+        "format": "JPEG",
+        "megapixels": 5,
+        "dimensions": "1926 × 2696",
+        "size": "823 KB",
+        "summary": "5 MP • 1926 × 2696 • 823 KB",
+        "settings": [
+          {
+            "label": "ISO",
+            "value": "80"
+          },
+          {
+            "label": "ФР",
+            "value": "24 mm"
+          },
+          {
+            "label": "EV",
+            "value": "+0,0 ev"
+          },
+          {
+            "label": "ƒ",
+            "value": "ƒ1,8"
+          },
+          {
+            "label": "S",
+            "value": "1/6173 s"
+          }
+        ]
+      },
+      "uploadedAt": "2026-05-31T17:31:36.650992Z"
+    },
+    {
+      "id": "20260530-122524-c785fa9c",
+      "date": "2020-04-04T18:25:06Z",
+      "src": "/assets/photos/originals/2026/05/20260530-122524-c785fa9c-shortcut-upload.jpg",
+      "width": 3024,
+      "height": 4032,
+      "caption": "",
+      "alt": "",
+      "hdr": false,
+      "mimeType": "image/jpeg",
+      "size": 3264908,
+      "location": {
+        "name": null,
+        "latitude": 54.693439,
+        "longitude": 37.557247,
+        "label": "Дворяниново, Тульская область"
+      },
+      "technical": {
+        "hasExif": true,
+        "camera": "Apple iPhone 11 Pro",
+        "cameraLine": "Apple iPhone 11 Pro",
+        "lensLine": "Main Camera — 26 mm ƒ1,8",
+        "format": "JPEG",
+        "megapixels": 12,
+        "dimensions": "3024 × 4032",
+        "size": "3,1 MB",
+        "summary": "12 MP • 3024 × 4032 • 3,1 MB",
+        "settings": [
+          {
+            "label": "ISO",
+            "value": "32"
+          },
+          {
+            "label": "ФР",
+            "value": "26 mm"
+          },
+          {
+            "label": "EV",
+            "value": "+0,0 ev"
+          },
+          {
+            "label": "ƒ",
+            "value": "ƒ1,8"
+          },
+          {
+            "label": "S",
+            "value": "1/633 s"
+          }
+        ]
+      },
+      "uploadedAt": "2026-05-30T12:25:24.398228Z"
+    },
+    {
+      "id": "20260530-122352-15c66ea8",
+      "date": "2021-10-02T16:14:51Z",
+      "src": "/assets/photos/originals/2026/05/20260530-122352-15c66ea8-shortcut-upload.jpg",
+      "width": 3024,
+      "height": 4032,
+      "caption": "",
+      "alt": "",
+      "hdr": false,
+      "mimeType": "image/jpeg",
+      "size": 2105626,
+      "location": {
+        "name": null,
+        "latitude": 55.715747,
+        "longitude": 37.546944,
+        "label": "район Хамовники, Москва"
+      },
+      "technical": {
+        "hasExif": true,
+        "camera": "Apple iPhone 13 Pro Max",
+        "cameraLine": "Apple iPhone 13 Pro Max",
+        "lensLine": "Main Camera — 77 mm ƒ2,8",
+        "format": "JPEG",
+        "megapixels": 12,
+        "dimensions": "3024 × 4032",
+        "size": "2,0 MB",
+        "summary": "12 MP • 3024 × 4032 • 2,0 MB",
+        "settings": [
+          {
+            "label": "ISO",
+            "value": "64"
+          },
+          {
+            "label": "ФР",
+            "value": "77 mm"
+          },
+          {
+            "label": "EV",
+            "value": "+0,7 ev"
+          },
+          {
+            "label": "ƒ",
+            "value": "ƒ2,8"
+          },
+          {
+            "label": "S",
+            "value": "1/121 s"
+          }
+        ]
+      },
+      "uploadedAt": "2026-05-30T12:23:52.921742Z"
+    },
+    {
+      "id": "20260530-122137-753aa9f1",
+      "date": "2022-10-07T14:04:00Z",
+      "src": "/assets/photos/originals/2026/05/20260530-122137-753aa9f1-shortcut-upload.jpg",
+      "width": 1923,
+      "height": 3418,
+      "caption": "",
+      "alt": "",
+      "hdr": false,
+      "mimeType": "image/jpeg",
+      "size": 1877301,
+      "location": {
+        "name": null,
+        "latitude": 43.783753,
+        "longitude": 11.25445,
+        "label": "Quartiere 5, Флоренция, Тоскана"
+      },
+      "technical": {
+        "hasExif": true,
+        "camera": "Apple iPhone 13 Pro Max",
+        "cameraLine": "Apple iPhone 13 Pro Max",
+        "lensLine": "Main Camera — 26 mm ƒ1,5",
+        "format": "JPEG",
+        "megapixels": 7,
+        "dimensions": "1923 × 3418",
+        "size": "1,8 MB",
+        "summary": "7 MP • 1923 × 3418 • 1,8 MB",
+        "settings": [
+          {
+            "label": "ISO",
+            "value": "50"
+          },
+          {
+            "label": "ФР",
+            "value": "26 mm"
+          },
+          {
+            "label": "EV",
+            "value": "+0,0 ev"
+          },
+          {
+            "label": "ƒ",
+            "value": "ƒ1,5"
+          },
+          {
+            "label": "S",
+            "value": "1/3257 s"
+          }
+        ]
+      },
+      "uploadedAt": "2026-05-30T12:21:37.578809Z"
+    },
+    {
+      "id": "20260530-122114-3dff70a3",
+      "date": "2022-10-07T14:04:00Z",
+      "src": "/assets/photos/originals/2026/05/20260530-122114-3dff70a3-shortcut-upload.jpg",
+      "width": 1923,
+      "height": 3418,
+      "caption": "",
+      "alt": "",
+      "hdr": false,
+      "mimeType": "image/jpeg",
+      "size": 1877301,
+      "location": {
+        "name": null,
+        "latitude": 43.783753,
+        "longitude": 11.25445,
+        "label": "Quartiere 5, Флоренция, Тоскана"
+      },
+      "technical": {
+        "hasExif": true,
+        "camera": "Apple iPhone 13 Pro Max",
+        "cameraLine": "Apple iPhone 13 Pro Max",
+        "lensLine": "Main Camera — 26 mm ƒ1,5",
+        "format": "JPEG",
+        "megapixels": 7,
+        "dimensions": "1923 × 3418",
+        "size": "1,8 MB",
+        "summary": "7 MP • 1923 × 3418 • 1,8 MB",
+        "settings": [
+          {
+            "label": "ISO",
+            "value": "50"
+          },
+          {
+            "label": "ФР",
+            "value": "26 mm"
+          },
+          {
+            "label": "EV",
+            "value": "+0,0 ev"
+          },
+          {
+            "label": "ƒ",
+            "value": "ƒ1,5"
+          },
+          {
+            "label": "S",
+            "value": "1/3257 s"
+          }
+        ]
+      },
+      "uploadedAt": "2026-05-30T12:21:14.606835Z"
+    },
+    {
+      "id": "20260530-122033-cf7742ed",
+      "date": "2023-08-26T11:52:12Z",
+      "src": "/assets/photos/originals/2026/05/20260530-122033-cf7742ed-shortcut-upload.jpg",
+      "width": 2268,
+      "height": 4032,
+      "caption": "",
+      "alt": "",
+      "hdr": false,
+      "mimeType": "image/jpeg",
+      "size": 2347753,
+      "location": {
+        "name": null,
+        "latitude": 46.179019,
+        "longitude": 8.643394,
+        "label": "Centovalli, Тичино"
+      },
+      "technical": {
+        "hasExif": true,
+        "camera": "Apple iPhone 14 Pro Max",
+        "cameraLine": "Apple iPhone 14 Pro Max",
+        "lensLine": "Main Camera — 77 mm ƒ2,8",
+        "format": "JPEG",
+        "megapixels": 9,
+        "dimensions": "2268 × 4032",
+        "size": "2,2 MB",
+        "summary": "9 MP • 2268 × 4032 • 2,2 MB",
+        "settings": [
+          {
+            "label": "ISO",
+            "value": "32"
+          },
+          {
+            "label": "ФР",
+            "value": "77 mm"
+          },
+          {
+            "label": "EV",
+            "value": "-0,3 ev"
+          },
+          {
+            "label": "ƒ",
+            "value": "ƒ2,8"
+          },
+          {
+            "label": "S",
+            "value": "1/1449 s"
+          }
+        ]
+      },
+      "uploadedAt": "2026-05-30T12:20:33.380755Z"
+    },
+    {
+      "id": "20260530-080345-e511ad91",
+      "date": "2026-05-30T08:03:45.511593Z",
+      "src": "/assets/photos/originals/2026/05/20260530-080345-e511ad91-shortcut-upload.jpg",
+      "width": 3130,
+      "height": 2075,
+      "caption": "",
+      "alt": "",
+      "hdr": false,
+      "mimeType": "image/jpeg",
+      "size": 4679944,
+      "uploadedAt": "2026-05-30T08:03:45.511593Z",
+      "location": {
+        "name": null,
+        "latitude": null,
+        "longitude": null,
+        "label": null
+      },
+      "technical": {
+        "hasExif": false,
+        "camera": "Leica M6",
+        "cameraLine": "Leica M6 — плёнка",
+        "lensLine": "Плёночная фотография",
+        "format": "JPEG",
+        "megapixels": 6,
+        "dimensions": "3130 × 2075",
+        "size": "4,5 MB",
+        "summary": "6 MP • 3130 × 2075 • 4,5 MB",
+        "settings": []
+      }
+    },
+    {
+      "id": "20260529-235543-6a57f1cb",
+      "date": "2025-10-03T17:48:18Z",
+      "src": "/assets/photos/originals/2026/05/20260529-235543-6a57f1cb-shortcut-upload.jpg",
+      "width": 2268,
+      "height": 4032,
+      "caption": "",
+      "alt": "",
+      "hdr": false,
+      "mimeType": "image/jpeg",
+      "size": 2207157,
+      "uploadedAt": "2026-05-29T23:55:43.679249Z",
+      "location": {
+        "name": null,
+        "latitude": 22.293553,
+        "longitude": 114.169456,
+        "label": "Яучиммон, Гонконг, Цзюлун"
+      },
+      "technical": {
+        "hasExif": true,
+        "camera": "Apple iPhone 16 Pro Max",
+        "cameraLine": "Apple iPhone 16 Pro Max",
+        "lensLine": "Main Camera — 48 mm ƒ1,8",
+        "format": "JPEG",
+        "megapixels": 9,
+        "dimensions": "2268 × 4032",
+        "size": "2,1 MB",
+        "summary": "9 MP • 2268 × 4032 • 2,1 MB",
+        "settings": [
+          {
+            "label": "ISO",
+            "value": "64"
+          },
+          {
+            "label": "ФР",
+            "value": "48 mm"
+          },
+          {
+            "label": "EV",
+            "value": "+0,0 ev"
+          },
+          {
+            "label": "ƒ",
+            "value": "ƒ1,8"
+          },
+          {
+            "label": "S",
+            "value": "1/3096 s"
+          }
+        ]
+      }
+    },
+    {
+      "id": "20260529-235227-c5697f57",
+      "date": "2025-11-08T18:15:59Z",
+      "src": "/assets/photos/originals/2026/05/20260529-235227-c5697f57-shortcut-upload.jpg",
+      "width": 3130,
+      "height": 2075,
+      "caption": "",
+      "alt": "",
+      "hdr": false,
+      "mimeType": "image/jpeg",
+      "size": 5930305,
+      "uploadedAt": "2026-05-29T23:52:27.312717Z",
+      "location": {
+        "name": null,
+        "latitude": null,
+        "longitude": null,
+        "label": null
+      },
+      "technical": {
+        "hasExif": false,
+        "camera": "Leica M6",
+        "cameraLine": "Leica M6 — плёнка",
+        "lensLine": "Плёночная фотография",
+        "format": "JPEG",
+        "megapixels": 6,
+        "dimensions": "3130 × 2075",
+        "size": "5,7 MB",
+        "summary": "6 MP • 3130 × 2075 • 5,7 MB",
+        "settings": []
+      }
+    }
+  ]
+}

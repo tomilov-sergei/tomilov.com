@@ -8,21 +8,31 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const rootDir = path.resolve(__dirname, "..");
 const screenshotsDir = path.join(rootDir, "screenshots");
 const postsIndexDir = path.join(screenshotsDir, "posts");
+const photosDir = path.join(rootDir, "photos");
+const photosArchiveDir = path.join(photosDir, "archive");
 const postsJsonPath = path.join(rootDir, "assets", "telegram", "posts.json");
+const photosJsonPath = path.join(rootDir, "assets", "photos", "photos.json");
 const sitemapPath = path.join(rootDir, "sitemap.xml");
+const feedPath = path.join(rootDir, "feed.xml");
+const screenshotsFeedPath = path.join(screenshotsDir, "feed.xml");
+const photosFeedPath = path.join(photosDir, "feed.xml");
 const siteUrl = "https://tomilov.com";
 const siteName = "Серёжа Томилов";
 const channelTitle = "Screenshot of the Day";
+const photosTitle = "Фото";
+const photosDescription = "Витрина лучших снимков Серёжи Томилова.";
+const licenseUrl = "https://creativecommons.org/licenses/by/4.0/";
+const licenseName = "CC BY 4.0";
 const telegramMediaBase = "https://s3.twcstorage.ru/00df5bd5-137f-492a-8d95-c7ee2cc2d851";
+const feedLimit = 50;
 const assetVersion = getCurrentAssetVersion();
 
-if (!existsSync(postsJsonPath)) {
-  throw new Error(`Telegram posts JSON was not found: ${postsJsonPath}`);
-}
-
-const data = JSON.parse(readFileSync(postsJsonPath, "utf8"));
+const data = readJsonIfExists(postsJsonPath, { posts: [] });
+const photosData = readJsonIfExists(photosJsonPath, { photos: [] });
 const posts = [...(data.posts || [])].sort((a, b) => Number(b.dateUnixtime || 0) - Number(a.dateUnixtime || 0));
+const photos = [...(photosData.photos || [])].sort((a, b) => getPhotoSortKey(b).localeCompare(getPhotoSortKey(a)));
 const postIds = new Set(posts.map((post) => String(post.id)));
+const photoIds = new Set(photos.map((photo) => String(photo.id)));
 
 mkdirSync(screenshotsDir, { recursive: true });
 removeStalePostDirs(postIds);
@@ -35,11 +45,32 @@ for (const [index, post] of posts.entries()) {
 
 mkdirSync(postsIndexDir, { recursive: true });
 writeFileSync(path.join(postsIndexDir, "index.html"), renderPostsIndex(posts));
-writeFileSync(sitemapPath, renderSitemap(posts));
+
+mkdirSync(photosDir, { recursive: true });
+removeStalePhotoDirs(photoIds);
+
+for (const [index, photo] of photos.entries()) {
+  const photoDir = path.join(photosDir, String(photo.id));
+  mkdirSync(photoDir, { recursive: true });
+  writeFileSync(path.join(photoDir, "index.html"), renderPhotoPage(photo, photos[index - 1], photos[index + 1]));
+}
+
+mkdirSync(photosArchiveDir, { recursive: true });
+writeFileSync(path.join(photosDir, "index.html"), renderPhotosPage(photos));
+writeFileSync(path.join(photosArchiveDir, "index.html"), renderPhotosArchive(photos));
+writeFileSync(sitemapPath, renderSitemap(posts, photos));
+writeFileSync(feedPath, renderMainFeed(posts, photos));
+writeFileSync(screenshotsFeedPath, renderScreenshotsFeed(posts));
+writeFileSync(photosFeedPath, renderPhotosFeed(photos));
 
 console.log(`Generated ${posts.length} post pages`);
+console.log(`Generated ${photos.length} photo pages`);
 console.log(path.relative(rootDir, postsIndexDir));
+console.log(path.relative(rootDir, photosArchiveDir));
 console.log(path.relative(rootDir, sitemapPath));
+console.log(path.relative(rootDir, feedPath));
+console.log(path.relative(rootDir, screenshotsFeedPath));
+console.log(path.relative(rootDir, photosFeedPath));
 
 function renderPostPage(post, newerPost, olderPost) {
   const url = `${siteUrl}/screenshots/${post.id}/`;
@@ -84,6 +115,7 @@ function renderPostPage(post, newerPost, olderPost) {
     <title>${escapeHtml(title)}</title>
     <meta name="description" content="${escapeAttribute(description)}">
     <link rel="canonical" href="${url}">
+    <link rel="alternate" type="application/rss+xml" title="${escapeAttribute(channelTitle)}" href="${siteUrl}/screenshots/feed.xml">
     <meta property="og:type" content="article">
     <meta property="og:title" content="${escapeAttribute(makePostTitle(post, 90))}">
     <meta property="og:description" content="${escapeAttribute(description)}">
@@ -125,7 +157,6 @@ function renderPostPage(post, newerPost, olderPost) {
 }
 
 function renderPostsIndex(posts) {
-  const latest = posts[0];
   const description = `Статический индекс всех постов канала ${channelTitle}.`;
 
   return `<!doctype html>
@@ -136,6 +167,7 @@ function renderPostsIndex(posts) {
     <title>Все посты — ${channelTitle}</title>
     <meta name="description" content="${escapeAttribute(description)}">
     <link rel="canonical" href="${siteUrl}/screenshots/posts/">
+    <link rel="alternate" type="application/rss+xml" title="${escapeAttribute(channelTitle)}" href="${siteUrl}/screenshots/feed.xml">
     <meta property="og:type" content="website">
     <meta property="og:title" content="Все посты — ${channelTitle}">
     <meta property="og:description" content="${escapeAttribute(description)}">
@@ -174,6 +206,324 @@ function renderPostsIndex(posts) {
           <span>${escapeHtml(makePostTitle(post, 120))}</span>
         </a>`;
   }
+}
+
+function renderPhotosPage(photos) {
+  const image = photos[0] ? getPhotoAssetUrl(photos[0].src) : `${siteUrl}/assets/og.png`;
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "CollectionPage",
+    name: photosTitle,
+    description: photosDescription,
+    url: `${siteUrl}/photos/`,
+    isPartOf: {
+      "@type": "WebSite",
+      name: siteName,
+      url: siteUrl,
+    },
+    creator: {
+      "@type": "Person",
+      name: siteName,
+      url: siteUrl,
+    },
+    license: licenseUrl,
+  };
+
+  return `<!doctype html>
+<html lang="ru-RU">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width">
+    <title>${photosTitle} — ${siteName}</title>
+    <meta name="description" content="${escapeAttribute(photosDescription)}">
+    <link rel="canonical" href="${siteUrl}/photos/">
+    <link rel="alternate" type="application/rss+xml" title="${escapeAttribute(photosTitle)}" href="${siteUrl}/photos/feed.xml">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="${photosTitle}">
+    <meta property="og:description" content="${escapeAttribute(photosDescription)}">
+    <meta property="og:image" content="${escapeAttribute(image)}">
+    <meta property="og:url" content="${siteUrl}/photos/">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="${photosTitle}">
+    <meta name="twitter:description" content="${escapeAttribute(photosDescription)}">
+    <meta name="twitter:image" content="${escapeAttribute(image)}">
+    <link rel="icon" href="/assets/favicon.png">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500;700&family=Lora:wght@600&family=Manrope:wght@800&display=swap">
+    <link rel="stylesheet" href="/styles.css?v=${assetVersion}">
+    <script type="application/ld+json">${escapeJsonLd(jsonLd)}</script>
+  </head>
+  <body>
+    <main class="page photos-page">
+      ${renderHeader("/photos/")}
+
+      <section class="photos-intro" aria-labelledby="photos-title">
+        <h1 id="photos-title">Фото</h1>
+      </section>
+
+      <section class="photo-feed" data-photo-feed data-static-photo-feed aria-live="polite">
+        ${photos.length ? photos.map((photo, index) => renderPhotoCard(photo, index)).join("\n        ") : '<p class="feed-status" data-photo-status>Фотографий пока нет.</p>'}
+      </section>
+
+      <footer class="photos-footer">
+        <p>Витрина лучших снимков. Использование разрешено по лицензии <a href="${licenseUrl}" target="_blank" rel="license noopener">${licenseName}</a> с указанием авторства.</p>
+        <a href="/photos/archive/">Все фото</a>
+      </footer>
+    </main>
+
+    ${renderPhotoDialog()}
+    <script src="/script.js?v=${assetVersion}"></script>
+  </body>
+</html>
+`;
+}
+
+function renderPhotosArchive(photos) {
+  const description = `Статический индекс всех фото из раздела ${photosTitle}.`;
+
+  return `<!doctype html>
+<html lang="ru-RU">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width">
+    <title>Все фото — ${siteName}</title>
+    <meta name="description" content="${escapeAttribute(description)}">
+    <link rel="canonical" href="${siteUrl}/photos/archive/">
+    <link rel="alternate" type="application/rss+xml" title="${escapeAttribute(photosTitle)}" href="${siteUrl}/photos/feed.xml">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Все фото — ${siteName}">
+    <meta property="og:description" content="${escapeAttribute(description)}">
+    <meta property="og:image" content="${siteUrl}/assets/og.png">
+    <meta property="og:url" content="${siteUrl}/photos/archive/">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Все фото — ${siteName}">
+    <meta name="twitter:description" content="${escapeAttribute(description)}">
+    <meta name="twitter:image" content="${siteUrl}/assets/og.png">
+    <link rel="icon" href="/assets/favicon.png">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500;700&family=Lora:wght@600&family=Manrope:wght@800&display=swap">
+    <link rel="stylesheet" href="/styles.css?v=${assetVersion}">
+  </head>
+  <body>
+    <main class="page photos-page">
+      ${renderHeader("/photos/archive/")}
+
+      <section class="photos-intro compact" aria-labelledby="photos-archive-title">
+        <p class="eyebrow">Static index</p>
+        <h1 id="photos-archive-title">Все фото</h1>
+        <a href="/photos/">Вернуться в фотоленту</a>
+      </section>
+
+      <section class="post-index-list" aria-label="Все фото">
+        ${photos.map(renderPhotoIndexLink).join("\n        ")}
+      </section>
+    </main>
+  </body>
+</html>
+`;
+
+  function renderPhotoIndexLink(photo) {
+    return `<a class="post-index-item" href="/photos/${photo.id}/">
+          <time datetime="${escapeAttribute(toIsoDate(photo.date || photo.uploadedAt))}">${escapeHtml(formatDate(photo.date || photo.uploadedAt))}</time>
+          <span>${escapeHtml(makePhotoTitle(photo, 120))}</span>
+        </a>`;
+  }
+}
+
+function renderPhotoPage(photo, newerPhoto, olderPhoto) {
+  const url = `${siteUrl}/photos/${photo.id}/`;
+  const title = `${makePhotoTitle(photo)} — ${photosTitle}`;
+  const description = makePhotoDescription(photo);
+  const image = getPhotoAssetUrl(photo.src);
+  const imageObject = renderPhotoJsonLd(photo, url, description);
+
+  return `<!doctype html>
+<html lang="ru-RU">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width">
+    <title>${escapeHtml(title)}</title>
+    <meta name="description" content="${escapeAttribute(description)}">
+    <link rel="canonical" href="${url}">
+    <link rel="alternate" type="application/rss+xml" title="${escapeAttribute(photosTitle)}" href="${siteUrl}/photos/feed.xml">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="${escapeAttribute(makePhotoTitle(photo, 90))}">
+    <meta property="og:description" content="${escapeAttribute(description)}">
+    <meta property="og:image" content="${escapeAttribute(image)}">
+    <meta property="og:url" content="${url}">
+    <meta property="article:published_time" content="${escapeAttribute(toIsoDate(photo.date || photo.uploadedAt))}">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="${escapeAttribute(makePhotoTitle(photo, 90))}">
+    <meta name="twitter:description" content="${escapeAttribute(description)}">
+    <meta name="twitter:image" content="${escapeAttribute(image)}">
+    <link rel="license" href="${licenseUrl}">
+    <link rel="icon" href="/assets/favicon.png">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500;700&family=Lora:wght@600&family=Manrope:wght@800&display=swap">
+    <link rel="stylesheet" href="/styles.css?v=${assetVersion}">
+    <script type="application/ld+json">${escapeJsonLd(imageObject)}</script>
+  </head>
+  <body>
+    <main class="page photo-detail-page">
+      ${renderHeader(`/photos/${photo.id}/`)}
+
+      <nav class="post-breadcrumb" aria-label="Хлебные крошки">
+        <a href="/photos/">Фото</a>
+        <span aria-hidden="true">/</span>
+        <a href="/photos/archive/">Все фото</a>
+      </nav>
+
+      <article class="photo-detail">
+        <figure class="photo-detail-figure">
+          <a href="${escapeAttribute(photo.src)}">
+            <img src="${escapeAttribute(photo.src)}" width="${escapeAttribute(photo.width || "")}" height="${escapeAttribute(photo.height || "")}" decoding="async" alt="${escapeAttribute(makePhotoAlt(photo))}">
+          </a>
+          <figcaption>
+            <h1>${escapeHtml(makePhotoTitle(photo, 140))}</h1>
+            ${photo.caption ? `<p>${escapeHtml(photo.caption)}</p>` : ""}
+          </figcaption>
+        </figure>
+
+        ${renderPhotoMeta(photo)}
+      </article>
+
+      <nav class="post-nav" aria-label="Соседние фото">
+        ${newerPhoto ? `<a href="/photos/${newerPhoto.id}/">Новее</a>` : "<span></span>"}
+        ${olderPhoto ? `<a href="/photos/${olderPhoto.id}/">Старее</a>` : "<span></span>"}
+      </nav>
+    </main>
+  </body>
+</html>
+`;
+}
+
+function renderPhotoJsonLd(photo, url, description) {
+  const object = {
+    "@context": "https://schema.org",
+    "@type": "ImageObject",
+    name: makePhotoTitle(photo, 110),
+    caption: photo.caption || makePhotoTitle(photo, 110),
+    description,
+    contentUrl: getPhotoAssetUrl(photo.src),
+    url,
+    thumbnailUrl: getPhotoAssetUrl(photo.src),
+    datePublished: toIsoDate(photo.date || photo.uploadedAt),
+    uploadDate: toIsoDate(photo.uploadedAt || photo.date),
+    creator: {
+      "@type": "Person",
+      name: siteName,
+      url: siteUrl,
+    },
+    creditText: siteName,
+    copyrightNotice: `© ${siteName}`,
+    license: licenseUrl,
+    acquireLicensePage: url,
+    isPartOf: {
+      "@type": "CollectionPage",
+      name: photosTitle,
+      url: `${siteUrl}/photos/`,
+    },
+  };
+
+  if (photo.width) object.width = `${photo.width}px`;
+  if (photo.height) object.height = `${photo.height}px`;
+
+  const location = getPhotoLocationLabel(photo);
+  if (location) {
+    object.contentLocation = {
+      "@type": "Place",
+      name: location,
+    };
+  }
+
+  return object;
+}
+
+function renderPhotoCard(photo, index) {
+  const style = photo.width && photo.height ? ` style="aspect-ratio: ${Number(photo.width)} / ${Number(photo.height)}"` : "";
+  const title = makePhotoTitle(photo, 100);
+
+  return `<article class="photo-entry">
+          <a class="photo-card" href="/photos/${photo.id}/"${style} aria-label="${escapeAttribute(title)}">
+            <img src="${escapeAttribute(photo.src)}" loading="${index < 4 ? "eager" : "lazy"}" decoding="async" alt="${escapeAttribute(makePhotoAlt(photo))}">
+            ${photo.hdr ? '<span class="photo-hdr-badge">HDR</span>' : ""}
+          </a>
+          ${renderPhotoInfo(photo)}
+        </article>`;
+}
+
+function renderPhotoInfo(photo) {
+  const technical = photo.technical || {};
+  const settings = (technical.settings || []).filter((item) => item.value);
+  const location = getPhotoLocationLabel(photo);
+
+  return `<div class="photo-info">
+            <div class="photo-info-header">
+              <strong>${escapeHtml(technical.cameraLine || "Leica M6 — плёнка")}</strong>
+            </div>
+            <div class="photo-info-body">
+              <p>${escapeHtml(technical.lensLine || "Плёночная фотография")}</p>
+              <p>${escapeHtml(technical.summary || compactText([formatDimensions(photo), formatFileSize(photo.size)]))}</p>
+              ${location ? `<p class="photo-location">${escapeHtml(location)}</p>` : ""}
+            </div>
+            ${settings.length ? `<div class="photo-settings">
+              ${settings.map((setting) => `<span>${escapeHtml(setting.label === "ISO" ? `ISO ${setting.value}` : setting.value)}</span>`).join("\n              ")}
+            </div>` : ""}
+          </div>`;
+}
+
+function renderPhotoMeta(photo) {
+  const technical = photo.technical || {};
+  const location = getPhotoLocationLabel(photo);
+  const settings = (technical.settings || []).filter((item) => item.value);
+
+  return `<aside class="photo-detail-meta" aria-label="Информация о фото">
+          <dl>
+            <div>
+              <dt>Дата</dt>
+              <dd><time datetime="${escapeAttribute(toIsoDate(photo.date || photo.uploadedAt))}">${escapeHtml(formatDate(photo.date || photo.uploadedAt))}</time></dd>
+            </div>
+            <div>
+              <dt>Камера</dt>
+              <dd>${escapeHtml(technical.cameraLine || "Leica M6 — плёнка")}</dd>
+            </div>
+            <div>
+              <dt>Объектив</dt>
+              <dd>${escapeHtml(technical.lensLine || "Плёночная фотография")}</dd>
+            </div>
+            ${location ? `<div>
+              <dt>Место</dt>
+              <dd>${escapeHtml(location)}</dd>
+            </div>` : ""}
+            ${settings.length ? `<div>
+              <dt>Настройки</dt>
+              <dd>${escapeHtml(settings.map((setting) => setting.label === "ISO" ? `ISO ${setting.value}` : setting.value).join(" · "))}</dd>
+            </div>` : ""}
+            <div>
+              <dt>Файл</dt>
+              <dd>${escapeHtml(compactText([formatDimensions(photo), formatFileSize(photo.size), photo.mimeType]))}</dd>
+            </div>
+            <div>
+              <dt>Лицензия</dt>
+              <dd><a href="${licenseUrl}" target="_blank" rel="license noopener">${licenseName}</a>. Использование разрешено с указанием авторства и ссылки на эту страницу.</dd>
+            </div>
+          </dl>
+        </aside>`;
+}
+
+function renderPhotoDialog() {
+  return `<dialog class="photo-viewer" data-photo-dialog aria-label="Просмотр фотографии">
+      <div class="photo-viewer-bar">
+        <button type="button" data-photo-prev aria-label="Предыдущее фото">‹</button>
+        <button type="button" data-photo-actual>100%</button>
+        <button type="button" data-photo-next aria-label="Следующее фото">›</button>
+        <button type="button" data-photo-close>Закрыть</button>
+      </div>
+      <figure class="photo-viewer-stage">
+        <img data-photo-dialog-image alt="">
+        <figcaption data-photo-dialog-caption></figcaption>
+      </figure>
+    </dialog>`;
 }
 
 function renderStaticPost(post) {
@@ -250,22 +600,26 @@ function renderReactions(reactions) {
 
 function renderHeader(currentPath) {
   const isScreenshots = currentPath.startsWith("/screenshots/");
+  const isPhotos = currentPath.startsWith("/photos/");
   const isAbout = currentPath.startsWith("/about/");
 
   return `<header class="site-header" aria-label="Навигация">
         <a class="brand" href="/">SS/84</a>
         <nav class="path" aria-label="Разделы">
           <a href="/screenshots/"${isScreenshots ? ' aria-current="page"' : ""}>Блог</a>
+          <a href="/photos/"${isPhotos ? ' aria-current="page"' : ""}>Фото</a>
           <a href="/about/"${isAbout ? ' aria-current="page"' : ""}><span class="desktop-name">Серёжа Томилов</span><span class="mobile-name">about</span></a>
         </nav>
       </header>`;
 }
 
-function renderSitemap(posts) {
+function renderSitemap(posts, photos) {
   const staticUrls = [
     { loc: `${siteUrl}/` },
     { loc: `${siteUrl}/about` },
     { loc: `${siteUrl}/screenshots/` },
+    { loc: `${siteUrl}/photos/`, lastmod: photos[0] ? toSitemapDate(photos[0].uploadedAt || photos[0].date) : null },
+    { loc: `${siteUrl}/photos/archive/`, lastmod: photos[0] ? toSitemapDate(photos[0].uploadedAt || photos[0].date) : null },
     { loc: `${siteUrl}/screenshots/posts/`, lastmod: posts[0] ? toSitemapDate(posts[0].edited || posts[0].date) : null },
   ];
 
@@ -274,17 +628,136 @@ function renderSitemap(posts) {
     lastmod: toSitemapDate(post.edited || post.date),
   }));
 
-  const urls = [...staticUrls, ...postUrls];
+  const photoUrls = photos.map((photo) => ({
+    loc: `${siteUrl}/photos/${photo.id}/`,
+    lastmod: toSitemapDate(photo.uploadedAt || photo.date),
+    image: {
+      loc: getPhotoAssetUrl(photo.src),
+      title: makePhotoTitle(photo, 110),
+      caption: photo.caption || makePhotoTitle(photo, 110),
+    },
+  }));
+
+  const urls = [...staticUrls, ...postUrls, ...photoUrls];
 
   return `<?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
 ${urls
   .map((url) => `  <url>
-    <loc>${escapeHtml(url.loc)}</loc>${url.lastmod ? `\n    <lastmod>${escapeHtml(url.lastmod)}</lastmod>` : ""}
+    <loc>${escapeHtml(url.loc)}</loc>${url.lastmod ? `\n    <lastmod>${escapeHtml(url.lastmod)}</lastmod>` : ""}${url.image ? `\n    <image:image>
+      <image:loc>${escapeHtml(url.image.loc)}</image:loc>
+      <image:title>${escapeHtml(url.image.title)}</image:title>
+      <image:caption>${escapeHtml(url.image.caption)}</image:caption>
+      <image:license>${licenseUrl}</image:license>
+    </image:image>` : ""}
   </url>`)
   .join("\n")}
 </urlset>
 `;
+}
+
+function renderMainFeed(posts, photos) {
+  const items = [
+    ...posts.map(makePostFeedItem),
+    ...photos.map(makePhotoFeedItem),
+  ]
+    .sort((a, b) => b.sortDate.getTime() - a.sortDate.getTime())
+    .slice(0, feedLimit);
+
+  return renderRssFeed({
+    title: siteName,
+    description: "Новые записи и фотографии на tomilov.com.",
+    link: `${siteUrl}/`,
+    self: `${siteUrl}/feed.xml`,
+    items,
+  });
+}
+
+function renderScreenshotsFeed(posts) {
+  return renderRssFeed({
+    title: channelTitle,
+    description: `Новые посты канала ${channelTitle}.`,
+    link: `${siteUrl}/screenshots/`,
+    self: `${siteUrl}/screenshots/feed.xml`,
+    items: posts.slice(0, feedLimit).map(makePostFeedItem),
+  });
+}
+
+function renderPhotosFeed(photos) {
+  return renderRssFeed({
+    title: `${photosTitle} — ${siteName}`,
+    description: photosDescription,
+    link: `${siteUrl}/photos/`,
+    self: `${siteUrl}/photos/feed.xml`,
+    items: photos.slice(0, feedLimit).map(makePhotoFeedItem),
+  });
+}
+
+function renderRssFeed({ title, description, link, self, items }) {
+  const latestDate = items[0]?.sortDate || new Date();
+
+  return `<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:media="http://search.yahoo.com/mrss/">
+  <channel>
+    <title>${escapeHtml(title)}</title>
+    <link>${escapeHtml(link)}</link>
+    <description>${escapeHtml(description)}</description>
+    <language>ru-RU</language>
+    <lastBuildDate>${toRssDate(latestDate)}</lastBuildDate>
+    <atom:link href="${escapeAttribute(self)}" rel="self" type="application/rss+xml"/>
+${items.map(renderFeedItem).join("\n")}
+  </channel>
+</rss>
+`;
+}
+
+function renderFeedItem(item) {
+  const category = item.category ? `\n      <category>${escapeHtml(item.category)}</category>` : "";
+  const media = item.mediaUrl ? `\n      <media:content url="${escapeAttribute(item.mediaUrl)}" medium="image"${item.mediaType ? ` type="${escapeAttribute(item.mediaType)}"` : ""}/>` : "";
+
+  return `    <item>
+      <title>${escapeHtml(item.title)}</title>
+      <link>${escapeHtml(item.link)}</link>
+      <guid isPermaLink="true">${escapeHtml(item.guid)}</guid>
+      <pubDate>${toRssDate(item.pubDate)}</pubDate>
+      <description>${escapeHtml(item.description)}</description>${category}${media}
+    </item>`;
+}
+
+function makePostFeedItem(post) {
+  const link = `${siteUrl}/screenshots/${post.id}/`;
+  const mediaUrl = getSocialImage(post);
+
+  return {
+    title: makePostTitle(post, 120),
+    link,
+    guid: link,
+    pubDate: post.date,
+    sortDate: parseDate(post.date),
+    description: makeDescription(post),
+    category: channelTitle,
+    mediaUrl,
+    mediaType: mediaUrl ? guessMimeType(mediaUrl) : "",
+  };
+}
+
+function makePhotoFeedItem(photo) {
+  const link = `${siteUrl}/photos/${photo.id}/`;
+  const mediaUrl = getPhotoAssetUrl(photo.src);
+  const date = photo.uploadedAt || photo.date;
+
+  return {
+    title: makePhotoTitle(photo, 120),
+    link,
+    guid: link,
+    pubDate: date,
+    sortDate: parseDate(date),
+    description: `${makePhotoDescription(photo)} Лицензия: ${licenseName}, использование с указанием авторства и ссылки на страницу фото.`,
+    category: photosTitle,
+    mediaUrl,
+    mediaType: photo.mimeType || guessMimeType(mediaUrl),
+  };
 }
 
 function removeStalePostDirs(postIds) {
@@ -297,13 +770,30 @@ function removeStalePostDirs(postIds) {
   }
 }
 
-function getCurrentAssetVersion() {
-  const screenshotsIndex = path.join(rootDir, "screenshots", "index.html");
-  if (!existsSync(screenshotsIndex)) return "20260526-1549";
+function removeStalePhotoDirs(photoIds) {
+  for (const entry of readdirSync(photosDir, { withFileTypes: true })) {
+    if (!entry.isDirectory() || entry.name === "archive" || photoIds.has(entry.name)) {
+      continue;
+    }
 
-  const html = readFileSync(screenshotsIndex, "utf8");
-  const match = html.match(/\/styles\.css\?v=([^"]+)/);
-  return match?.[1] || "20260526-1549";
+    rmSync(path.join(photosDir, entry.name), { recursive: true, force: true });
+  }
+}
+
+function getCurrentAssetVersion() {
+  const homeIndex = path.join(rootDir, "index.html");
+  const screenshotsIndex = path.join(rootDir, "screenshots", "index.html");
+  const photosIndex = path.join(rootDir, "photos", "index.html");
+
+  for (const sourcePath of [homeIndex, photosIndex, screenshotsIndex]) {
+    if (!existsSync(sourcePath)) continue;
+
+    const html = readFileSync(sourcePath, "utf8");
+    const match = html.match(/\/styles\.css\?v=([^"]+)/);
+    if (match) return match[1];
+  }
+
+  return "20260531-photo-info";
 }
 
 function makePostTitle(post, maxLength = 72) {
@@ -339,7 +829,81 @@ function getTelegramAssetUrl(src) {
   return `${telegramMediaBase}${src}`;
 }
 
+function readJsonIfExists(filePath, fallback) {
+  if (!existsSync(filePath)) {
+    return fallback;
+  }
+
+  return JSON.parse(readFileSync(filePath, "utf8"));
+}
+
+function getPhotoSortKey(photo) {
+  return photo.uploadedAt || photo.id || photo.date || "";
+}
+
+function makePhotoTitle(photo, maxLength = 72) {
+  const caption = normalizeWhitespace(photo.caption);
+  const title = caption || compactText([
+    getPhotoLocationLabel(photo),
+    photo.technical?.cameraLine,
+    formatDate(photo.date || photo.uploadedAt),
+  ]) || `Фото от ${formatDate(photo.date || photo.uploadedAt)}`;
+
+  return truncate(title, maxLength);
+}
+
+function makePhotoDescription(photo) {
+  const description = compactText([
+    normalizeWhitespace(photo.caption),
+    getPhotoLocationLabel(photo),
+    photo.technical?.cameraLine,
+    photo.technical?.lensLine,
+    formatDate(photo.date || photo.uploadedAt),
+  ]) || `Фото Серёжи Томилова от ${formatDate(photo.date || photo.uploadedAt)}.`;
+
+  return truncate(description, 156);
+}
+
+function makePhotoAlt(photo) {
+  return normalizeWhitespace(photo.alt || photo.caption) || makePhotoTitle(photo, 100);
+}
+
+function getPhotoLocationLabel(photo) {
+  const location = photo.location || {};
+  const value = normalizeWhitespace(location.label || location.name);
+  const normalized = value.toLowerCase().replace(/^локация:?\s*/, "");
+
+  if (!value || normalized === "не указана" || /^-?\d+(?:\.\d+)?,\s*-?\d+(?:\.\d+)?$/.test(value)) {
+    return "";
+  }
+
+  return value;
+}
+
+function getPhotoAssetUrl(src) {
+  if (!src) return `${siteUrl}/assets/og.png`;
+  if (/^https?:\/\//.test(src)) return src;
+  return `${siteUrl}${src}`;
+}
+
+function compactText(values) {
+  return values.filter(Boolean).join(" · ");
+}
+
+function formatDimensions(photo) {
+  return photo.width && photo.height ? `${photo.width} × ${photo.height}` : "";
+}
+
+function formatFileSize(value) {
+  if (!value) return "";
+  if (value >= 1024 * 1024) return `${(value / (1024 * 1024)).toFixed(1).replace(".", ",")} MB`;
+  if (value >= 1024) return `${Math.round(value / 1024)} KB`;
+  return `${value} B`;
+}
+
 function normalizeWhitespace(value = "") {
+  if (value == null) return "";
+
   return String(value).replace(/\s+/g, " ").trim();
 }
 
@@ -366,6 +930,25 @@ function toIsoDate(value) {
 
 function toSitemapDate(value) {
   return toIsoDate(value).slice(0, 10);
+}
+
+function toRssDate(value) {
+  return parseDate(value).toUTCString();
+}
+
+function parseDate(value) {
+  const date = value instanceof Date ? value : new Date(value);
+  if (!Number.isNaN(date.getTime())) return date;
+  return new Date();
+}
+
+function guessMimeType(value = "") {
+  const pathname = String(value).split("?")[0].toLowerCase();
+  if (pathname.endsWith(".png")) return "image/png";
+  if (pathname.endsWith(".webp")) return "image/webp";
+  if (pathname.endsWith(".gif")) return "image/gif";
+  if (pathname.endsWith(".avif")) return "image/avif";
+  return "image/jpeg";
 }
 
 function escapeHtml(value = "") {

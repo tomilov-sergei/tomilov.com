@@ -1,0 +1,17 @@
+[Unit]
+Description=tomilov.com photo upload server
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=www-data
+Group=www-data
+EnvironmentFile=/etc/tomilov-photo-upload.env
+WorkingDirectory=/var/www/tomilov.com/current
+ExecStart=/usr/bin/python3 /var/www/tomilov.com/current/tools/photo_upload_server.py
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target

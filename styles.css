@@ -529,6 +529,357 @@ a {
   cursor: pointer;
 }
 
+.photos-page {
+  max-width: 1180px;
+}
+
+.photos-intro {
+  display: grid;
+  gap: 14px;
+  padding: 88px 8px 34px;
+}
+
+.photos-intro h1 {
+  max-width: 760px;
+  font-family: Lora, Georgia, serif;
+  font-size: clamp(54px, 9vw, 112px);
+  font-weight: 600;
+  line-height: 0.95;
+}
+
+.photos-footer {
+  display: grid;
+  gap: 10px;
+  padding: 18px 8px 72px;
+}
+
+.photos-footer p {
+  max-width: 620px;
+  margin: 0;
+  color: var(--muted);
+  font-family: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 13px;
+  font-weight: 700;
+  line-height: 1.55;
+}
+
+.photos-footer a {
+  width: fit-content;
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+}
+
+.photo-feed {
+  columns: 3 260px;
+  column-gap: 12px;
+  padding-bottom: 28px;
+}
+
+.photo-feed .feed-status {
+  column-span: all;
+}
+
+.photo-entry {
+  display: block;
+  width: 100%;
+  margin: 0 0 12px;
+  overflow: hidden;
+  break-inside: avoid;
+  border-radius: 8px;
+  background: var(--panel-bg);
+  box-shadow: var(--shadow);
+}
+
+.photo-card {
+  position: relative;
+  display: block;
+  width: 100%;
+  min-height: 180px;
+  padding: 0;
+  overflow: hidden;
+  border: 0;
+  background: #eef0f3;
+  cursor: zoom-in;
+}
+
+.photo-card img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  dynamic-range-limit: standard;
+}
+
+.photo-card:hover img {
+  filter: saturate(1.03) contrast(1.02);
+}
+
+.photo-hdr-badge {
+  position: absolute;
+  inset: 10px 10px auto auto;
+  padding: 5px 7px;
+  border-radius: 999px;
+  background: rgb(0 0 0 / 0.55);
+  color: #fff;
+  font-family: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0;
+}
+
+.photo-info {
+  overflow: hidden;
+  background: rgb(28 28 30 / 0.92);
+  color: rgb(235 235 245 / 0.86);
+  font-family: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+}
+
+.photo-info-header {
+  padding: 11px 14px;
+  background: rgb(58 58 63 / 0.88);
+}
+
+.photo-info-header strong {
+  display: block;
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1.25;
+}
+
+.photo-info-body {
+  display: grid;
+  gap: 5px;
+  padding: 12px 14px 13px;
+  border-bottom: 1px solid rgb(255 255 255 / 0.08);
+}
+
+.photo-info-body p {
+  margin: 0;
+  color: rgb(235 235 245 / 0.62);
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 1.35;
+}
+
+.photo-info-body .photo-location {
+  color: rgb(235 235 245 / 0.78);
+}
+
+.photo-settings {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  align-items: center;
+}
+
+.photo-settings span {
+  min-width: 0;
+  padding: 9px 6px 10px;
+  overflow: hidden;
+  border-right: 1px solid rgb(255 255 255 / 0.12);
+  color: rgb(235 235 245 / 0.72);
+  font-size: 11px;
+  font-weight: 700;
+  line-height: 1.1;
+  text-align: center;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.photo-settings span:last-child {
+  border-right: 0;
+}
+
+.photo-detail-page {
+  max-width: 1180px;
+}
+
+.photo-detail {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(280px, 340px);
+  gap: 18px;
+  align-items: start;
+}
+
+.photo-detail-figure {
+  overflow: hidden;
+  margin: 0;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--panel-bg);
+  box-shadow: var(--shadow);
+}
+
+.photo-detail-figure a {
+  display: block;
+  background: #eef0f3;
+}
+
+.photo-detail-figure img {
+  display: block;
+  width: 100%;
+  height: auto;
+  dynamic-range-limit: no-limit;
+}
+
+.photo-detail-figure figcaption {
+  display: grid;
+  gap: 12px;
+  padding: 22px 24px 24px;
+}
+
+.photo-detail-figure h1 {
+  max-width: 780px;
+  font-family: Lora, Georgia, serif;
+  font-size: clamp(30px, 4vw, 48px);
+  font-weight: 600;
+  line-height: 1.1;
+}
+
+.photo-detail-figure p {
+  max-width: 700px;
+  font-size: 17px;
+  line-height: 1.58;
+}
+
+.photo-detail-meta {
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--panel-bg);
+  box-shadow: var(--shadow);
+  font-family: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+}
+
+.photo-detail-meta dl {
+  margin: 0;
+}
+
+.photo-detail-meta div {
+  display: grid;
+  gap: 5px;
+  padding: 14px 16px;
+  border-bottom: 1px solid color-mix(in srgb, var(--muted) 18%, transparent);
+}
+
+.photo-detail-meta div:last-child {
+  border-bottom: 0;
+}
+
+.photo-detail-meta dt {
+  color: var(--muted);
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.photo-detail-meta dd {
+  margin: 0;
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 1.45;
+}
+
+.photo-detail-meta a {
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+}
+
+.photo-viewer {
+  width: 100vw;
+  max-width: none;
+  height: 100vh;
+  max-height: none;
+  padding: 0;
+  border: 0;
+  background: rgb(12 12 12 / 0.94);
+  color: #fff;
+}
+
+.photo-viewer::backdrop {
+  background: rgb(0 0 0 / 0.72);
+}
+
+.photo-viewer-bar {
+  position: fixed;
+  z-index: 1;
+  inset: 12px 12px auto;
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  pointer-events: none;
+}
+
+.photo-viewer-bar button {
+  min-width: 44px;
+  min-height: 36px;
+  border: 1px solid rgb(255 255 255 / 0.2);
+  border-radius: 999px;
+  background: rgb(0 0 0 / 0.46);
+  color: #fff;
+  cursor: pointer;
+  font-family: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 12px;
+  font-weight: 700;
+  pointer-events: auto;
+}
+
+.photo-viewer-stage {
+  display: grid;
+  min-height: 100%;
+  margin: 0;
+  padding: 64px 18px 28px;
+  overflow: auto;
+  place-items: center;
+}
+
+.photo-viewer-stage img {
+  display: block;
+  width: auto;
+  max-width: 100%;
+  max-height: calc(100vh - 132px);
+  border-radius: 4px;
+  object-fit: contain;
+  cursor: zoom-in;
+  dynamic-range-limit: no-limit;
+}
+
+.photo-viewer-stage figcaption {
+  max-width: 780px;
+  margin-top: 16px;
+  color: rgb(255 255 255 / 0.72);
+  font-size: 14px;
+  line-height: 1.5;
+  text-align: center;
+}
+
+.photo-viewer.is-actual-size .photo-viewer-stage {
+  display: block;
+}
+
+.photo-viewer.is-actual-size .photo-viewer-stage img {
+  max-width: none;
+  max-height: none;
+  margin: 0 auto;
+  cursor: zoom-out;
+}
+
+@media (dynamic-range: high) {
+  .photo-viewer-bar::before {
+    align-self: center;
+    padding: 6px 8px;
+    border-radius: 999px;
+    background: rgb(0 0 0 / 0.4);
+    color: rgb(255 255 255 / 0.72);
+    content: "HDR display";
+    font-family: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0;
+    pointer-events: auto;
+  }
+}
+
 @media (max-width: 1199px) {
   .page {
     width: min(100%, 390px);
@@ -646,5 +997,57 @@ a {
     grid-template-columns: 1fr;
     gap: 4px;
     padding: 14px 16px;
+  }
+
+  .photos-page {
+    width: min(100%, 430px);
+  }
+
+  .photos-intro {
+    padding: 64px 8px 28px;
+  }
+
+  .photos-intro h1 {
+    font-size: 54px;
+  }
+
+  .photos-footer {
+    padding: 12px 8px 60px;
+  }
+
+  .photo-feed {
+    columns: 1;
+  }
+
+  .photo-detail-page {
+    width: min(100%, 430px);
+  }
+
+  .photo-detail {
+    grid-template-columns: 1fr;
+  }
+
+  .photo-detail-figure {
+    border-radius: 10px;
+  }
+
+  .photo-detail-figure figcaption {
+    padding: 20px;
+  }
+
+  .photo-detail-figure h1 {
+    font-size: 30px;
+  }
+
+  .photo-viewer-bar {
+    inset: 8px 8px auto;
+  }
+
+  .photo-viewer-stage {
+    padding: 58px 10px 24px;
+  }
+
+  .photo-viewer-stage img {
+    max-height: calc(100vh - 126px);
   }
 }

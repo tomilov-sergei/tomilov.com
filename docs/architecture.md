@@ -4,11 +4,14 @@ This file is the project map for future Codex chats.
 
 ## Current Product
 
-`tomilov.com` is a personal static site with three public sections:
+`tomilov.com` is a personal static site with four public sections:
 
 - `/` - home page with a Miro live embed.
 - `/about/` - talks, videos, and personal profile material.
 - `/screenshots/` - archive of the Telegram channel "Screenshot of the Day".
+- `/photos/` - personal photo feed.
+
+Product direction for `/screenshots/`: a public collection of observations about digital products, design, interfaces, technology, and beautiful things. Telegram is the publishing source; the site should be the durable, searchable, indexable, and navigable version of that thinking. See `docs/product.md`.
 
 ## Runtime Stack
 
@@ -22,11 +25,15 @@ This file is the project map for future Codex chats.
 - `index.html` - home page.
 - `about/index.html` - about page.
 - `screenshots/index.html` - Telegram archive page.
+- `photos/index.html` - public photo feed.
 - `styles.css` - shared styles.
-- `script.js` - YouTube activation and Telegram feed rendering.
+- `script.js` - YouTube activation, Telegram feed rendering, photo feed rendering, and photo viewer.
 - `assets/telegram/posts.json` - imported Telegram post database.
+- `assets/photos/photos.json` - uploaded photo manifest.
+- `feed.xml`, `screenshots/feed.xml`, `photos/feed.xml` - RSS feeds generated from the same manifests as SEO pages.
 - `tools/import-telegram-export.mjs` - one-off/repeatable Telegram Desktop export importer.
 - `tools/telegram_live_importer.py` - Telegram Bot API webhook importer for new posts.
+- `tools/photo_upload_server.py` - token-protected Apple Shortcut upload endpoint.
 - `tools/deploy-site.sh` - production deployment script.
 - `ops/` - nginx/systemd/env examples for live Telegram import.
 
@@ -43,10 +50,20 @@ Telegram content currently flows into the site in two ways:
 Production serves live Telegram media through nginx `/assets/telegram/live/...` proxying to Timeweb S3.
 The live importer's `POSTS_JSON_PATH` must point to the same shared `assets/telegram/posts.json` that nginx exposes through `/var/www/tomilov.com/current/assets/telegram`.
 
+Photo content flows through a token-protected Apple Shortcut endpoint:
+
+Apple Photos share sheet -> Apple Shortcut -> `/photos/upload` -> Python service on `127.0.0.1:8788` -> `assets/photos/photos.json` and `assets/photos/originals/**`.
+
+Photo originals are intentionally stored without canvas processing, resizing, or transcoding so HDR/Ultra HDR metadata and gain maps can survive. The Shortcut must not use image transform actions. The browser is responsible for actual HDR display support.
+
+Static SEO pages, sitemap, and RSS are generated from `assets/telegram/posts.json` and `assets/photos/photos.json`. The full deploy path uses `tools/generate-seo-pages.mjs`; the production photo upload path uses `tools/generate_photo_seo.py` so new photos update `/photos/feed.xml` and `/feed.xml` immediately even when Node.js is unavailable on the VPS.
+
 ## Telegram Storage Policy
 
 Production shared storage is the source of truth for live Telegram content:
 
+- Production shared storage root is `/mnt/tomilov-data/tomilov.com` on the second disk.
+- Public site paths stay under `/var/www/tomilov.com/current` through release and asset symlinks.
 - `shared/assets/telegram/posts.json` is pulled from production before SEO page generation during deploy.
 - Local `assets/telegram/` is a working mirror, not the default authority.
 - Media deploys are additive by default and do not use `--delete`, so server-side live media is not removed by an older local copy.
@@ -58,6 +75,8 @@ Production shared storage is the source of truth for live Telegram content:
 The deploy script packages the static site, uploads it to the VPS, creates a timestamped release, and switches `/var/www/tomilov.com/current` to the new release.
 
 Telegram media is synced separately into shared storage so large media files are not packed into every release.
+
+Photo media also lives in shared storage. Releases symlink `assets/photos` to `shared/assets/photos`, and the deploy script pulls production `photos.json` by default before packaging.
 
 ## Project Memory Rule
 

@@ -18,9 +18,14 @@ document.addEventListener("click", (event) => {
 
 const feed = document.querySelector("[data-telegram-feed]");
 const telegramMediaBase = "https://s3.twcstorage.ru/00df5bd5-137f-492a-8d95-c7ee2cc2d851";
+const photoFeed = document.querySelector("[data-photo-feed]");
 
 if (feed) {
   initTelegramFeed(feed);
+}
+
+if (photoFeed) {
+  initPhotoFeed(photoFeed);
 }
 
 async function initTelegramFeed(feedElement) {
@@ -231,4 +236,255 @@ function formatDate(value) {
     month: "long",
     year: "numeric",
   }).format(new Date(value));
+}
+
+async function initPhotoFeed(feedElement) {
+  const status = document.querySelector("[data-photo-status]");
+  const hasStaticFeed = feedElement.hasAttribute("data-static-photo-feed");
+
+  try {
+    const response = await fetch("/assets/photos/photos.json", { cache: "no-store" });
+
+    if (!response.ok) {
+      throw new Error(`HTTP ${response.status}`);
+    }
+
+    const data = await response.json();
+    const photos = getPhotosByUploadOrder(data.photos || []);
+
+    if (!photos.length) {
+      if (status) {
+        status.textContent = "Фотографий пока нет.";
+      }
+      return;
+    }
+
+    feedElement.replaceChildren();
+    feedElement.removeAttribute("data-static-photo-feed");
+    status?.remove();
+    renderPhotos(feedElement, photos);
+    initPhotoViewer(photos);
+  } catch (error) {
+    if (status) {
+      status.textContent = "Не получилось загрузить фотографии.";
+    } else if (!hasStaticFeed) {
+      feedElement.textContent = "Не получилось загрузить фотографии.";
+    }
+    console.error(error);
+  }
+}
+
+function renderPhotos(feedElement, photos) {
+  const fragment = document.createDocumentFragment();
+
+  for (const [index, photo] of photos.entries()) {
+    fragment.append(createPhotoCard(photo, index));
+  }
+
+  feedElement.append(fragment);
+}
+
+function getPhotosByUploadOrder(photos) {
+  return [...photos].sort((first, second) => getPhotoUploadKey(second).localeCompare(getPhotoUploadKey(first)));
+}
+
+function getPhotoUploadKey(photo) {
+  return photo.uploadedAt || photo.id || photo.date || "";
+}
+
+function createPhotoCard(photo, index) {
+  const article = document.createElement("article");
+  article.className = "photo-entry";
+
+  const button = document.createElement("button");
+  button.className = "photo-card";
+  button.type = "button";
+  button.dataset.photoIndex = String(index);
+  button.setAttribute("aria-label", photo.caption || `Открыть фото ${index + 1}`);
+
+  if (photo.width && photo.height) {
+    button.style.aspectRatio = `${photo.width} / ${photo.height}`;
+  }
+
+  const img = document.createElement("img");
+  img.src = photo.src;
+  img.loading = index < 4 ? "eager" : "lazy";
+  img.decoding = "async";
+  img.alt = photo.caption || "";
+  button.append(img);
+
+  if (photo.hdr) {
+    const badge = document.createElement("span");
+    badge.className = "photo-hdr-badge";
+    badge.textContent = "HDR";
+    button.append(badge);
+  }
+
+  article.append(button, createPhotoInfo(photo));
+
+  return article;
+}
+
+function createPhotoInfo(photo) {
+  const technical = photo.technical || {};
+  const location = photo.location || {};
+  const wrapper = document.createElement("div");
+  wrapper.className = "photo-info";
+
+  const header = document.createElement("div");
+  header.className = "photo-info-header";
+
+  const title = document.createElement("strong");
+  title.textContent = technical.cameraLine || "Leica M6 — плёнка";
+  header.append(title);
+
+  wrapper.append(header);
+
+  const body = document.createElement("div");
+  body.className = "photo-info-body";
+
+  const lens = document.createElement("p");
+  lens.textContent = technical.lensLine || "Плёночная фотография";
+  body.append(lens);
+
+  const summary = document.createElement("p");
+  summary.textContent = technical.summary || compactText([formatDimensions(photo), formatFileSize(photo.size)]);
+  body.append(summary);
+
+  const locationLabel = normalizeLocationLabel(location.label || location.name);
+
+  if (locationLabel) {
+    const locationLine = document.createElement("p");
+    locationLine.className = "photo-location";
+    locationLine.textContent = locationLabel;
+    body.append(locationLine);
+  }
+  wrapper.append(body);
+
+  const settings = (technical.settings || []).filter((item) => item.value);
+
+  if (settings.length) {
+    const settingsRow = document.createElement("div");
+    settingsRow.className = "photo-settings";
+
+    for (const setting of settings) {
+      const item = document.createElement("span");
+      item.textContent = setting.label === "ISO" ? `ISO ${setting.value}` : setting.value;
+      settingsRow.append(item);
+    }
+
+    wrapper.append(settingsRow);
+  }
+
+  return wrapper;
+}
+
+function initPhotoViewer(photos) {
+  const dialog = document.querySelector("[data-photo-dialog]");
+  const image = document.querySelector("[data-photo-dialog-image]");
+  const caption = document.querySelector("[data-photo-dialog-caption]");
+  const close = document.querySelector("[data-photo-close]");
+  const prev = document.querySelector("[data-photo-prev]");
+  const next = document.querySelector("[data-photo-next]");
+  const actual = document.querySelector("[data-photo-actual]");
+  let activeIndex = 0;
+  let isActualSize = false;
+
+  if (!dialog || !image || !caption) return;
+
+  document.addEventListener("click", (event) => {
+    const trigger = event.target.closest("[data-photo-index]");
+    if (!trigger) return;
+
+    activeIndex = Number(trigger.dataset.photoIndex || 0);
+    openPhoto(activeIndex);
+  });
+
+  close?.addEventListener("click", () => dialog.close());
+  prev?.addEventListener("click", () => openPhoto(activeIndex - 1));
+  next?.addEventListener("click", () => openPhoto(activeIndex + 1));
+  actual?.addEventListener("click", () => setActualSize(!isActualSize));
+  image.addEventListener("click", () => setActualSize(!isActualSize));
+
+  dialog.addEventListener("keydown", (event) => {
+    if (event.key === "ArrowLeft") {
+      event.preventDefault();
+      openPhoto(activeIndex - 1);
+    } else if (event.key === "ArrowRight") {
+      event.preventDefault();
+      openPhoto(activeIndex + 1);
+    }
+  });
+
+  dialog.addEventListener("close", () => {
+    image.removeAttribute("src");
+    setActualSize(false);
+  });
+
+  function openPhoto(index) {
+    activeIndex = (index + photos.length) % photos.length;
+    const photo = photos[activeIndex];
+
+    setActualSize(false);
+    image.src = photo.src;
+    image.alt = photo.caption || "";
+    caption.textContent = photo.caption || makePhotoCaption(photo);
+
+    if (photo.width && photo.height) {
+      image.style.aspectRatio = `${photo.width} / ${photo.height}`;
+    } else {
+      image.style.removeProperty("aspect-ratio");
+    }
+
+    if (!dialog.open) {
+      dialog.showModal();
+    }
+  }
+
+  function setActualSize(value) {
+    isActualSize = value;
+    dialog.classList.toggle("is-actual-size", isActualSize);
+    actual.textContent = isActualSize ? "Вписать" : "100%";
+  }
+}
+
+function makePhotoCaption(photo) {
+  const technical = photo.technical || {};
+  const location = photo.location || {};
+  const locationLabel = normalizeLocationLabel(location.label || location.name);
+
+  return compactText([
+    technical.cameraLine,
+    technical.lensLine,
+    locationLabel,
+    formatDate(photo.date),
+  ]);
+}
+
+function compactText(values) {
+  return values.filter(Boolean).join(" · ");
+}
+
+function formatDimensions(photo) {
+  return photo.width && photo.height ? `${photo.width} × ${photo.height}` : "";
+}
+
+function formatFileSize(value) {
+  if (!value) return "";
+  if (value >= 1024 * 1024) return `${(value / (1024 * 1024)).toFixed(1).replace(".", ",")} MB`;
+  if (value >= 1024) return `${Math.round(value / 1024)} KB`;
+  return `${value} B`;
+}
+
+function normalizeLocationLabel(value) {
+  if (!value) return "";
+
+  const text = String(value).trim();
+  const normalized = text.toLowerCase().replace(/^локация:?\s*/, "");
+
+  if (!text || normalized === "не указана" || /^-?\d+(?:\.\d+)?,\s*-?\d+(?:\.\d+)?$/.test(text)) {
+    return "";
+  }
+
+  return text;
 }
