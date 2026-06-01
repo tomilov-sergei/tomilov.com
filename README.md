@@ -136,7 +136,7 @@ RSS-фиды генерируются из тех же данных:
 1. Создать бота через BotFather и добавить его админом в канал.
 2. На VPS создать `/etc/tomilov-telegram-live.env` по примеру `ops/telegram-live-importer.env.example`.
 3. Подключить nginx location из `ops/nginx-telegram-webhook.conf.example`.
-4. Установить systemd unit по примеру `ops/telegram-live-importer.service.example`.
+4. Установить systemd unit `/etc/systemd/system/tomilov-telegram-live.service` по примеру `ops/telegram-live-importer.service.example`.
 5. Привязать webhook:
 
 ```sh
