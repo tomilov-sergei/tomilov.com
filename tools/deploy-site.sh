@@ -90,7 +90,7 @@ if [ ! -d '$REMOTE_ROOT/current' ]; then
 fi
 cd '$REMOTE_ROOT/current'
 python3 tools/generate_photo_seo.py
-chown -R www-data:www-data photos feed.xml sitemap.xml '$REMOTE_STORAGE_ROOT/shared/assets/photos'
+chown -R www-data:www-data photos en feed.xml sitemap.xml '$REMOTE_STORAGE_ROOT/shared/assets/photos'
 printf 'Refreshed photo pages in current release\n'
 find photos -maxdepth 2 -type f | sort"
   exit 0
@@ -136,6 +136,7 @@ COPYFILE_DISABLE=1 tar --no-xattrs --exclude "assets/telegram" --exclude "assets
   yandex_251bf4498768ab1a.html \
   assets \
   about \
+  en \
   photos \
   ops \
   screenshots \

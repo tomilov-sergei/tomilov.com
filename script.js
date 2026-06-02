@@ -1,8 +1,199 @@
+const telegramMediaBase = "https://s3.twcstorage.ru/00df5bd5-137f-492a-8d95-c7ee2cc2d851";
+const storedLanguageKey = "tomilov-language";
+
+const ui = {
+  ru: {
+    postsEmpty: "Постов пока нет.",
+    postsLoadError: "Не получилось загрузить архив.",
+    photosEmpty: "Фотографий пока нет.",
+    photosLoadError: "Не получилось загрузить фотографии.",
+    openPhoto: "Открыть фото",
+    watchVideo: "Смотреть видео",
+    filmCamera: "Leica M6 — плёнка",
+    filmPhoto: "Плёночная фотография",
+    fit: "Вписать",
+    actual: "100%",
+  },
+  en: {
+    postsEmpty: "No posts yet.",
+    postsLoadError: "Could not load the archive.",
+    photosEmpty: "No photos yet.",
+    photosLoadError: "Could not load photos.",
+    openPhoto: "Open photo",
+    watchVideo: "Watch video",
+    filmCamera: "Leica M6 — film",
+    filmPhoto: "Film photograph",
+    fit: "Fit",
+    actual: "100%",
+  },
+};
+
+let photoViewerState = null;
+
 document.addEventListener("click", (event) => {
-  const trigger = event.target.closest("[data-youtube]");
+  const languageLink = event.target.closest("[data-language-link]");
+  if (languageLink) {
+    handleLanguageClick(event, languageLink);
+    return;
+  }
 
-  if (!trigger) return;
+  const photoTrigger = event.target.closest("[data-photo-index]");
+  if (photoTrigger) {
+    event.preventDefault();
+    openPhoto(Number(photoTrigger.dataset.photoIndex || 0));
+    return;
+  }
 
+  const youtubeTrigger = event.target.closest("[data-youtube]");
+  if (youtubeTrigger) {
+    activateYouTube(youtubeTrigger);
+  }
+});
+
+window.addEventListener("popstate", () => {
+  swapPage(location.href, { push: false, remember: false }).catch(() => {
+    location.reload();
+  });
+});
+
+initPage();
+applySavedLanguage();
+
+function initPage() {
+  updateLanguageSwitcherState();
+
+  const feed = document.querySelector("[data-telegram-feed]");
+  if (feed && !feed.dataset.feedReady) {
+    feed.dataset.feedReady = "true";
+    initTelegramFeed(feed);
+  }
+
+  const photoFeed = document.querySelector("[data-photo-feed]");
+  if (photoFeed && !photoFeed.dataset.feedReady) {
+    photoFeed.dataset.feedReady = "true";
+    initPhotoFeed(photoFeed);
+  }
+}
+
+function currentLanguage() {
+  const page = document.querySelector("[data-page-lang]");
+  if (page?.dataset.pageLang) return page.dataset.pageLang;
+  return location.pathname.startsWith("/en/") || location.pathname === "/en" ? "en" : "ru";
+}
+
+function getUi(lang = currentLanguage()) {
+  return ui[lang] || ui.ru;
+}
+
+function handleLanguageClick(event, link) {
+  if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey || event.button !== 0) return;
+
+  event.preventDefault();
+  const lang = link.dataset.lang || "ru";
+  localStorage.setItem(storedLanguageKey, lang);
+
+  swapPage(link.href, { push: true, remember: true }).catch(() => {
+    window.location.href = link.href;
+  });
+}
+
+function applySavedLanguage() {
+  const saved = localStorage.getItem(storedLanguageKey);
+  if (!saved || saved === currentLanguage()) return;
+
+  const link = document.querySelector(`[data-language-link][data-lang="${saved}"]`);
+  if (!link) return;
+
+  swapPage(link.href, { push: false, replace: true, remember: false }).catch(() => {});
+}
+
+async function swapPage(url, options = {}) {
+  const nextUrl = new URL(url, location.href);
+  if (nextUrl.origin !== location.origin) {
+    window.location.href = nextUrl.href;
+    return;
+  }
+
+  const response = await fetch(nextUrl.href, {
+    headers: { Accept: "text/html" },
+  });
+
+  if (!response.ok) {
+    throw new Error(`HTTP ${response.status}`);
+  }
+
+  const html = await response.text();
+  const nextDocument = new DOMParser().parseFromString(html, "text/html");
+  const nextBody = nextDocument.body;
+
+  if (!nextBody?.children.length) {
+    throw new Error("empty_document");
+  }
+
+  document.documentElement.lang = nextDocument.documentElement.lang || document.documentElement.lang;
+  replaceHead(nextDocument);
+  replaceBody(nextBody);
+
+  if (options.push) {
+    history.pushState({}, "", nextUrl.href);
+  } else if (options.replace) {
+    history.replaceState({}, "", nextUrl.href);
+  }
+
+  if (options.remember) {
+    localStorage.setItem(storedLanguageKey, currentLanguage());
+  }
+
+  initPage();
+  window.scrollTo({ top: 0, behavior: "auto" });
+}
+
+function replaceHead(nextDocument) {
+  document.title = nextDocument.title;
+
+  const selectors = [
+    'meta[name="description"]',
+    'meta[property^="og:"]',
+    'meta[name^="twitter:"]',
+    'meta[property^="article:"]',
+    'link[rel="canonical"]',
+    'link[rel="alternate"]',
+    'link[rel="license"]',
+    'script[type="application/ld+json"]',
+  ];
+
+  document.head.querySelectorAll(selectors.join(",")).forEach((node) => node.remove());
+
+  for (const node of nextDocument.head.querySelectorAll(selectors.join(","))) {
+    document.head.append(document.importNode(node, true));
+  }
+}
+
+function replaceBody(nextBody) {
+  for (const attribute of [...document.body.attributes]) {
+    document.body.removeAttribute(attribute.name);
+  }
+
+  for (const attribute of [...nextBody.attributes]) {
+    document.body.setAttribute(attribute.name, attribute.value);
+  }
+
+  document.body.replaceChildren(...[...nextBody.childNodes].map((node) => document.importNode(node, true)));
+}
+
+function updateLanguageSwitcherState() {
+  const lang = currentLanguage();
+
+  for (const link of document.querySelectorAll("[data-language-link]")) {
+    if (link.dataset.lang === lang) {
+      link.setAttribute("aria-current", "true");
+    } else {
+      link.removeAttribute("aria-current");
+    }
+  }
+}
+
+function activateYouTube(trigger) {
   const videoId = trigger.getAttribute("data-youtube");
   const title = trigger.getAttribute("aria-label") || "YouTube video";
   const iframe = document.createElement("iframe");
@@ -14,21 +205,11 @@ document.addEventListener("click", (event) => {
 
   trigger.replaceChildren(iframe);
   trigger.classList.add("is-playing");
-});
-
-const feed = document.querySelector("[data-telegram-feed]");
-const telegramMediaBase = "https://s3.twcstorage.ru/00df5bd5-137f-492a-8d95-c7ee2cc2d851";
-const photoFeed = document.querySelector("[data-photo-feed]");
-
-if (feed) {
-  initTelegramFeed(feed);
-}
-
-if (photoFeed) {
-  initPhotoFeed(photoFeed);
 }
 
 async function initTelegramFeed(feedElement) {
+  const lang = currentLanguage();
+  const strings = getUi(lang);
   const status = document.querySelector("[data-feed-status]");
   const loadMore = document.querySelector("[data-load-more]");
   const batchSize = 18;
@@ -46,16 +227,15 @@ async function initTelegramFeed(feedElement) {
     posts = data.posts || [];
 
     if (!posts.length) {
-      status.textContent = "Постов пока нет.";
+      if (status) status.textContent = strings.postsEmpty;
       return;
     }
 
-    status.remove();
+    status?.remove();
     renderNextBatch();
-
-    loadMore.addEventListener("click", renderNextBatch);
+    loadMore?.addEventListener("click", renderNextBatch);
   } catch (error) {
-    status.textContent = "Не получилось загрузить архив.";
+    if (status) status.textContent = strings.postsLoadError;
     console.error(error);
   }
 
@@ -64,31 +244,35 @@ async function initTelegramFeed(feedElement) {
     const nextPosts = posts.slice(rendered, rendered + batchSize);
 
     for (const post of nextPosts) {
-      fragment.append(createPost(post));
+      fragment.append(createPost(post, lang));
     }
 
     feedElement.append(fragment);
     rendered += nextPosts.length;
-    loadMore.hidden = rendered >= posts.length;
+
+    if (loadMore) {
+      loadMore.hidden = rendered >= posts.length;
+    }
   }
 }
 
-function createPost(post) {
+function createPost(post, lang) {
   const article = document.createElement("article");
   article.className = "screenshot-post";
   article.id = `post-${post.id}`;
 
   if (post.media?.length) {
-    article.append(createMedia(post.media));
+    article.append(createMedia(post.media, post, lang));
   }
 
   const body = document.createElement("div");
   body.className = "screenshot-body";
 
-  if (post.text) {
+  const postText = getPostText(post, lang);
+  if (postText) {
     const text = document.createElement("div");
     text.className = "screenshot-text";
-    appendRichText(text, post);
+    appendRichText(text, post, lang);
     body.append(text);
   }
 
@@ -100,7 +284,7 @@ function createPost(post) {
   link.href = post.telegramUrl;
   link.target = "_blank";
   link.rel = "noopener";
-  link.textContent = formatDate(post.date);
+  link.textContent = formatDate(post.date, lang);
   meta.append(link);
 
   if (post.reactions?.length) {
@@ -122,11 +306,11 @@ function createPost(post) {
   return article;
 }
 
-function createMedia(mediaItems) {
+function createMedia(mediaItems, post, lang) {
   const wrapper = document.createElement("div");
   wrapper.className = `screenshot-media${mediaItems.length > 1 ? " is-grid" : " is-single"}`;
 
-  for (const media of mediaItems) {
+  for (const [index, media] of mediaItems.entries()) {
     const item = document.createElement("div");
     item.className = "screenshot-media-item";
 
@@ -141,11 +325,11 @@ function createMedia(mediaItems) {
       img.src = getTelegramAssetUrl(media.src);
       img.loading = "lazy";
       img.decoding = "async";
-      img.alt = "";
+      img.alt = mediaAlt(post, index, lang);
       item.append(img);
     } else if (media.type === "video" || media.type === "animation") {
       item.classList.add("is-video");
-      item.append(createVideoPreview(media));
+      item.append(createVideoPreview(media, lang));
     }
 
     wrapper.append(item);
@@ -154,11 +338,11 @@ function createMedia(mediaItems) {
   return wrapper;
 }
 
-function createVideoPreview(media) {
+function createVideoPreview(media, lang) {
   const trigger = document.createElement("button");
   trigger.className = "screenshot-video-preview";
   trigger.type = "button";
-  trigger.setAttribute("aria-label", "Смотреть видео");
+  trigger.setAttribute("aria-label", getUi(lang).watchVideo);
 
   if (media.poster) {
     const poster = document.createElement("img");
@@ -207,12 +391,13 @@ function getTelegramAssetUrl(src) {
   return `${telegramMediaBase}${src}`;
 }
 
-function appendRichText(container, post) {
-  const entities = post.entities || [];
+function appendRichText(container, post, lang) {
+  const text = getPostText(post, lang);
+  const entities = getPostEntities(post, lang);
   const entityText = entities.map((entity) => entity.text).join("");
 
-  if (!entities.length || entityText !== post.text) {
-    container.textContent = post.text;
+  if (!entities.length || entityText !== text) {
+    container.textContent = text;
     return;
   }
 
@@ -230,15 +415,32 @@ function appendRichText(container, post) {
   }
 }
 
-function formatDate(value) {
-  return new Intl.DateTimeFormat("ru-RU", {
-    day: "numeric",
-    month: "long",
-    year: "numeric",
-  }).format(new Date(value));
+function getPostText(post, lang) {
+  if (lang === "en") {
+    const value = normalizeText(post.translations?.en?.text);
+    if (value) return value;
+  }
+
+  return normalizeText(post.text);
+}
+
+function getPostEntities(post, lang) {
+  if (lang === "en" && Array.isArray(post.translations?.en?.entities)) {
+    return post.translations.en.entities;
+  }
+
+  return post.entities || [];
+}
+
+function mediaAlt(post, index, lang) {
+  const title = truncate(getPostText(post, lang), 90);
+  if (!title) return "";
+  return index === 0 ? title : `${title}, ${lang === "en" ? "media" : "медиа"} ${index + 1}`;
 }
 
 async function initPhotoFeed(feedElement) {
+  const lang = currentLanguage();
+  const strings = getUi(lang);
   const status = document.querySelector("[data-photo-status]");
   const hasStaticFeed = feedElement.hasAttribute("data-static-photo-feed");
 
@@ -254,7 +456,7 @@ async function initPhotoFeed(feedElement) {
 
     if (!photos.length) {
       if (status) {
-        status.textContent = "Фотографий пока нет.";
+        status.textContent = strings.photosEmpty;
       }
       return;
     }
@@ -262,23 +464,23 @@ async function initPhotoFeed(feedElement) {
     feedElement.replaceChildren();
     feedElement.removeAttribute("data-static-photo-feed");
     status?.remove();
-    renderPhotos(feedElement, photos);
-    initPhotoViewer(photos);
+    renderPhotos(feedElement, photos, lang);
+    initPhotoViewer(photos, lang);
   } catch (error) {
     if (status) {
-      status.textContent = "Не получилось загрузить фотографии.";
+      status.textContent = strings.photosLoadError;
     } else if (!hasStaticFeed) {
-      feedElement.textContent = "Не получилось загрузить фотографии.";
+      feedElement.textContent = strings.photosLoadError;
     }
     console.error(error);
   }
 }
 
-function renderPhotos(feedElement, photos) {
+function renderPhotos(feedElement, photos, lang) {
   const fragment = document.createDocumentFragment();
 
   for (const [index, photo] of photos.entries()) {
-    fragment.append(createPhotoCard(photo, index));
+    fragment.append(createPhotoCard(photo, index, lang));
   }
 
   feedElement.append(fragment);
@@ -292,7 +494,7 @@ function getPhotoUploadKey(photo) {
   return photo.uploadedAt || photo.id || photo.date || "";
 }
 
-function createPhotoCard(photo, index) {
+function createPhotoCard(photo, index, lang) {
   const article = document.createElement("article");
   article.className = "photo-entry";
 
@@ -300,7 +502,7 @@ function createPhotoCard(photo, index) {
   button.className = "photo-card";
   button.type = "button";
   button.dataset.photoIndex = String(index);
-  button.setAttribute("aria-label", photo.caption || `Открыть фото ${index + 1}`);
+  button.setAttribute("aria-label", photoAlt(photo, lang) || `${getUi(lang).openPhoto} ${index + 1}`);
 
   if (photo.width && photo.height) {
     button.style.aspectRatio = `${photo.width} / ${photo.height}`;
@@ -310,7 +512,7 @@ function createPhotoCard(photo, index) {
   img.src = photo.src;
   img.loading = index < 4 ? "eager" : "lazy";
   img.decoding = "async";
-  img.alt = photo.caption || "";
+  img.alt = photoAlt(photo, lang);
   button.append(img);
 
   if (photo.hdr) {
@@ -320,14 +522,13 @@ function createPhotoCard(photo, index) {
     button.append(badge);
   }
 
-  article.append(button, createPhotoInfo(photo));
+  article.append(button, createPhotoInfo(photo, lang));
 
   return article;
 }
 
-function createPhotoInfo(photo) {
+function createPhotoInfo(photo, lang) {
   const technical = photo.technical || {};
-  const location = photo.location || {};
   const wrapper = document.createElement("div");
   wrapper.className = "photo-info";
 
@@ -335,7 +536,7 @@ function createPhotoInfo(photo) {
   header.className = "photo-info-header";
 
   const title = document.createElement("strong");
-  title.textContent = technical.cameraLine || "Leica M6 — плёнка";
+  title.textContent = technical.cameraLine || getUi(lang).filmCamera;
   header.append(title);
 
   wrapper.append(header);
@@ -344,14 +545,14 @@ function createPhotoInfo(photo) {
   body.className = "photo-info-body";
 
   const lens = document.createElement("p");
-  lens.textContent = technical.lensLine || "Плёночная фотография";
+  lens.textContent = technical.lensLine || getUi(lang).filmPhoto;
   body.append(lens);
 
   const summary = document.createElement("p");
   summary.textContent = technical.summary || compactText([formatDimensions(photo), formatFileSize(photo.size)]);
   body.append(summary);
 
-  const locationLabel = normalizeLocationLabel(location.label || location.name);
+  const locationLabel = photoLocation(photo, lang);
 
   if (locationLabel) {
     const locationLine = document.createElement("p");
@@ -359,6 +560,7 @@ function createPhotoInfo(photo) {
     locationLine.textContent = locationLabel;
     body.append(locationLine);
   }
+
   wrapper.append(body);
 
   const settings = (technical.settings || []).filter((item) => item.value);
@@ -379,7 +581,7 @@ function createPhotoInfo(photo) {
   return wrapper;
 }
 
-function initPhotoViewer(photos) {
+function initPhotoViewer(photos, lang) {
   const dialog = document.querySelector("[data-photo-dialog]");
   const image = document.querySelector("[data-photo-dialog-image]");
   const caption = document.querySelector("[data-photo-dialog-caption]");
@@ -387,32 +589,33 @@ function initPhotoViewer(photos) {
   const prev = document.querySelector("[data-photo-prev]");
   const next = document.querySelector("[data-photo-next]");
   const actual = document.querySelector("[data-photo-actual]");
-  let activeIndex = 0;
-  let isActualSize = false;
 
   if (!dialog || !image || !caption) return;
 
-  document.addEventListener("click", (event) => {
-    const trigger = event.target.closest("[data-photo-index]");
-    if (!trigger) return;
-
-    activeIndex = Number(trigger.dataset.photoIndex || 0);
-    openPhoto(activeIndex);
-  });
+  photoViewerState = {
+    photos,
+    lang,
+    dialog,
+    image,
+    caption,
+    actual,
+    activeIndex: 0,
+    isActualSize: false,
+  };
 
   close?.addEventListener("click", () => dialog.close());
-  prev?.addEventListener("click", () => openPhoto(activeIndex - 1));
-  next?.addEventListener("click", () => openPhoto(activeIndex + 1));
-  actual?.addEventListener("click", () => setActualSize(!isActualSize));
-  image.addEventListener("click", () => setActualSize(!isActualSize));
+  prev?.addEventListener("click", () => openPhoto(photoViewerState.activeIndex - 1));
+  next?.addEventListener("click", () => openPhoto(photoViewerState.activeIndex + 1));
+  actual?.addEventListener("click", () => setActualSize(!photoViewerState.isActualSize));
+  image.addEventListener("click", () => setActualSize(!photoViewerState.isActualSize));
 
   dialog.addEventListener("keydown", (event) => {
     if (event.key === "ArrowLeft") {
       event.preventDefault();
-      openPhoto(activeIndex - 1);
+      openPhoto(photoViewerState.activeIndex - 1);
     } else if (event.key === "ArrowRight") {
       event.preventDefault();
-      openPhoto(activeIndex + 1);
+      openPhoto(photoViewerState.activeIndex + 1);
     }
   });
 
@@ -420,45 +623,78 @@ function initPhotoViewer(photos) {
     image.removeAttribute("src");
     setActualSize(false);
   });
+}
 
-  function openPhoto(index) {
-    activeIndex = (index + photos.length) % photos.length;
-    const photo = photos[activeIndex];
+function openPhoto(index) {
+  if (!photoViewerState?.photos.length) return;
 
-    setActualSize(false);
-    image.src = photo.src;
-    image.alt = photo.caption || "";
-    caption.textContent = photo.caption || makePhotoCaption(photo);
+  const state = photoViewerState;
+  state.activeIndex = (index + state.photos.length) % state.photos.length;
+  const photo = state.photos[state.activeIndex];
 
-    if (photo.width && photo.height) {
-      image.style.aspectRatio = `${photo.width} / ${photo.height}`;
-    } else {
-      image.style.removeProperty("aspect-ratio");
-    }
+  setActualSize(false);
+  state.image.src = photo.src;
+  state.image.alt = photoAlt(photo, state.lang);
+  state.caption.textContent = photoCaption(photo, state.lang) || makePhotoCaption(photo, state.lang);
 
-    if (!dialog.open) {
-      dialog.showModal();
-    }
+  if (photo.width && photo.height) {
+    state.image.style.aspectRatio = `${photo.width} / ${photo.height}`;
+  } else {
+    state.image.style.removeProperty("aspect-ratio");
   }
 
-  function setActualSize(value) {
-    isActualSize = value;
-    dialog.classList.toggle("is-actual-size", isActualSize);
-    actual.textContent = isActualSize ? "Вписать" : "100%";
+  if (!state.dialog.open) {
+    state.dialog.showModal();
   }
 }
 
-function makePhotoCaption(photo) {
+function setActualSize(value) {
+  if (!photoViewerState) return;
+
+  photoViewerState.isActualSize = value;
+  photoViewerState.dialog.classList.toggle("is-actual-size", value);
+  if (photoViewerState.actual) {
+    photoViewerState.actual.textContent = value ? getUi(photoViewerState.lang).fit : getUi(photoViewerState.lang).actual;
+  }
+}
+
+function makePhotoCaption(photo, lang) {
   const technical = photo.technical || {};
-  const location = photo.location || {};
-  const locationLabel = normalizeLocationLabel(location.label || location.name);
 
   return compactText([
     technical.cameraLine,
     technical.lensLine,
-    locationLabel,
-    formatDate(photo.date),
+    photoLocation(photo, lang),
+    formatDate(photo.date, lang),
   ]);
+}
+
+function photoCaption(photo, lang) {
+  if (lang === "en") {
+    const value = normalizeText(photo.translations?.en?.caption);
+    if (value) return value;
+  }
+
+  return normalizeText(photo.caption);
+}
+
+function photoAlt(photo, lang) {
+  if (lang === "en") {
+    const value = normalizeText(photo.translations?.en?.alt);
+    if (value) return value;
+  }
+
+  return normalizeText(photo.alt) || photoCaption(photo, lang) || makePhotoCaption(photo, lang);
+}
+
+function photoLocation(photo, lang) {
+  if (lang === "en") {
+    const value = normalizeLocationLabel(photo.translations?.en?.locationLabel || photo.translations?.en?.location);
+    if (value) return value;
+  }
+
+  const location = photo.location || {};
+  return normalizeLocationLabel(location.label || location.name);
 }
 
 function compactText(values) {
@@ -487,4 +723,21 @@ function normalizeLocationLabel(value) {
   }
 
   return text;
+}
+
+function normalizeText(value) {
+  return value == null ? "" : String(value).trim();
+}
+
+function truncate(value, maxLength) {
+  if (!value || value.length <= maxLength) return value || "";
+  return `${value.slice(0, maxLength - 1).trim()}…`;
+}
+
+function formatDate(value, lang = currentLanguage()) {
+  return new Intl.DateTimeFormat(lang === "en" ? "en-US" : "ru-RU", {
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+  }).format(new Date(value));
 }

@@ -52,7 +52,17 @@
           }
         ]
       },
-      "uploadedAt": "2026-05-31T17:31:36.650992Z"
+      "uploadedAt": "2026-05-31T17:31:36.650992Z",
+      "translations": {
+        "en": {
+          "caption": "",
+          "alt": "",
+          "locationLabel": "Pushkino, Moscow Oblast",
+          "status": "codex-draft",
+          "translatedAt": "2026-06-01T16:55:35.204Z",
+          "model": "codex"
+        }
+      }
     },
     {
       "id": "20260530-122524-c785fa9c",
@@ -104,7 +114,17 @@
           }
         ]
       },
-      "uploadedAt": "2026-05-30T12:25:24.398228Z"
+      "uploadedAt": "2026-05-30T12:25:24.398228Z",
+      "translations": {
+        "en": {
+          "caption": "",
+          "alt": "",
+          "locationLabel": "Dvoryaninovo, Tula Oblast",
+          "status": "codex-draft",
+          "translatedAt": "2026-06-01T16:55:35.204Z",
+          "model": "codex"
+        }
+      }
     },
     {
       "id": "20260530-122352-15c66ea8",
@@ -156,7 +176,17 @@
           }
         ]
       },
-      "uploadedAt": "2026-05-30T12:23:52.921742Z"
+      "uploadedAt": "2026-05-30T12:23:52.921742Z",
+      "translations": {
+        "en": {
+          "caption": "",
+          "alt": "",
+          "locationLabel": "Khamovniki District, Moscow",
+          "status": "codex-draft",
+          "translatedAt": "2026-06-01T16:55:35.204Z",
+          "model": "codex"
+        }
+      }
     },
     {
       "id": "20260530-122137-753aa9f1",
@@ -208,7 +238,17 @@
           }
         ]
       },
-      "uploadedAt": "2026-05-30T12:21:37.578809Z"
+      "uploadedAt": "2026-05-30T12:21:37.578809Z",
+      "translations": {
+        "en": {
+          "caption": "",
+          "alt": "",
+          "locationLabel": "Quartiere 5, Florence, Tuscany",
+          "status": "codex-draft",
+          "translatedAt": "2026-06-01T16:55:35.204Z",
+          "model": "codex"
+        }
+      }
     },
     {
       "id": "20260530-122114-3dff70a3",
@@ -260,7 +300,17 @@
           }
         ]
       },
-      "uploadedAt": "2026-05-30T12:21:14.606835Z"
+      "uploadedAt": "2026-05-30T12:21:14.606835Z",
+      "translations": {
+        "en": {
+          "caption": "",
+          "alt": "",
+          "locationLabel": "Quartiere 5, Florence, Tuscany",
+          "status": "codex-draft",
+          "translatedAt": "2026-06-01T16:55:35.204Z",
+          "model": "codex"
+        }
+      }
     },
     {
       "id": "20260530-122033-cf7742ed",
@@ -312,7 +362,17 @@
           }
         ]
       },
-      "uploadedAt": "2026-05-30T12:20:33.380755Z"
+      "uploadedAt": "2026-05-30T12:20:33.380755Z",
+      "translations": {
+        "en": {
+          "caption": "",
+          "alt": "",
+          "locationLabel": "Centovalli, Ticino",
+          "status": "codex-draft",
+          "translatedAt": "2026-06-01T16:55:35.204Z",
+          "model": "codex"
+        }
+      }
     },
     {
       "id": "20260530-080345-e511ad91",
@@ -395,6 +455,16 @@
             "value": "1/3096 s"
           }
         ]
+      },
+      "translations": {
+        "en": {
+          "caption": "",
+          "alt": "",
+          "locationLabel": "Yau Tsim Mong, Hong Kong, Kowloon",
+          "status": "codex-draft",
+          "translatedAt": "2026-06-01T16:55:35.204Z",
+          "model": "codex"
+        }
       }
     },
     {
@@ -428,5 +498,6 @@
         "settings": []
       }
     }
-  ]
+  ],
+  "translationUpdatedAt": "2026-06-01T16:55:35.204Z"
 }

@@ -10,6 +10,7 @@ This file is the project map for future Codex chats.
 - `/about/` - talks, videos, and personal profile material.
 - `/screenshots/` - archive of the Telegram channel "Screenshot of the Day".
 - `/photos/` - personal photo feed.
+- `/en/**` - English mirrors of the public pages, posts, photo pages, feeds, and indexes.
 
 Product direction for `/screenshots/`: a public collection of observations about digital products, design, interfaces, technology, and beautiful things. Telegram is the publishing source; the site should be the durable, searchable, indexable, and navigable version of that thinking. See `docs/product.md`.
 
@@ -31,10 +32,12 @@ Product direction for `/screenshots/`: a public collection of observations about
 - `assets/telegram/posts.json` - imported Telegram post database.
 - `assets/photos/photos.json` - uploaded photo manifest.
 - `feed.xml`, `screenshots/feed.xml`, `photos/feed.xml` - RSS feeds generated from the same manifests as SEO pages.
+- `en/feed.xml`, `en/screenshots/feed.xml`, `en/photos/feed.xml` - English RSS feeds generated from the same manifests.
 - `tools/import-telegram-export.mjs` - one-off/repeatable Telegram Desktop export importer.
 - `tools/telegram_live_importer.py` - Telegram Bot API webhook importer for new posts.
 - `tools/photo_upload_server.py` - token-protected Apple Shortcut upload endpoint.
 - `tools/generate_telegram_seo.py` - production refresh for blog pages, RSS, and sitemap after Telegram webhook updates.
+- `tools/translate-content.mjs` - OpenAI-backed translation backfill for `translations.en`.
 - `tools/deploy-site.sh` - production deployment script.
 - `ops/` - nginx/systemd/env examples for live Telegram import and photo upload.
 
@@ -58,6 +61,8 @@ Apple Photos share sheet -> Apple Shortcut -> `/photos/upload` -> Python service
 Photo originals are intentionally stored without canvas processing, resizing, or transcoding so HDR/Ultra HDR metadata and gain maps can survive. The Shortcut must not use image transform actions. The upload service validates the token and file signature, then stores the original bytes. The browser is responsible for actual HDR display support.
 
 Static SEO pages, sitemap, and RSS are generated from `assets/telegram/posts.json` and `assets/photos/photos.json`. The full deploy path uses `tools/generate-seo-pages.mjs`. The production Telegram webhook path uses `tools/generate_telegram_seo.py` so new posts update `/screenshots/<id>/`, `/screenshots/feed.xml`, `/feed.xml`, and `sitemap.xml` immediately. The production photo upload path uses `tools/generate_photo_seo.py` so new photos update `/photos/feed.xml` and `/feed.xml` immediately. Both production refresh generators are Python-only, so they do not require Node.js on the VPS.
+
+English content lives beside source records in `translations.en`. Generators write `/en/**` pages from those translations and fall back to the source Russian text while a translation is missing. The header language switcher links to real static counterpart URLs and `script.js` swaps pages through `fetch` and `history.pushState` when JavaScript is available.
 
 ## Telegram Storage Policy
 

@@ -11,22 +11,122 @@ from xml.etree import ElementTree as ET
 
 
 ROOT_DIR = Path(__file__).resolve().parent.parent
+EN_DIR = ROOT_DIR / "en"
 PHOTOS_DIR = ROOT_DIR / "photos"
 PHOTOS_ARCHIVE_DIR = PHOTOS_DIR / "archive"
+EN_PHOTOS_DIR = EN_DIR / "photos"
+EN_PHOTOS_ARCHIVE_DIR = EN_PHOTOS_DIR / "archive"
 POSTS_JSON_PATH = ROOT_DIR / "assets/telegram/posts.json"
 PHOTOS_JSON_PATH = ROOT_DIR / "assets/photos/photos.json"
 SITEMAP_PATH = ROOT_DIR / "sitemap.xml"
 FEED_PATH = ROOT_DIR / "feed.xml"
+EN_FEED_PATH = EN_DIR / "feed.xml"
 PHOTOS_FEED_PATH = PHOTOS_DIR / "feed.xml"
+EN_PHOTOS_FEED_PATH = EN_PHOTOS_DIR / "feed.xml"
 SITE_URL = "https://tomilov.com"
 SITE_NAME = "Серёжа Томилов"
+SITE_NAME_EN = "Seryozha Tomilov"
 PHOTOS_TITLE = "Фото"
+PHOTOS_TITLE_EN = "Photos"
 PHOTOS_DESCRIPTION = "Витрина лучших снимков Серёжи Томилова."
+PHOTOS_DESCRIPTION_EN = "A showcase of Seryozha Tomilov's best photographs."
 LICENSE_URL = "https://creativecommons.org/licenses/by/4.0/"
 LICENSE_NAME = "CC BY 4.0"
 CHANNEL_TITLE = "Screenshot of the Day"
 TELEGRAM_MEDIA_BASE = "https://s3.twcstorage.ru/00df5bd5-137f-492a-8d95-c7ee2cc2d851"
 FEED_LIMIT = 50
+LANGUAGES = ("ru", "en")
+
+STRINGS = {
+    "ru": {
+        "html_lang": "ru-RU",
+        "rss_lang": "ru-RU",
+        "site_name": SITE_NAME,
+        "site_description": "Интернет Серёжи Томилова",
+        "nav_aria": "Навигация",
+        "sections_aria": "Разделы",
+        "blog": "Блог",
+        "photos": PHOTOS_TITLE,
+        "about_desktop": SITE_NAME,
+        "about_mobile": "about",
+        "photos_description": PHOTOS_DESCRIPTION,
+        "photos_empty": "Фотографий пока нет.",
+        "photos_footer": f'Витрина лучших снимков. Использование разрешено по лицензии <a href="{LICENSE_URL}" target="_blank" rel="license noopener">{LICENSE_NAME}</a> с указанием авторства.',
+        "all_photos": "Все фото",
+        "back_to_photos": "Вернуться в фотоленту",
+        "static_index": "Static index",
+        "photos_archive_description": "Статический индекс всех фото из раздела Фото.",
+        "breadcrumbs": "Хлебные крошки",
+        "photo_info": "Информация о фото",
+        "viewer": "Просмотр фотографии",
+        "previous_photo": "Предыдущее фото",
+        "next_photo": "Следующее фото",
+        "close": "Закрыть",
+        "fit": "Вписать",
+        "newer": "Новее",
+        "older": "Старее",
+        "date": "Дата",
+        "camera": "Камера",
+        "lens": "Объектив",
+        "place": "Место",
+        "settings": "Настройки",
+        "file": "Файл",
+        "license": "Лицензия",
+        "license_usage": "Использование разрешено с указанием авторства и ссылки на эту страницу.",
+        "film_camera": "Leica M6 — плёнка",
+        "film_photo": "Плёночная фотография",
+        "photo_from": "Фото от {date}",
+        "photo_by_date": "Фото Серёжи Томилова от {date}.",
+        "post_from": "Пост от {date}",
+        "post_by_date": "Пост канала Screenshot of the Day от {date}.",
+        "main_feed_description": "Новые записи и фотографии на tomilov.com.",
+        "photos_feed_license": f"Лицензия: {LICENSE_NAME}, использование с указанием авторства и ссылки на страницу фото.",
+    },
+    "en": {
+        "html_lang": "en",
+        "rss_lang": "en-US",
+        "site_name": SITE_NAME_EN,
+        "site_description": "The internet home of Seryozha Tomilov",
+        "nav_aria": "Navigation",
+        "sections_aria": "Sections",
+        "blog": "Blog",
+        "photos": PHOTOS_TITLE_EN,
+        "about_desktop": SITE_NAME_EN,
+        "about_mobile": "about",
+        "photos_description": PHOTOS_DESCRIPTION_EN,
+        "photos_empty": "No photos yet.",
+        "photos_footer": f'A showcase of selected photographs. Licensed under <a href="{LICENSE_URL}" target="_blank" rel="license noopener">{LICENSE_NAME}</a> with attribution.',
+        "all_photos": "All photos",
+        "back_to_photos": "Back to photo feed",
+        "static_index": "Static index",
+        "photos_archive_description": "A static index of every photo in the Photos section.",
+        "breadcrumbs": "Breadcrumbs",
+        "photo_info": "Photo information",
+        "viewer": "Photo viewer",
+        "previous_photo": "Previous photo",
+        "next_photo": "Next photo",
+        "close": "Close",
+        "fit": "Fit",
+        "newer": "Newer",
+        "older": "Older",
+        "date": "Date",
+        "camera": "Camera",
+        "lens": "Lens",
+        "place": "Place",
+        "settings": "Settings",
+        "file": "File",
+        "license": "License",
+        "license_usage": "Use is allowed with attribution and a link to this page.",
+        "film_camera": "Leica M6 — film",
+        "film_photo": "Film photograph",
+        "photo_from": "Photo from {date}",
+        "photo_by_date": "Photo by Seryozha Tomilov from {date}.",
+        "post_from": "Post from {date}",
+        "post_by_date": "A Screenshot of the Day post from {date}.",
+        "main_feed_description": "New posts and photographs on tomilov.com.",
+        "photos_feed_license": f"License: {LICENSE_NAME}; use is allowed with attribution and a link to the photo page.",
+    },
+}
 
 
 def main():
@@ -34,64 +134,140 @@ def main():
     photos = sorted(read_json(PHOTOS_JSON_PATH, {"photos": []}).get("photos", []), key=photo_sort_key, reverse=True)
     photo_ids = {str(photo.get("id", "")) for photo in photos}
 
-    PHOTOS_DIR.mkdir(parents=True, exist_ok=True)
-    remove_stale_photo_dirs(photo_ids)
+    for lang in LANGUAGES:
+        photos_dir = photos_dir_for_lang(lang)
+        photos_archive_dir = photos_archive_dir_for_lang(lang)
+        photos_dir.mkdir(parents=True, exist_ok=True)
+        remove_stale_photo_dirs(photo_ids, photos_dir)
 
-    for index, photo in enumerate(photos):
-        photo_dir = PHOTOS_DIR / str(photo["id"])
-        photo_dir.mkdir(parents=True, exist_ok=True)
-        newer = photos[index - 1] if index > 0 else None
-        older = photos[index + 1] if index + 1 < len(photos) else None
-        (photo_dir / "index.html").write_text(render_photo_page(photo, newer, older), encoding="utf-8")
+        for index, photo in enumerate(photos):
+            photo_dir = photos_dir / str(photo["id"])
+            photo_dir.mkdir(parents=True, exist_ok=True)
+            newer = photos[index - 1] if index > 0 else None
+            older = photos[index + 1] if index + 1 < len(photos) else None
+            (photo_dir / "index.html").write_text(render_photo_page(photo, newer, older, lang), encoding="utf-8")
 
-    PHOTOS_ARCHIVE_DIR.mkdir(parents=True, exist_ok=True)
-    (PHOTOS_DIR / "index.html").write_text(render_photos_page(photos), encoding="utf-8")
-    (PHOTOS_ARCHIVE_DIR / "index.html").write_text(render_photos_archive(photos), encoding="utf-8")
+        photos_archive_dir.mkdir(parents=True, exist_ok=True)
+        (photos_dir / "index.html").write_text(render_photos_page(photos, lang), encoding="utf-8")
+        (photos_archive_dir / "index.html").write_text(render_photos_archive(photos, lang), encoding="utf-8")
+
     SITEMAP_PATH.write_text(render_sitemap(photos), encoding="utf-8")
-    FEED_PATH.write_text(render_main_feed(posts, photos), encoding="utf-8")
-    PHOTOS_FEED_PATH.write_text(render_photos_feed(photos), encoding="utf-8")
+    FEED_PATH.write_text(render_main_feed(posts, photos, "ru"), encoding="utf-8")
+    EN_DIR.mkdir(parents=True, exist_ok=True)
+    EN_FEED_PATH.write_text(render_main_feed(posts, photos, "en"), encoding="utf-8")
+    PHOTOS_FEED_PATH.write_text(render_photos_feed(photos, "ru"), encoding="utf-8")
+    EN_PHOTOS_FEED_PATH.write_text(render_photos_feed(photos, "en"), encoding="utf-8")
 
     print(f"Generated {len(photos)} photo pages")
     print(PHOTOS_ARCHIVE_DIR.relative_to(ROOT_DIR))
+    print(EN_PHOTOS_ARCHIVE_DIR.relative_to(ROOT_DIR))
     print(SITEMAP_PATH.relative_to(ROOT_DIR))
     print(FEED_PATH.relative_to(ROOT_DIR))
+    print(EN_FEED_PATH.relative_to(ROOT_DIR))
     print(PHOTOS_FEED_PATH.relative_to(ROOT_DIR))
+    print(EN_PHOTOS_FEED_PATH.relative_to(ROOT_DIR))
 
 
-def render_photos_page(photos):
+def strings(lang):
+    return STRINGS.get(lang, STRINGS["ru"])
+
+
+def tr(lang, key):
+    return strings(lang)[key]
+
+
+def lang_prefix(lang):
+    return "/en" if lang == "en" else ""
+
+
+def localized_path(path, lang):
+    if not path.startswith("/"):
+        path = f"/{path}"
+    return f"{lang_prefix(lang)}{path}" if lang == "en" else path
+
+
+def localized_url(path, lang):
+    return f"{SITE_URL}{localized_path(path, lang)}"
+
+
+def opposite_lang(lang):
+    return "en" if lang == "ru" else "ru"
+
+
+def alternate_links(path, lang):
+    ru_url = localized_url(path, "ru")
+    en_url = localized_url(path, "en")
+    return f"""    <link rel="alternate" hreflang="ru" href="{ru_url}">
+    <link rel="alternate" hreflang="en" href="{en_url}">
+    <link rel="alternate" hreflang="x-default" href="{ru_url}">"""
+
+
+def photos_dir_for_lang(lang):
+    return EN_PHOTOS_DIR if lang == "en" else PHOTOS_DIR
+
+
+def photos_archive_dir_for_lang(lang):
+    return EN_PHOTOS_ARCHIVE_DIR if lang == "en" else PHOTOS_ARCHIVE_DIR
+
+
+def feed_path_for_lang(lang):
+    return EN_FEED_PATH if lang == "en" else FEED_PATH
+
+
+def photos_feed_path_for_lang(lang):
+    return EN_PHOTOS_FEED_PATH if lang == "en" else PHOTOS_FEED_PATH
+
+
+def translation(item, lang):
+    if lang == "ru":
+        return {}
+    translations = item.get("translations") or {}
+    value = translations.get(lang) or {}
+    return value if isinstance(value, dict) else {}
+
+
+def translated_value(item, lang, key, fallback=""):
+    return clean_text(translation(item, lang).get(key)) or clean_text(item.get(key)) or fallback
+
+
+def render_photos_page(photos, lang="ru"):
     image = photo_asset_url(photos[0].get("src")) if photos else f"{SITE_URL}/assets/og.png"
+    page_path = "/photos/"
+    title = tr(lang, "photos")
+    description = tr(lang, "photos_description")
     json_ld = {
         "@context": "https://schema.org",
         "@type": "CollectionPage",
-        "name": PHOTOS_TITLE,
-        "description": PHOTOS_DESCRIPTION,
-        "url": f"{SITE_URL}/photos/",
-        "isPartOf": {"@type": "WebSite", "name": SITE_NAME, "url": SITE_URL},
-        "creator": {"@type": "Person", "name": SITE_NAME, "url": SITE_URL},
+        "name": title,
+        "description": description,
+        "url": localized_url(page_path, lang),
+        "isPartOf": {"@type": "WebSite", "name": tr(lang, "site_name"), "url": SITE_URL},
+        "creator": {"@type": "Person", "name": tr(lang, "site_name"), "url": SITE_URL},
         "license": LICENSE_URL,
     }
 
-    feed = "\n        ".join(render_photo_card(photo, index) for index, photo in enumerate(photos))
+    feed = "\n        ".join(render_photo_card(photo, index, lang) for index, photo in enumerate(photos))
     if not feed:
-        feed = '<p class="feed-status" data-photo-status>Фотографий пока нет.</p>'
+        feed = f'<p class="feed-status" data-photo-status>{tr(lang, "photos_empty")}</p>'
 
     return f"""<!doctype html>
-<html lang="ru-RU">
+<html lang="{tr(lang, 'html_lang')}">
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width">
-    <title>{PHOTOS_TITLE} — {SITE_NAME}</title>
-    <meta name="description" content="{escape_attr(PHOTOS_DESCRIPTION)}">
-    <link rel="canonical" href="{SITE_URL}/photos/">
-    <link rel="alternate" type="application/rss+xml" title="{escape_attr(PHOTOS_TITLE)}" href="{SITE_URL}/photos/feed.xml">
+    <title>{title} — {tr(lang, 'site_name')}</title>
+    <meta name="description" content="{escape_attr(description)}">
+    <link rel="canonical" href="{localized_url(page_path, lang)}">
+{alternate_links(page_path, lang)}
+    <link rel="alternate" type="application/rss+xml" title="{escape_attr(title)}" href="{localized_url('/photos/feed.xml', lang)}">
     <meta property="og:type" content="website">
-    <meta property="og:title" content="{PHOTOS_TITLE}">
-    <meta property="og:description" content="{escape_attr(PHOTOS_DESCRIPTION)}">
+    <meta property="og:title" content="{title}">
+    <meta property="og:description" content="{escape_attr(description)}">
     <meta property="og:image" content="{escape_attr(image)}">
-    <meta property="og:url" content="{SITE_URL}/photos/">
+    <meta property="og:url" content="{localized_url(page_path, lang)}">
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="{PHOTOS_TITLE}">
-    <meta name="twitter:description" content="{escape_attr(PHOTOS_DESCRIPTION)}">
+    <meta name="twitter:title" content="{title}">
+    <meta name="twitter:description" content="{escape_attr(description)}">
     <meta name="twitter:image" content="{escape_attr(image)}">
     <link rel="icon" href="/assets/favicon.png">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -100,11 +276,11 @@ def render_photos_page(photos):
     <script type="application/ld+json">{json_script(json_ld)}</script>
   </head>
   <body>
-    <main class="page photos-page">
-      {render_header("/photos/")}
+    <main class="page photos-page" data-page-lang="{lang}">
+      {render_header(page_path, lang)}
 
       <section class="photos-intro" aria-labelledby="photos-title">
-        <h1 id="photos-title">Фото</h1>
+        <h1 id="photos-title">{title}</h1>
       </section>
 
       <section class="photo-feed" data-photo-feed data-static-photo-feed aria-live="polite">
@@ -112,38 +288,42 @@ def render_photos_page(photos):
       </section>
 
       <footer class="photos-footer">
-        <p>Витрина лучших снимков. Использование разрешено по лицензии <a href="{LICENSE_URL}" target="_blank" rel="license noopener">{LICENSE_NAME}</a> с указанием авторства.</p>
-        <a href="/photos/archive/">Все фото</a>
+        <p>{tr(lang, 'photos_footer')}</p>
+        <a href="{localized_path('/photos/archive/', lang)}">{tr(lang, 'all_photos')}</a>
       </footer>
     </main>
 
-    {render_photo_dialog()}
-    <script src="/script.js?v=20260531-upload-order"></script>
+    {render_photo_dialog(lang)}
+    <script src="/script.js?v={asset_version()}"></script>
   </body>
 </html>
 """
 
 
-def render_photos_archive(photos):
-    items = "\n        ".join(render_photo_index_link(photo) for photo in photos)
+def render_photos_archive(photos, lang="ru"):
+    page_path = "/photos/archive/"
+    title = tr(lang, "all_photos")
+    description = tr(lang, "photos_archive_description")
+    items = "\n        ".join(render_photo_index_link(photo, lang) for photo in photos)
 
     return f"""<!doctype html>
-<html lang="ru-RU">
+<html lang="{tr(lang, 'html_lang')}">
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width">
-    <title>Все фото — {SITE_NAME}</title>
-    <meta name="description" content="Статический индекс всех фото из раздела Фото.">
-    <link rel="canonical" href="{SITE_URL}/photos/archive/">
-    <link rel="alternate" type="application/rss+xml" title="{escape_attr(PHOTOS_TITLE)}" href="{SITE_URL}/photos/feed.xml">
+    <title>{title} — {tr(lang, 'site_name')}</title>
+    <meta name="description" content="{escape_attr(description)}">
+    <link rel="canonical" href="{localized_url(page_path, lang)}">
+{alternate_links(page_path, lang)}
+    <link rel="alternate" type="application/rss+xml" title="{escape_attr(tr(lang, 'photos'))}" href="{localized_url('/photos/feed.xml', lang)}">
     <meta property="og:type" content="website">
-    <meta property="og:title" content="Все фото — {SITE_NAME}">
-    <meta property="og:description" content="Статический индекс всех фото из раздела Фото.">
+    <meta property="og:title" content="{title} — {tr(lang, 'site_name')}">
+    <meta property="og:description" content="{escape_attr(description)}">
     <meta property="og:image" content="{SITE_URL}/assets/og.png">
-    <meta property="og:url" content="{SITE_URL}/photos/archive/">
+    <meta property="og:url" content="{localized_url(page_path, lang)}">
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Все фото — {SITE_NAME}">
-    <meta name="twitter:description" content="Статический индекс всех фото из раздела Фото.">
+    <meta name="twitter:title" content="{title} — {tr(lang, 'site_name')}">
+    <meta name="twitter:description" content="{escape_attr(description)}">
     <meta name="twitter:image" content="{SITE_URL}/assets/og.png">
     <link rel="icon" href="/assets/favicon.png">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -151,16 +331,16 @@ def render_photos_archive(photos):
     <link rel="stylesheet" href="/styles.css?v={asset_version()}">
   </head>
   <body>
-    <main class="page photos-page">
-      {render_header("/photos/archive/")}
+    <main class="page photos-page" data-page-lang="{lang}">
+      {render_header(page_path, lang)}
 
       <section class="photos-intro compact" aria-labelledby="photos-archive-title">
-        <p class="eyebrow">Static index</p>
-        <h1 id="photos-archive-title">Все фото</h1>
-        <a href="/photos/">Вернуться в фотоленту</a>
+        <p class="eyebrow">{tr(lang, 'static_index')}</p>
+        <h1 id="photos-archive-title">{title}</h1>
+        <a href="{localized_path('/photos/', lang)}">{tr(lang, 'back_to_photos')}</a>
       </section>
 
-      <section class="post-index-list" aria-label="Все фото">
+      <section class="post-index-list" aria-label="{escape_attr(title)}">
         {items}
       </section>
     </main>
@@ -169,31 +349,36 @@ def render_photos_archive(photos):
 """
 
 
-def render_photo_page(photo, newer, older):
-    url = f"{SITE_URL}/photos/{photo['id']}/"
-    title = f"{photo_title(photo)} — {PHOTOS_TITLE}"
-    description = photo_description(photo)
+def render_photo_page(photo, newer, older, lang="ru"):
+    page_path = f"/photos/{photo['id']}/"
+    url = localized_url(page_path, lang)
+    title = f"{photo_title(photo, 72, lang)} — {tr(lang, 'photos')}"
+    description = photo_description(photo, lang)
     image = photo_asset_url(photo.get("src"))
-    json_ld = photo_json_ld(photo, url, description)
-    caption = f"<p>{escape_html(photo.get('caption'))}</p>" if clean_text(photo.get("caption")) else ""
+    json_ld = photo_json_ld(photo, url, description, lang)
+    caption_text = photo_caption(photo, lang)
+    caption = f"<p>{escape_html(caption_text)}</p>" if caption_text else ""
+    newer_link = f'<a href="{localized_path("/photos/" + str(newer["id"]) + "/", lang)}">{tr(lang, "newer")}</a>' if newer else "<span></span>"
+    older_link = f'<a href="{localized_path("/photos/" + str(older["id"]) + "/", lang)}">{tr(lang, "older")}</a>' if older else "<span></span>"
 
     return f"""<!doctype html>
-<html lang="ru-RU">
+<html lang="{tr(lang, 'html_lang')}">
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width">
     <title>{escape_html(title)}</title>
     <meta name="description" content="{escape_attr(description)}">
     <link rel="canonical" href="{url}">
-    <link rel="alternate" type="application/rss+xml" title="{escape_attr(PHOTOS_TITLE)}" href="{SITE_URL}/photos/feed.xml">
+{alternate_links(page_path, lang)}
+    <link rel="alternate" type="application/rss+xml" title="{escape_attr(tr(lang, 'photos'))}" href="{localized_url('/photos/feed.xml', lang)}">
     <meta property="og:type" content="article">
-    <meta property="og:title" content="{escape_attr(photo_title(photo, 90))}">
+    <meta property="og:title" content="{escape_attr(photo_title(photo, 90, lang))}">
     <meta property="og:description" content="{escape_attr(description)}">
     <meta property="og:image" content="{escape_attr(image)}">
     <meta property="og:url" content="{url}">
     <meta property="article:published_time" content="{escape_attr(iso_date(photo.get('date') or photo.get('uploadedAt')))}">
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="{escape_attr(photo_title(photo, 90))}">
+    <meta name="twitter:title" content="{escape_attr(photo_title(photo, 90, lang))}">
     <meta name="twitter:description" content="{escape_attr(description)}">
     <meta name="twitter:image" content="{escape_attr(image)}">
     <link rel="license" href="{LICENSE_URL}">
@@ -204,32 +389,32 @@ def render_photo_page(photo, newer, older):
     <script type="application/ld+json">{json_script(json_ld)}</script>
   </head>
   <body>
-    <main class="page photo-detail-page">
-      {render_header(f"/photos/{photo['id']}/")}
+    <main class="page photo-detail-page" data-page-lang="{lang}">
+      {render_header(page_path, lang)}
 
-      <nav class="post-breadcrumb" aria-label="Хлебные крошки">
-        <a href="/photos/">Фото</a>
+      <nav class="post-breadcrumb" aria-label="{tr(lang, 'breadcrumbs')}">
+        <a href="{localized_path('/photos/', lang)}">{tr(lang, 'photos')}</a>
         <span aria-hidden="true">/</span>
-        <a href="/photos/archive/">Все фото</a>
+        <a href="{localized_path('/photos/archive/', lang)}">{tr(lang, 'all_photos')}</a>
       </nav>
 
       <article class="photo-detail">
         <figure class="photo-detail-figure">
           <a href="{escape_attr(photo.get('src'))}">
-            <img src="{escape_attr(photo.get('src'))}"{image_dimensions_attrs(photo)} decoding="async" alt="{escape_attr(photo_alt(photo))}">
+            <img src="{escape_attr(photo.get('src'))}"{image_dimensions_attrs(photo)} decoding="async" alt="{escape_attr(photo_alt(photo, lang))}">
           </a>
           <figcaption>
-            <h1>{escape_html(photo_title(photo, 140))}</h1>
+            <h1>{escape_html(photo_title(photo, 140, lang))}</h1>
             {caption}
           </figcaption>
         </figure>
 
-        {render_photo_meta(photo)}
+        {render_photo_meta(photo, lang)}
       </article>
 
-      <nav class="post-nav" aria-label="Соседние фото">
-        {f'<a href="/photos/{newer["id"]}/">Новее</a>' if newer else '<span></span>'}
-        {f'<a href="/photos/{older["id"]}/">Старее</a>' if older else '<span></span>'}
+      <nav class="post-nav" aria-label="{tr(lang, 'photos')}">
+        {newer_link}
+        {older_link}
       </nav>
     </main>
   </body>
@@ -237,23 +422,24 @@ def render_photo_page(photo, newer, older):
 """
 
 
-def render_photo_card(photo, index):
+def render_photo_card(photo, index, lang="ru"):
     aspect = f' style="aspect-ratio: {int(photo["width"])} / {int(photo["height"])}"' if photo.get("width") and photo.get("height") else ""
     loading = "eager" if index < 4 else "lazy"
     hdr = '<span class="photo-hdr-badge">HDR</span>' if photo.get("hdr") else ""
+    title = photo_title(photo, 100, lang)
 
     return f"""<article class="photo-entry">
-          <a class="photo-card" href="/photos/{photo['id']}/"{aspect} aria-label="{escape_attr(photo_title(photo, 100))}">
-            <img src="{escape_attr(photo.get('src'))}" loading="{loading}" decoding="async" alt="{escape_attr(photo_alt(photo))}">
+          <a class="photo-card" href="{localized_path("/photos/" + str(photo['id']) + "/", lang)}"{aspect} aria-label="{escape_attr(title)}">
+            <img src="{escape_attr(photo.get('src'))}" loading="{loading}" decoding="async" alt="{escape_attr(photo_alt(photo, lang))}">
             {hdr}
           </a>
-          {render_photo_info(photo)}
+          {render_photo_info(photo, lang)}
         </article>"""
 
 
-def render_photo_info(photo):
+def render_photo_info(photo, lang="ru"):
     technical = photo.get("technical") or {}
-    location = photo_location(photo)
+    location = photo_location(photo, lang)
     settings = [item for item in technical.get("settings", []) if item.get("value")]
     settings_html = ""
     if settings:
@@ -263,10 +449,10 @@ def render_photo_info(photo):
 
     return f"""<div class="photo-info">
             <div class="photo-info-header">
-              <strong>{escape_html(technical.get("cameraLine") or "Leica M6 — плёнка")}</strong>
+              <strong>{escape_html(technical.get("cameraLine") or tr(lang, "film_camera"))}</strong>
             </div>
             <div class="photo-info-body">
-              <p>{escape_html(technical.get("lensLine") or "Плёночная фотография")}</p>
+              <p>{escape_html(technical.get("lensLine") or tr(lang, "film_photo"))}</p>
               <p>{escape_html(technical.get("summary") or compact_text([format_dimensions(photo), format_file_size(photo.get("size"))]))}</p>
               {f'<p class="photo-location">{escape_html(location)}</p>' if location else ''}
             </div>
@@ -274,87 +460,90 @@ def render_photo_info(photo):
           </div>"""
 
 
-def render_photo_index_link(photo):
-    return f"""<a class="post-index-item" href="/photos/{photo['id']}/">
-          <time datetime="{escape_attr(iso_date(photo.get('date') or photo.get('uploadedAt')))}">{escape_html(format_date(photo.get('date') or photo.get('uploadedAt')))}</time>
-          <span>{escape_html(photo_title(photo, 120))}</span>
+def render_photo_index_link(photo, lang="ru"):
+    return f"""<a class="post-index-item" href="{localized_path("/photos/" + str(photo['id']) + "/", lang)}">
+          <time datetime="{escape_attr(iso_date(photo.get('date') or photo.get('uploadedAt')))}">{escape_html(format_date(photo.get('date') or photo.get('uploadedAt'), lang))}</time>
+          <span>{escape_html(photo_title(photo, 120, lang))}</span>
         </a>"""
 
 
-def render_photo_meta(photo):
+def render_photo_meta(photo, lang="ru"):
     technical = photo.get("technical") or {}
-    location = photo_location(photo)
+    location = photo_location(photo, lang)
     settings = [item for item in technical.get("settings", []) if item.get("value")]
 
     rows = [
-        ("Дата", f'<time datetime="{escape_attr(iso_date(photo.get("date") or photo.get("uploadedAt")))}">{escape_html(format_date(photo.get("date") or photo.get("uploadedAt")))}</time>'),
-        ("Камера", escape_html(technical.get("cameraLine") or "Leica M6 — плёнка")),
-        ("Объектив", escape_html(technical.get("lensLine") or "Плёночная фотография")),
+        (tr(lang, "date"), f'<time datetime="{escape_attr(iso_date(photo.get("date") or photo.get("uploadedAt")))}">{escape_html(format_date(photo.get("date") or photo.get("uploadedAt"), lang))}</time>'),
+        (tr(lang, "camera"), escape_html(technical.get("cameraLine") or tr(lang, "film_camera"))),
+        (tr(lang, "lens"), escape_html(technical.get("lensLine") or tr(lang, "film_photo"))),
     ]
     if location:
-        rows.append(("Место", escape_html(location)))
+        rows.append((tr(lang, "place"), escape_html(location)))
     if settings:
-        rows.append(("Настройки", escape_html(" · ".join(setting_value(item) for item in settings))))
+        rows.append((tr(lang, "settings"), escape_html(" · ".join(setting_value(item) for item in settings))))
     rows.extend([
-        ("Файл", escape_html(compact_text([format_dimensions(photo), format_file_size(photo.get("size")), photo.get("mimeType")]))),
-        ("Лицензия", f'<a href="{LICENSE_URL}" target="_blank" rel="license noopener">{LICENSE_NAME}</a>. Использование разрешено с указанием авторства и ссылки на эту страницу.'),
+        (tr(lang, "file"), escape_html(compact_text([format_dimensions(photo), format_file_size(photo.get("size")), photo.get("mimeType")]))),
+        (tr(lang, "license"), f'<a href="{LICENSE_URL}" target="_blank" rel="license noopener">{LICENSE_NAME}</a>. {tr(lang, "license_usage")}'),
     ])
 
-    return f"""<aside class="photo-detail-meta" aria-label="Информация о фото">
+    return f"""<aside class="photo-detail-meta" aria-label="{tr(lang, 'photo_info')}">
           <dl>
             {"".join(f'<div><dt>{label}</dt><dd>{value}</dd></div>' for label, value in rows)}
           </dl>
         </aside>"""
 
 
-def photo_json_ld(photo, url, description):
+def photo_json_ld(photo, url, description, lang="ru"):
     image = photo_asset_url(photo.get("src"))
     data = {
         "@context": "https://schema.org",
         "@type": "ImageObject",
-        "name": photo_title(photo, 110),
-        "caption": clean_text(photo.get("caption")) or photo_title(photo, 110),
+        "name": photo_title(photo, 110, lang),
+        "caption": photo_caption(photo, lang) or photo_title(photo, 110, lang),
         "description": description,
         "contentUrl": image,
         "url": url,
         "thumbnailUrl": image,
         "datePublished": iso_date(photo.get("date") or photo.get("uploadedAt")),
         "uploadDate": iso_date(photo.get("uploadedAt") or photo.get("date")),
-        "creator": {"@type": "Person", "name": SITE_NAME, "url": SITE_URL},
-        "creditText": SITE_NAME,
-        "copyrightNotice": f"© {SITE_NAME}",
+        "creator": {"@type": "Person", "name": tr(lang, "site_name"), "url": SITE_URL},
+        "creditText": tr(lang, "site_name"),
+        "copyrightNotice": f"© {tr(lang, 'site_name')}",
         "license": LICENSE_URL,
         "acquireLicensePage": url,
-        "isPartOf": {"@type": "CollectionPage", "name": PHOTOS_TITLE, "url": f"{SITE_URL}/photos/"},
+        "isPartOf": {"@type": "CollectionPage", "name": tr(lang, "photos"), "url": localized_url("/photos/", lang)},
     }
     if photo.get("width"):
         data["width"] = f"{photo['width']}px"
     if photo.get("height"):
         data["height"] = f"{photo['height']}px"
-    if photo_location(photo):
-        data["contentLocation"] = {"@type": "Place", "name": photo_location(photo)}
+    if photo_location(photo, lang):
+        data["contentLocation"] = {"@type": "Place", "name": photo_location(photo, lang)}
     return data
 
 
 def render_sitemap(photos):
     existing = read_existing_sitemap_non_photo_urls()
     latest = sitemap_date(photos[0].get("uploadedAt") or photos[0].get("date")) if photos else None
-    photos_static = [
-        {"loc": f"{SITE_URL}/photos/", "lastmod": latest},
-        {"loc": f"{SITE_URL}/photos/archive/", "lastmod": latest},
-    ]
-    photo_urls = [
-        {
-            "loc": f"{SITE_URL}/photos/{photo['id']}/",
-            "lastmod": sitemap_date(photo.get("uploadedAt") or photo.get("date")),
-            "image": {
-                "loc": photo_asset_url(photo.get("src")),
-                "title": photo_title(photo, 110),
-                "caption": clean_text(photo.get("caption")) or photo_title(photo, 110),
-            },
-        }
-        for photo in photos
-    ]
+    photos_static = []
+    photo_urls = []
+    for lang in LANGUAGES:
+        photos_static.extend([
+            {"loc": localized_url("/photos/", lang), "lastmod": latest},
+            {"loc": localized_url("/photos/archive/", lang), "lastmod": latest},
+        ])
+        photo_urls.extend([
+            {
+                "loc": localized_url(f"/photos/{photo['id']}/", lang),
+                "lastmod": sitemap_date(photo.get("uploadedAt") or photo.get("date")),
+                "image": {
+                    "loc": photo_asset_url(photo.get("src")),
+                    "title": photo_title(photo, 110, lang),
+                    "caption": photo_caption(photo, lang) or photo_title(photo, 110, lang),
+                },
+            }
+            for photo in photos
+        ])
     urls = existing + photos_static + photo_urls
 
     body = "\n".join(render_sitemap_url(url) for url in urls)
@@ -382,29 +571,31 @@ def render_sitemap_url(url):
   </url>"""
 
 
-def render_main_feed(posts, photos):
-    items = [post_feed_item(post) for post in posts] + [photo_feed_item(photo) for photo in photos]
+def render_main_feed(posts, photos, lang="ru"):
+    items = [post_feed_item(post, lang) for post in posts] + [photo_feed_item(photo, lang) for photo in photos]
     items = sorted(items, key=lambda item: item["sortDate"], reverse=True)[:FEED_LIMIT]
     return render_rss_feed(
-        title=SITE_NAME,
-        description="Новые записи и фотографии на tomilov.com.",
-        link=f"{SITE_URL}/",
-        self_url=f"{SITE_URL}/feed.xml",
+        title=tr(lang, "site_name"),
+        description=tr(lang, "main_feed_description"),
+        link=localized_url("/", lang),
+        self_url=localized_url("/feed.xml", lang),
         items=items,
+        lang=lang,
     )
 
 
-def render_photos_feed(photos):
+def render_photos_feed(photos, lang="ru"):
     return render_rss_feed(
-        title=f"{PHOTOS_TITLE} — {SITE_NAME}",
-        description=PHOTOS_DESCRIPTION,
-        link=f"{SITE_URL}/photos/",
-        self_url=f"{SITE_URL}/photos/feed.xml",
-        items=[photo_feed_item(photo) for photo in photos[:FEED_LIMIT]],
+        title=f"{tr(lang, 'photos')} — {tr(lang, 'site_name')}",
+        description=tr(lang, "photos_description"),
+        link=localized_url("/photos/", lang),
+        self_url=localized_url("/photos/feed.xml", lang),
+        items=[photo_feed_item(photo, lang) for photo in photos[:FEED_LIMIT]],
+        lang=lang,
     )
 
 
-def render_rss_feed(title, description, link, self_url, items):
+def render_rss_feed(title, description, link, self_url, items, lang="ru"):
     latest = items[0]["sortDate"] if items else datetime.now(timezone.utc)
     body = "\n".join(render_feed_item(item) for item in items)
     return f"""<?xml version="1.0" encoding="UTF-8"?>
@@ -413,7 +604,7 @@ def render_rss_feed(title, description, link, self_url, items):
     <title>{escape_html(title)}</title>
     <link>{escape_html(link)}</link>
     <description>{escape_html(description)}</description>
-    <language>ru-RU</language>
+    <language>{tr(lang, "rss_lang")}</language>
     <lastBuildDate>{rss_date(latest)}</lastBuildDate>
     <atom:link href="{escape_attr(self_url)}" rel="self" type="application/rss+xml"/>
 {body}
@@ -437,35 +628,35 @@ def render_feed_item(item):
     </item>"""
 
 
-def post_feed_item(post):
-    link = f"{SITE_URL}/screenshots/{post.get('id')}/"
+def post_feed_item(post, lang="ru"):
+    link = localized_url(f"/screenshots/{post.get('id')}/", lang)
     media = post_social_image(post)
     date = post_datetime(post)
     return {
-        "title": post_title(post, 120),
+        "title": post_title(post, 120, lang),
         "link": link,
         "guid": link,
         "pubDate": date,
         "sortDate": date,
-        "description": post_description(post),
+        "description": post_description(post, lang),
         "category": CHANNEL_TITLE,
         "mediaUrl": media,
         "mediaType": guess_mime_type(media) if media else "",
     }
 
 
-def photo_feed_item(photo):
-    link = f"{SITE_URL}/photos/{photo.get('id')}/"
+def photo_feed_item(photo, lang="ru"):
+    link = localized_url(f"/photos/{photo.get('id')}/", lang)
     media = photo_asset_url(photo.get("src"))
     date = parse_date(photo.get("uploadedAt") or photo.get("date"))
     return {
-        "title": photo_title(photo, 120),
+        "title": photo_title(photo, 120, lang),
         "link": link,
         "guid": link,
         "pubDate": date,
         "sortDate": date,
-        "description": f"{photo_description(photo)} Лицензия: {LICENSE_NAME}, использование с указанием авторства и ссылки на страницу фото.",
-        "category": PHOTOS_TITLE,
+        "description": f"{photo_description(photo, lang)} {tr(lang, 'photos_feed_license')}",
+        "category": tr(lang, "photos"),
         "mediaUrl": media,
         "mediaType": photo.get("mimeType") or guess_mime_type(media),
     }
@@ -486,7 +677,7 @@ def read_existing_sitemap_non_photo_urls():
 
     for node in root.findall("sm:url", namespace):
         loc = text_or_empty(node.find("sm:loc", namespace))
-        if loc.startswith(f"{SITE_URL}/photos"):
+        if loc.startswith(f"{SITE_URL}/photos") or loc.startswith(f"{SITE_URL}/en/photos"):
             continue
 
         lastmod = text_or_empty(node.find("sm:lastmod", namespace))
@@ -495,34 +686,38 @@ def read_existing_sitemap_non_photo_urls():
     return urls
 
 
-def remove_stale_photo_dirs(photo_ids):
-    for entry in PHOTOS_DIR.iterdir():
+def remove_stale_photo_dirs(photo_ids, photos_dir=PHOTOS_DIR):
+    for entry in photos_dir.iterdir():
         if not entry.is_dir() or entry.name == "archive" or entry.name in photo_ids:
             continue
         shutil.rmtree(entry)
 
 
-def render_header(current_path):
+def render_header(current_path, lang="ru"):
     is_screenshots = current_path.startswith("/screenshots/")
     is_photos = current_path.startswith("/photos/")
     is_about = current_path.startswith("/about/")
-    return f"""<header class="site-header" aria-label="Навигация">
-        <a class="brand" href="/">SS/84</a>
-        <nav class="path" aria-label="Разделы">
-          <a href="/screenshots/"{' aria-current="page"' if is_screenshots else ''}>Блог</a>
-          <a href="/photos/"{' aria-current="page"' if is_photos else ''}>Фото</a>
-          <a href="/about/"{' aria-current="page"' if is_about else ''}><span class="desktop-name">Серёжа Томилов</span><span class="mobile-name">about</span></a>
+    return f"""<header class="site-header" aria-label="{tr(lang, 'nav_aria')}">
+        <a class="brand" href="{localized_path("/", lang)}">SS/84</a>
+        <nav class="path" aria-label="{tr(lang, 'sections_aria')}">
+          <a href="{localized_path("/screenshots/", lang)}"{' aria-current="page"' if is_screenshots else ''}>{tr(lang, 'blog')}</a>
+          <a href="{localized_path("/photos/", lang)}"{' aria-current="page"' if is_photos else ''}>{tr(lang, 'photos')}</a>
+          <a href="{localized_path("/about/", lang)}"{' aria-current="page"' if is_about else ''}><span class="desktop-name">{tr(lang, 'about_desktop')}</span><span class="mobile-name">{tr(lang, 'about_mobile')}</span></a>
+        </nav>
+        <nav class="language-switcher" aria-label="Language">
+          <a href="{localized_path(current_path, 'ru')}" data-language-link data-lang="ru"{' aria-current="true"' if lang == 'ru' else ''}>RU</a>
+          <a href="{localized_path(current_path, 'en')}" data-language-link data-lang="en"{' aria-current="true"' if lang == 'en' else ''}>EN</a>
         </nav>
       </header>"""
 
 
-def render_photo_dialog():
-    return """<dialog class="photo-viewer" data-photo-dialog aria-label="Просмотр фотографии">
+def render_photo_dialog(lang="ru"):
+    return f"""<dialog class="photo-viewer" data-photo-dialog aria-label="{tr(lang, 'viewer')}">
       <div class="photo-viewer-bar">
-        <button type="button" data-photo-prev aria-label="Предыдущее фото">‹</button>
+        <button type="button" data-photo-prev aria-label="{tr(lang, 'previous_photo')}">‹</button>
         <button type="button" data-photo-actual>100%</button>
-        <button type="button" data-photo-next aria-label="Следующее фото">›</button>
-        <button type="button" data-photo-close>Закрыть</button>
+        <button type="button" data-photo-next aria-label="{tr(lang, 'next_photo')}">›</button>
+        <button type="button" data-photo-close>{tr(lang, 'close')}</button>
       </div>
       <figure class="photo-viewer-stage">
         <img data-photo-dialog-image alt="">
@@ -531,13 +726,29 @@ def render_photo_dialog():
     </dialog>"""
 
 
-def post_title(post, max_length=72):
-    title = clean_text(post.get("text")) or f"Пост от {format_date(post_datetime(post))}"
+def post_text(post, lang="ru"):
+    if lang == "en":
+        value = clean_text(translation(post, lang).get("text"))
+        if value:
+            return value
+    return clean_text(post.get("text"))
+
+
+def post_entities(post, lang="ru"):
+    if lang == "en":
+        value = translation(post, lang).get("entities")
+        if isinstance(value, list):
+            return value
+    return post.get("entities") or []
+
+
+def post_title(post, max_length=72, lang="ru"):
+    title = post_text(post, lang) or tr(lang, "post_from").format(date=format_date(post_datetime(post), lang))
     return truncate(title, max_length)
 
 
-def post_description(post):
-    description = clean_text(post.get("text")) or f"Пост канала {CHANNEL_TITLE} от {format_date(post_datetime(post))}."
+def post_description(post, lang="ru"):
+    description = post_text(post, lang) or tr(lang, "post_by_date").format(date=format_date(post_datetime(post), lang))
     return truncate(description, 156)
 
 
@@ -576,33 +787,52 @@ def post_datetime(post):
     return datetime.now(timezone.utc)
 
 
-def photo_title(photo, max_length=72):
-    title = clean_text(photo.get("caption")) or compact_text([
-        photo_location(photo),
+def photo_caption(photo, lang="ru"):
+    if lang == "en":
+        value = clean_text(translation(photo, lang).get("caption"))
+        if value:
+            return value
+    return clean_text(photo.get("caption"))
+
+
+def photo_title(photo, max_length=72, lang="ru"):
+    title = photo_caption(photo, lang) or compact_text([
+        photo_location(photo, lang),
         (photo.get("technical") or {}).get("cameraLine"),
-        format_date(photo.get("date") or photo.get("uploadedAt")),
-    ]) or f"Фото от {format_date(photo.get('date') or photo.get('uploadedAt'))}"
+        format_date(photo.get("date") or photo.get("uploadedAt"), lang),
+    ]) or tr(lang, "photo_from").format(date=format_date(photo.get("date") or photo.get("uploadedAt"), lang))
     return truncate(title, max_length)
 
 
-def photo_description(photo):
+def photo_description(photo, lang="ru"):
     description = compact_text([
-        clean_text(photo.get("caption")),
-        photo_location(photo),
+        photo_caption(photo, lang),
+        photo_location(photo, lang),
         (photo.get("technical") or {}).get("cameraLine"),
         (photo.get("technical") or {}).get("lensLine"),
-        format_date(photo.get("date") or photo.get("uploadedAt")),
-    ]) or f"Фото Серёжи Томилова от {format_date(photo.get('date') or photo.get('uploadedAt'))}."
+        format_date(photo.get("date") or photo.get("uploadedAt"), lang),
+    ]) or tr(lang, "photo_by_date").format(date=format_date(photo.get("date") or photo.get("uploadedAt"), lang))
     return truncate(description, 156)
 
 
-def photo_alt(photo):
-    return clean_text(photo.get("alt")) or clean_text(photo.get("caption")) or photo_title(photo, 100)
+def photo_alt(photo, lang="ru"):
+    if lang == "en":
+        value = clean_text(translation(photo, lang).get("alt"))
+        if value:
+            return value
+    return clean_text(photo.get("alt")) or photo_caption(photo, lang) or photo_title(photo, 100, lang)
 
 
-def photo_location(photo):
+def photo_location(photo, lang="ru"):
     location = photo.get("location") or {}
-    value = clean_text(location.get("label") or location.get("name"))
+    if lang == "en":
+        translated = clean_text(translation(photo, lang).get("locationLabel") or translation(photo, lang).get("location"))
+        if translated:
+            value = translated
+        else:
+            value = clean_text(location.get("label") or location.get("name"))
+    else:
+        value = clean_text(location.get("label") or location.get("name"))
     normalized = re.sub(r"^локация:?\s*", "", value.lower())
     if not value or normalized == "не указана" or re.match(r"^-?\d+(?:\.\d+)?,\s*-?\d+(?:\.\d+)?$", value):
         return ""
@@ -652,12 +882,19 @@ def format_file_size(value):
     return f"{value} B"
 
 
-def format_date(value):
+def format_date(value, lang="ru"):
+    date = parse_date(value)
+    if lang == "en":
+        months = [
+            "January", "February", "March", "April", "May", "June",
+            "July", "August", "September", "October", "November", "December",
+        ]
+        return f"{months[date.month - 1]} {date.day}, {date.year}"
+
     months = [
         "января", "февраля", "марта", "апреля", "мая", "июня",
         "июля", "августа", "сентября", "октября", "ноября", "декабря",
     ]
-    date = parse_date(value)
     return f"{date.day} {months[date.month - 1]} {date.year} г."
 
 

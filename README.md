@@ -6,6 +6,7 @@
 - `/about/` — страница с выступлениями и видео.
 - `/screenshots/` — архив канала Screenshot of the Day.
 - `/photos/` — фотолента для личных снимков.
+- `/en/` — английская версия сайта с теми же разделами и URL под префиксом `/en`.
 
 Главные файлы:
 
@@ -23,6 +24,7 @@
 - `tools/generate-seo-pages.mjs` — генерация статических страниц постов, индексов, RSS и `sitemap.xml`.
 - `tools/generate_telegram_seo.py` — production refresh страниц блога, RSS и `sitemap.xml` после Telegram webhook.
 - `tools/generate_photo_seo.py` — production refresh фото-страниц, RSS и `sitemap.xml` после upload.
+- `tools/translate-content.mjs` — LLM-перевод постов и фото в `translations.en`.
 - `tools/telegram_live_importer.py` — webhook-сервис для новых постов из Telegram.
 - `tools/deploy-site.sh` — production deploy и data-only refresh для фото.
 - `ops/` — примеры nginx/systemd/env для Telegram importer и photo upload.
@@ -122,13 +124,33 @@ HDR/Ultra HDR поддерживается сохранением исходно
 node tools/generate-seo-pages.mjs
 ```
 
-Скрипт читает `assets/telegram/posts.json` и `assets/photos/photos.json`, создаёт страницы `/screenshots/<id>/`, `/photos/<id>/`, статические индексы `/screenshots/posts/` и `/photos/archive/`, добавляет `ImageObject`/`BlogPosting` JSON-LD и обновляет `sitemap.xml`.
+Скрипт читает `assets/telegram/posts.json` и `assets/photos/photos.json`, создаёт страницы `/screenshots/<id>/`, `/photos/<id>/`, английские пары `/en/screenshots/<id>/`, `/en/photos/<id>/`, статические индексы, JSON-LD, RSS и `sitemap.xml`.
 
 RSS-фиды генерируются из тех же данных:
 
 - `/feed.xml` — общий фид сайта.
 - `/screenshots/feed.xml` — новые посты Screenshot of the Day.
 - `/photos/feed.xml` — новые фотографии.
+- `/en/feed.xml`, `/en/screenshots/feed.xml`, `/en/photos/feed.xml` — английские RSS-фиды.
+
+## Английская версия
+
+Английские страницы берут переводы из поля `translations.en` в `assets/telegram/posts.json` и `assets/photos/photos.json`. Если перевода ещё нет, генераторы оставляют исходный текст как fallback, но интерфейс, URL, даты, фиды и SEO-разметка уже английские.
+
+В шапке есть переключатель `RU / EN`. Ссылки ведут на реальные статические URL, а `script.js` перехватывает клик и подменяет страницу через `fetch` + `history.pushState`, без полной перезагрузки. Если JavaScript выключен, ссылки работают как обычная навигация.
+
+Разовый или регулярный перевод:
+
+```sh
+OPENAI_API_KEY=... node tools/translate-content.mjs --limit 20 --status draft
+node tools/generate-seo-pages.mjs
+```
+
+Скрипт переводит только записи без `translations.en`, сохраняет результат в JSON и помечает модель, дату и статус. Для проверки очереди без API:
+
+```sh
+node tools/translate-content.mjs --dry-run --limit 20
+```
 
 ## Telegram live import
 

@@ -7,6 +7,9 @@
     <title>Серёжа Томилов</title>
     <meta name="description" content="Интернет Серёжи Томилова">
     <link rel="canonical" href="https://tomilov.com/">
+    <link rel="alternate" hreflang="ru" href="https://tomilov.com/">
+    <link rel="alternate" hreflang="en" href="https://tomilov.com/en/">
+    <link rel="alternate" hreflang="x-default" href="https://tomilov.com/">
     <link rel="alternate" type="application/rss+xml" title="Серёжа Томилов" href="https://tomilov.com/feed.xml">
     <meta property="og:type" content="website">
     <meta property="og:title" content="Серёжа Томилов">
@@ -20,16 +23,20 @@
     <link rel="icon" href="/assets/favicon.png">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500;700&family=Lora:wght@600&family=Manrope:wght@800&display=swap">
-    <link rel="stylesheet" href="/styles.css?v=20260531-photo-footer">
+    <link rel="stylesheet" href="/styles.css?v=20260601-i18n">
   </head>
   <body>
-    <main class="page">
+    <main class="page" data-page-lang="ru">
       <header class="site-header" aria-label="Навигация">
         <a class="brand" href="/" aria-current="page">SS/84</a>
         <nav class="path" aria-label="Разделы">
           <a href="/screenshots/">Блог</a>
           <a href="/photos/">Фото</a>
           <a href="/about/"><span class="desktop-name">Серёжа Томилов</span><span class="mobile-name">about</span></a>
+        </nav>
+        <nav class="language-switcher" aria-label="Language">
+          <a href="/" data-language-link data-lang="ru" aria-current="true">RU</a>
+          <a href="/en/" data-language-link data-lang="en">EN</a>
         </nav>
       </header>
 
@@ -42,5 +49,6 @@
           title="SS/84 Miro board"></iframe>
       </section>
     </main>
+    <script src="/script.js?v=20260601-i18n"></script>
   </body>
 </html>

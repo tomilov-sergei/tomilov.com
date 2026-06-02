@@ -1,7 +1,11 @@
 .deploy/
+.codex-translation-batches/
+.env
+.env.*
 .DS_Store
 ._*
 __pycache__/
 *.py[cod]
-assets/telegram/
+assets/telegram/*
+!assets/telegram/posts.json
 assets/photos/originals/
