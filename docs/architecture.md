@@ -4,12 +4,13 @@ This file is the project map for future Codex chats.
 
 ## Current Product
 
-`tomilov.com` is a personal static site with four public sections:
+`tomilov.com` is a personal static site with five public sections:
 
 - `/` - home page with a Miro live embed.
 - `/about/` - talks, videos, and personal profile material.
 - `/screenshots/` - archive of the Telegram channel "Screenshot of the Day".
 - `/photos/` - personal photo feed.
+- `/barcelona-guide/` - curated Barcelona places and routes.
 - `/en/**` - English mirrors of the public pages, posts, photo pages, feeds, and indexes.
 
 Product direction for `/screenshots/`: a public collection of observations about digital products, design, interfaces, technology, and beautiful things. Telegram is the publishing source; the site should be the durable, searchable, indexable, and navigable version of that thinking. See `docs/product.md`.
@@ -27,6 +28,8 @@ Product direction for `/screenshots/`: a public collection of observations about
 - `about/index.html` - about page.
 - `screenshots/index.html` - Telegram archive page.
 - `photos/index.html` - public photo feed.
+- `barcelona-guide/index.html` - curated Barcelona guide.
+- `assets/barcelona-guide/**` - local working mirror of guide images; ignored by Git and stored in production shared storage.
 - `styles.css` - shared styles.
 - `script.js` - YouTube activation, Telegram feed rendering, photo feed rendering, and photo viewer.
 - `assets/telegram/posts.json` - imported Telegram post database.
@@ -39,7 +42,9 @@ Product direction for `/screenshots/`: a public collection of observations about
 - `tools/generate_telegram_seo.py` - production refresh for blog pages, RSS, and sitemap after Telegram webhook updates.
 - `tools/translate-content.mjs` - OpenAI-backed translation backfill for `translations.en`.
 - `tools/deploy-site.sh` - production deployment script.
+- `tools/check-site.py` - static integrity check for links, manifests, generated pages, feeds, and sitemap.
 - `ops/` - nginx/systemd/env examples for live Telegram import and photo upload.
+- `.github/workflows/validate.yml` - GitHub Actions validation for syntax, integrity, and deterministic generation.
 
 ## Content Flow
 
@@ -95,7 +100,11 @@ Telegram media is synced separately into shared storage so large media files are
 
 Photo media also lives in shared storage. Releases symlink `assets/photos` to `shared/assets/photos`, and the deploy script pulls production `photos.json` by default before packaging.
 
+Barcelona Guide images live in `shared/assets/barcelona-guide`. They are not committed because their third-party licensing is not established. Releases expose them through an `assets/barcelona-guide` symlink, while the guide HTML remains versioned in Git.
+
 `PHOTOS_ONLY=1 ./tools/deploy-site.sh` is not a full deploy. It runs production `tools/generate_photo_seo.py` inside the current release and refreshes only photo pages, photo RSS, the combined RSS feed, and `sitemap.xml`.
+
+Production code must be committed and pushed before deployment. Shared Telegram and photo data remain production-owned, but HTML, CSS, JavaScript, generators, operations examples, and curated static sections must be recoverable from GitHub.
 
 ## Project Memory Rule
 

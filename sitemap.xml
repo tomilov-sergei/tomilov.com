@@ -2,6 +2,9 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
         xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
   <url>
+    <loc>https://tomilov.com/barcelona-guide/</loc>
+  </url>
+  <url>
     <loc>https://tomilov.com/</loc>
   </url>
   <url>
@@ -11,8 +14,16 @@
     <loc>https://tomilov.com/screenshots/</loc>
   </url>
   <url>
-    <loc>https://tomilov.com/screenshots/posts/</loc>
+    <loc>https://tomilov.com/photos/</loc>
     <lastmod>2026-05-31</lastmod>
+  </url>
+  <url>
+    <loc>https://tomilov.com/photos/archive/</loc>
+    <lastmod>2026-05-31</lastmod>
+  </url>
+  <url>
+    <loc>https://tomilov.com/screenshots/posts/</loc>
+    <lastmod>2026-06-11</lastmod>
   </url>
   <url>
     <loc>https://tomilov.com/en/</loc>
@@ -24,8 +35,52 @@
     <loc>https://tomilov.com/en/screenshots/</loc>
   </url>
   <url>
-    <loc>https://tomilov.com/en/screenshots/posts/</loc>
+    <loc>https://tomilov.com/en/photos/</loc>
     <lastmod>2026-05-31</lastmod>
+  </url>
+  <url>
+    <loc>https://tomilov.com/en/photos/archive/</loc>
+    <lastmod>2026-05-31</lastmod>
+  </url>
+  <url>
+    <loc>https://tomilov.com/en/screenshots/posts/</loc>
+    <lastmod>2026-06-11</lastmod>
+  </url>
+  <url>
+    <loc>https://tomilov.com/screenshots/2025/</loc>
+    <lastmod>2026-06-11</lastmod>
+  </url>
+  <url>
+    <loc>https://tomilov.com/screenshots/2024/</loc>
+    <lastmod>2026-06-11</lastmod>
+  </url>
+  <url>
+    <loc>https://tomilov.com/screenshots/2023/</loc>
+    <lastmod>2026-06-11</lastmod>
+  </url>
+  <url>
+    <loc>https://tomilov.com/screenshots/2022/</loc>
+    <lastmod>2026-06-11</lastmod>
+  </url>
+  <url>
+    <loc>https://tomilov.com/screenshots/2021/</loc>
+    <lastmod>2026-06-11</lastmod>
+  </url>
+  <url>
+    <loc>https://tomilov.com/screenshots/2018/</loc>
+    <lastmod>2026-06-11</lastmod>
+  </url>
+  <url>
+    <loc>https://tomilov.com/screenshots/2016/</loc>
+    <lastmod>2026-06-10</lastmod>
+  </url>
+  <url>
+    <loc>https://tomilov.com/screenshots/2015/</loc>
+    <lastmod>2026-06-09</lastmod>
+  </url>
+  <url>
+    <loc>https://tomilov.com/screenshots/2014/</loc>
+    <lastmod>2026-06-09</lastmod>
   </url>
   <url>
     <loc>https://tomilov.com/screenshots/2008/</loc>
@@ -2560,6 +2615,42 @@
     <lastmod>2023-05-29</lastmod>
   </url>
   <url>
+    <loc>https://tomilov.com/en/screenshots/2025/</loc>
+    <lastmod>2026-06-11</lastmod>
+  </url>
+  <url>
+    <loc>https://tomilov.com/en/screenshots/2024/</loc>
+    <lastmod>2026-06-11</lastmod>
+  </url>
+  <url>
+    <loc>https://tomilov.com/en/screenshots/2023/</loc>
+    <lastmod>2026-06-11</lastmod>
+  </url>
+  <url>
+    <loc>https://tomilov.com/en/screenshots/2022/</loc>
+    <lastmod>2026-06-11</lastmod>
+  </url>
+  <url>
+    <loc>https://tomilov.com/en/screenshots/2021/</loc>
+    <lastmod>2026-06-11</lastmod>
+  </url>
+  <url>
+    <loc>https://tomilov.com/en/screenshots/2018/</loc>
+    <lastmod>2026-06-11</lastmod>
+  </url>
+  <url>
+    <loc>https://tomilov.com/en/screenshots/2016/</loc>
+    <lastmod>2026-06-10</lastmod>
+  </url>
+  <url>
+    <loc>https://tomilov.com/en/screenshots/2015/</loc>
+    <lastmod>2026-06-09</lastmod>
+  </url>
+  <url>
+    <loc>https://tomilov.com/en/screenshots/2014/</loc>
+    <lastmod>2026-06-09</lastmod>
+  </url>
+  <url>
     <loc>https://tomilov.com/en/screenshots/2008/</loc>
     <lastmod>2026-05-31</lastmod>
   </url>
@@ -5090,22 +5181,6 @@
   <url>
     <loc>https://tomilov.com/en/screenshots/2/</loc>
     <lastmod>2023-05-29</lastmod>
-  </url>
-  <url>
-    <loc>https://tomilov.com/photos/</loc>
-    <lastmod>2026-05-31</lastmod>
-  </url>
-  <url>
-    <loc>https://tomilov.com/photos/archive/</loc>
-    <lastmod>2026-05-31</lastmod>
-  </url>
-  <url>
-    <loc>https://tomilov.com/en/photos/</loc>
-    <lastmod>2026-05-31</lastmod>
-  </url>
-  <url>
-    <loc>https://tomilov.com/en/photos/archive/</loc>
-    <lastmod>2026-05-31</lastmod>
   </url>
   <url>
     <loc>https://tomilov.com/photos/20260531-173136-e90ccf67/</loc>

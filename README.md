@@ -6,15 +6,17 @@
 - `/about/` — страница с выступлениями и видео.
 - `/screenshots/` — архив канала Screenshot of the Day.
 - `/photos/` — фотолента для личных снимков.
+- `/barcelona-guide/` — личный гайд по местам в Барселоне.
 - `/en/` — английская версия сайта с теми же разделами и URL под префиксом `/en`.
 
 Главные файлы:
 
-- `index.html`, `about/index.html`, `photos/index.html` — структура страниц.
+- `index.html`, `about/index.html`, `photos/index.html`, `barcelona-guide/index.html` — структура страниц.
 - `screenshots/index.html` — страница архива Telegram-канала.
 - `styles.css` — общий дизайн, сетки, адаптив и темы.
 - `script.js` — включение YouTube-видео по клику, лента Telegram-архива и фотолента.
 - `assets/` — favicon, OG-картинка и превью видео.
+- `assets/barcelona-guide/**` — локальная рабочая копия изображений гида; игнорируется git и живёт в production shared storage.
 - `assets/photos/photos.json` — манифест личных фото; оригиналы лежат в `assets/photos/originals/**`, игнорируются git и живут в shared storage.
 - `assets/telegram/posts.json` и `assets/telegram/**` — импортированные посты и медиа из Telegram.
 - `feed.xml`, `screenshots/feed.xml`, `photos/feed.xml` — RSS-фиды сайта, блога и фотоленты.
@@ -37,6 +39,18 @@ python3 -m http.server 4173
 
 После запуска сайт доступен на `http://127.0.0.1:4173/`.
 
+## Проверка
+
+Перед коммитом и деплоем:
+
+```sh
+python3 tools/check-site.py
+node tools/generate-seo-pages.mjs
+git diff --exit-code
+```
+
+`tools/check-site.py` проверяет внутренние ссылки, JSON-манифесты, XML, sitemap и наличие русских и английских страниц для каждого поста и фото. GitHub Actions повторяет эти проверки, проверяет синтаксис Python, JavaScript и shell-скриптов и подтверждает, что генерация не оставляет diff.
+
 ## Деплой
 
 Это обычный статический сайт без сборки. На Timeweb он публикуется одной командой:
@@ -49,11 +63,13 @@ python3 -m http.server 4173
 Production-хранилище по умолчанию лежит на втором диске: `/mnt/tomilov-data/tomilov.com`.
 Telegram-архив живёт отдельно в `/mnt/tomilov-data/tomilov.com/shared/assets/telegram/`, чтобы не упаковывать 10+ GB медиа в каждый release.
 Фото живут в `/mnt/tomilov-data/tomilov.com/shared/assets/photos/`, по той же модели shared storage.
+Изображения Barcelona Guide живут в `/mnt/tomilov-data/tomilov.com/shared/assets/barcelona-guide/` и подключаются в release через symlink.
 Публичные пути остаются прежними через symlink: `/var/www/tomilov.com/current/assets/telegram` и `/var/www/tomilov.com/current/assets/photos`.
 
 По умолчанию production shared storage считается источником правды для `posts.json` и `photos.json`: перед SEO-генерацией деплой скачивает свежие JSON из `/mnt/tomilov-data/tomilov.com/shared/assets/**`, создаёт страницы, RSS и `sitemap.xml`, а затем выкладывает новый release. Это нужно, чтобы live-посты из Telegram и новые фото с телефона не терялись при обычном деплое.
 
 Медиа синхронизируются в сторону сервера аддитивно, без `--delete`, и без перезаписи `posts.json`. Это защищает live-медиа, которые появились на сервере после Telegram webhook.
+Изображения Barcelona Guide также синхронизируются аддитивно и не входят в Git или release-архив.
 
 Если нужен другой storage root, передайте его явно:
 
@@ -137,7 +153,7 @@ RSS-фиды генерируются из тех же данных:
 
 Английские страницы берут переводы из поля `translations.en` в `assets/telegram/posts.json` и `assets/photos/photos.json`. Если перевода ещё нет, генераторы оставляют исходный текст как fallback, но интерфейс, URL, даты, фиды и SEO-разметка уже английские.
 
-В шапке есть переключатель `RU / EN`. Ссылки ведут на реальные статические URL, а `script.js` перехватывает клик и подменяет страницу через `fetch` + `history.pushState`, без полной перезагрузки. Если JavaScript выключен, ссылки работают как обычная навигация.
+В шапке справа есть текстовый переключатель `рус/eng`. Ссылки ведут на реальные статические URL, а `script.js` перехватывает клик и подменяет страницу через `fetch` + `history.pushState`, без полной перезагрузки. Если JavaScript выключен, ссылки работают как обычная навигация.
 
 Разовый или регулярный перевод:
 

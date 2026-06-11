@@ -73,6 +73,200 @@ function initPage() {
     photoFeed.dataset.feedReady = "true";
     initPhotoFeed(photoFeed);
   }
+
+  const barcelonaGuide = document.querySelector("[data-barcelona-guide]");
+  if (barcelonaGuide && !barcelonaGuide.dataset.guideReady) {
+    barcelonaGuide.dataset.guideReady = "true";
+    initBarcelonaGuide(barcelonaGuide);
+  }
+}
+
+function initBarcelonaGuide(root) {
+  const search = root.querySelector("[data-guide-search]");
+  const filters = Array.from(root.querySelectorAll("[data-guide-filter]"));
+  const queryButtons = Array.from(root.querySelectorAll("[data-guide-query]"));
+  const reset = root.querySelector("[data-guide-reset]");
+  const cards = Array.from(root.querySelectorAll("[data-guide-place]"));
+  const empty = root.querySelector("[data-guide-empty]");
+  let activeFilter = "all";
+
+  for (const card of cards) {
+    ensureGuidePlacePreview(card);
+  }
+
+  const grid = root.querySelector(".guide-grid");
+  if (grid) {
+    cards
+      .sort((first, second) => guideRank(first) - guideRank(second))
+      .forEach((card) => grid.append(card));
+  }
+
+  function applyFilters() {
+    const needle = normalizeGuideText(search?.value);
+    let shown = 0;
+
+    for (const card of cards) {
+      const categories = (card.dataset.categories || "").split(/\s+/).filter(Boolean);
+      const categoryMatch = activeFilter === "all" || categories.includes(activeFilter);
+      const haystack = normalizeGuideText(`${card.textContent} ${card.dataset.search || ""}`);
+      const searchMatch = !needle || haystack.includes(needle);
+      const isVisible = categoryMatch && searchMatch;
+
+      card.hidden = !isVisible;
+      if (isVisible) shown++;
+    }
+
+    if (empty) {
+      empty.hidden = shown > 0;
+    }
+  }
+
+  function setActiveFilter(nextFilter) {
+    activeFilter = nextFilter;
+    for (const item of filters) {
+      item.setAttribute("aria-pressed", item.dataset.guideFilter === activeFilter ? "true" : "false");
+    }
+  }
+
+  function resetQuickButtons() {
+    for (const button of queryButtons) {
+      button.setAttribute("aria-pressed", "false");
+    }
+  }
+
+  for (const filter of filters) {
+    filter.addEventListener("click", () => {
+      setActiveFilter(filter.dataset.guideFilter || "all");
+      resetQuickButtons();
+      applyFilters();
+    });
+  }
+
+  for (const button of queryButtons) {
+    button.addEventListener("click", () => {
+      if (search) search.value = button.dataset.guideQuery || "";
+      setActiveFilter("all");
+      resetQuickButtons();
+      button.setAttribute("aria-pressed", "true");
+      applyFilters();
+    });
+  }
+
+  for (const routeLink of root.querySelectorAll(".guide-route-steps a[href^=\"#\"]")) {
+    routeLink.addEventListener("click", () => {
+      setActiveFilter("all");
+      if (search) search.value = "";
+      resetQuickButtons();
+      applyFilters();
+    });
+  }
+
+  search?.addEventListener("input", () => {
+    resetQuickButtons();
+    applyFilters();
+  });
+
+  reset?.addEventListener("click", () => {
+    setActiveFilter("all");
+    if (search) search.value = "";
+    resetQuickButtons();
+    applyFilters();
+    search?.focus();
+  });
+
+  search?.addEventListener("keydown", (event) => {
+    if (event.key === "Escape") {
+      search.value = "";
+      resetQuickButtons();
+      applyFilters();
+    }
+  });
+
+  applyFilters();
+}
+
+function normalizeGuideText(value) {
+  return normalizeText(value).toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+}
+
+function guideRank(card) {
+  const value = Number(card.dataset.guideRank);
+  return Number.isFinite(value) ? value : 999;
+}
+
+function ensureGuidePlacePreview(card) {
+  if (card.querySelector(".guide-place-preview")) return;
+
+  const mapLink = card.querySelector(".guide-map-link");
+  const map = card.querySelector(".guide-map");
+  if (!mapLink || !map) return;
+
+  const title = normalizeText(card.querySelector("h2")?.textContent);
+  const address = normalizeText(card.querySelector(".guide-address")?.textContent);
+  const imageSrc = normalizeText(card.dataset.image);
+  const categories = (card.dataset.categories || "").split(/\s+/).filter(Boolean);
+  const category = categories[0] || "place";
+  const theme = guidePreviewTheme(categories);
+  const preview = document.createElement("a");
+  preview.className = "guide-place-preview";
+  preview.href = mapLink.href;
+  preview.target = "_blank";
+  preview.rel = "noopener";
+  preview.dataset.previewTheme = theme;
+  preview.setAttribute("aria-label", `${title}: открыть в Google Maps`);
+
+  const visual = document.createElement("div");
+  visual.className = "guide-preview-visual";
+
+  if (imageSrc) {
+    const image = document.createElement("img");
+    image.className = "guide-preview-image";
+    image.src = imageSrc;
+    image.loading = "lazy";
+    image.decoding = "async";
+    image.alt = title;
+    visual.append(image);
+  }
+
+  const badge = document.createElement("span");
+  badge.className = "guide-preview-badge";
+  badge.textContent = mapLink.hostname.replace(/^www\./, "");
+  visual.append(badge);
+
+  const caption = document.createElement("div");
+  caption.className = "guide-preview-caption";
+
+  const previewTitle = document.createElement("strong");
+  previewTitle.className = "guide-preview-title";
+  previewTitle.textContent = compactText([title, "Barcelona"]);
+
+  const subtitle = document.createElement("span");
+  subtitle.className = "guide-preview-subtitle";
+  subtitle.textContent = compactText([guideCategoryLabel(category), address]);
+
+  caption.append(previewTitle, subtitle);
+  preview.append(visual, caption);
+  card.insertBefore(preview, map);
+}
+
+function guidePreviewTheme(categories) {
+  for (const theme of ["culture", "food", "coffee", "shop", "walk", "bar"]) {
+    if (categories.includes(theme)) return theme;
+  }
+  return "place";
+}
+
+function guideCategoryLabel(category) {
+  const labels = {
+    bar: "Places, Bar",
+    coffee: "Places, Coffee",
+    culture: "Places, Culture",
+    food: "Places, Food",
+    shop: "Places, Shopping",
+    walk: "Places, Navigation & Traffic",
+  };
+
+  return labels[category] || "Places, Navigation & Traffic";
 }
 
 function currentLanguage() {

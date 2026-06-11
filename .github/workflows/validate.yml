@@ -1,0 +1,45 @@
+name: Validate site
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.10"
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Check static site integrity
+        run: python3 tools/check-site.py
+
+      - name: Check script syntax
+        run: |
+          python3 -m compileall -q tools
+          bash -n tools/*.sh
+          node --check script.js
+          find tools -maxdepth 1 -type f \( -name '*.js' -o -name '*.mjs' \) -exec node --check {} \;
+
+      - name: Verify generated pages are current
+        run: |
+          node tools/generate-seo-pages.mjs
+          git diff --exit-code -- \
+            sitemap.xml \
+            feed.xml \
+            en/feed.xml \
+            screenshots \
+            photos \
+            en/screenshots \
+            en/photos

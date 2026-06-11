@@ -7,7 +7,6 @@ from datetime import datetime, timezone
 from email.utils import format_datetime
 from pathlib import Path
 from urllib.parse import quote
-from xml.etree import ElementTree as ET
 
 
 ROOT_DIR = Path(__file__).resolve().parent.parent
@@ -151,7 +150,7 @@ def main():
         (photos_dir / "index.html").write_text(render_photos_page(photos, lang), encoding="utf-8")
         (photos_archive_dir / "index.html").write_text(render_photos_archive(photos, lang), encoding="utf-8")
 
-    SITEMAP_PATH.write_text(render_sitemap(photos), encoding="utf-8")
+    SITEMAP_PATH.write_text(render_sitemap(posts, photos), encoding="utf-8")
     FEED_PATH.write_text(render_main_feed(posts, photos, "ru"), encoding="utf-8")
     EN_DIR.mkdir(parents=True, exist_ok=True)
     EN_FEED_PATH.write_text(render_main_feed(posts, photos, "en"), encoding="utf-8")
@@ -522,15 +521,27 @@ def photo_json_ld(photo, url, description, lang="ru"):
     return data
 
 
-def render_sitemap(photos):
-    existing = read_existing_sitemap_non_photo_urls()
-    latest = sitemap_date(photos[0].get("uploadedAt") or photos[0].get("date")) if photos else None
-    photos_static = []
+def render_sitemap(posts, photos):
+    latest_post = sitemap_date(posts[0].get("edited") or posts[0].get("date")) if posts else None
+    latest_photo = sitemap_date(photos[0].get("uploadedAt") or photos[0].get("date")) if photos else None
+    static_urls = [{"loc": localized_url("/barcelona-guide/", "ru")}]
+    post_urls = []
     photo_urls = []
     for lang in LANGUAGES:
-        photos_static.extend([
-            {"loc": localized_url("/photos/", lang), "lastmod": latest},
-            {"loc": localized_url("/photos/archive/", lang), "lastmod": latest},
+        static_urls.extend([
+            {"loc": localized_url("/", lang)},
+            {"loc": localized_url("/about/", lang)},
+            {"loc": localized_url("/screenshots/", lang)},
+            {"loc": localized_url("/photos/", lang), "lastmod": latest_photo},
+            {"loc": localized_url("/photos/archive/", lang), "lastmod": latest_photo},
+            {"loc": localized_url("/screenshots/posts/", lang), "lastmod": latest_post},
+        ])
+        post_urls.extend([
+            {
+                "loc": localized_url(f"/screenshots/{post['id']}/", lang),
+                "lastmod": sitemap_date(post.get("edited") or post.get("date")),
+            }
+            for post in posts
         ])
         photo_urls.extend([
             {
@@ -544,9 +555,8 @@ def render_sitemap(photos):
             }
             for photo in photos
         ])
-    urls = existing + photos_static + photo_urls
 
-    body = "\n".join(render_sitemap_url(url) for url in urls)
+    body = "\n".join(render_sitemap_url(url) for url in [*static_urls, *post_urls, *photo_urls])
     return f"""<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
         xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
@@ -662,30 +672,6 @@ def photo_feed_item(photo, lang="ru"):
     }
 
 
-def read_existing_sitemap_non_photo_urls():
-    if not SITEMAP_PATH.exists():
-        return [
-            {"loc": f"{SITE_URL}/"},
-            {"loc": f"{SITE_URL}/about"},
-            {"loc": f"{SITE_URL}/screenshots/"},
-            {"loc": f"{SITE_URL}/screenshots/posts/"},
-        ]
-
-    root = ET.fromstring(SITEMAP_PATH.read_text(encoding="utf-8"))
-    namespace = {"sm": "http://www.sitemaps.org/schemas/sitemap/0.9"}
-    urls = []
-
-    for node in root.findall("sm:url", namespace):
-        loc = text_or_empty(node.find("sm:loc", namespace))
-        if loc.startswith(f"{SITE_URL}/photos") or loc.startswith(f"{SITE_URL}/en/photos"):
-            continue
-
-        lastmod = text_or_empty(node.find("sm:lastmod", namespace))
-        urls.append({"loc": loc, "lastmod": lastmod or None})
-
-    return urls
-
-
 def remove_stale_photo_dirs(photo_ids, photos_dir=PHOTOS_DIR):
     for entry in photos_dir.iterdir():
         if not entry.is_dir() or entry.name == "archive" or entry.name in photo_ids:
@@ -704,11 +690,14 @@ def render_header(current_path, lang="ru"):
           <a href="{localized_path("/photos/", lang)}"{' aria-current="page"' if is_photos else ''}>{tr(lang, 'photos')}</a>
           <a href="{localized_path("/about/", lang)}"{' aria-current="page"' if is_about else ''}><span class="desktop-name">{tr(lang, 'about_desktop')}</span><span class="mobile-name">{tr(lang, 'about_mobile')}</span></a>
         </nav>
-        <nav class="language-switcher" aria-label="Language">
-          <a href="{localized_path(current_path, 'ru')}" data-language-link data-lang="ru"{' aria-current="true"' if lang == 'ru' else ''}>RU</a>
-          <a href="{localized_path(current_path, 'en')}" data-language-link data-lang="en"{' aria-current="true"' if lang == 'en' else ''}>EN</a>
-        </nav>
+        {render_language_switcher(current_path, lang)}
       </header>"""
+
+
+def render_language_switcher(current_path, lang="ru"):
+    return f"""<nav class="language-switcher" aria-label="Language">
+          <a href="{localized_path(current_path, 'ru')}" data-language-link data-lang="ru"{' aria-current="true"' if lang == 'ru' else ''}>рус</a><span aria-hidden="true">/</span><a href="{localized_path(current_path, 'en')}" data-language-link data-lang="en"{' aria-current="true"' if lang == 'en' else ''}>eng</a>
+        </nav>"""
 
 
 def render_photo_dialog(lang="ru"):
@@ -744,12 +733,12 @@ def post_entities(post, lang="ru"):
 
 def post_title(post, max_length=72, lang="ru"):
     title = post_text(post, lang) or tr(lang, "post_from").format(date=format_date(post_datetime(post), lang))
-    return truncate(title, max_length)
+    return truncate_js_string(title, max_length)
 
 
 def post_description(post, lang="ru"):
     description = post_text(post, lang) or tr(lang, "post_by_date").format(date=format_date(post_datetime(post), lang))
-    return truncate(description, 156)
+    return truncate_js_string(description, 156)
 
 
 def post_social_image(post):
@@ -941,10 +930,6 @@ def read_json(path, fallback):
     return json.loads(path.read_text(encoding="utf-8"))
 
 
-def text_or_empty(node):
-    return node.text.strip() if node is not None and node.text else ""
-
-
 def asset_version():
     for source in [ROOT_DIR / "index.html", ROOT_DIR / "photos/index.html", ROOT_DIR / "screenshots/index.html"]:
         if not source.exists():
@@ -966,6 +951,16 @@ def truncate(value, max_length):
     if len(value) <= max_length:
         return value
     return value[: max_length - 1].strip() + "…"
+
+
+def truncate_js_string(value, max_length):
+    value = str(value)
+    encoded = value.encode("utf-16-le")
+    length = len(encoded) // 2
+    if length <= max_length:
+        return value
+    sliced = encoded[: (max_length - 1) * 2].decode("utf-16-le", errors="ignore").strip()
+    return sliced + "…"
 
 
 def escape_html(value=""):

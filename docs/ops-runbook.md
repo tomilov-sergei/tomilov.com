@@ -1,6 +1,6 @@
 # Operations Runbook
 
-Last updated: 2026-06-01.
+Last updated: 2026-06-12.
 
 This runbook covers production checks for `tomilov.com` on the Timeweb VPS.
 
@@ -10,6 +10,7 @@ This runbook covers production checks for `tomilov.com` on the Timeweb VPS.
 - Release storage: `/mnt/tomilov-data/tomilov.com/releases`
 - Shared Telegram data: `/mnt/tomilov-data/tomilov.com/shared/assets/telegram`
 - Shared photo data: `/mnt/tomilov-data/tomilov.com/shared/assets/photos`
+- Shared Barcelona Guide images: `/mnt/tomilov-data/tomilov.com/shared/assets/barcelona-guide`
 - Telegram env: `/etc/tomilov-telegram-live.env`
 - Photo upload env: `/etc/tomilov-photo-upload.env`
 - Telegram service: `tomilov-telegram-live.service`
@@ -17,11 +18,15 @@ This runbook covers production checks for `tomilov.com` on the Timeweb VPS.
 
 ## After Deploy
 
-Check that git is clean locally:
+Before deploy, check static integrity and confirm that source changes are committed and pushed:
 
 ```sh
+python3 tools/check-site.py
 git status --short --branch
+git ls-remote origin refs/heads/main
 ```
+
+Do not deploy uncommitted source files. Production shared data may be newer than the Git snapshot, but the deployed application code and curated static content must exist on GitHub.
 
 Check public crawl surfaces:
 

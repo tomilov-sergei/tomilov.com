@@ -317,6 +317,7 @@ def render_sitemap(posts, photos):
     static_urls = []
     post_urls = []
     photo_urls = []
+    static_urls.append({"loc": shared.localized_url("/barcelona-guide/", "ru")})
     for lang in shared.LANGUAGES:
         static_urls.extend([
             {"loc": shared.localized_url("/", lang)},

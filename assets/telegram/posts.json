@@ -1,8 +1,290 @@
 {
   "source": "Screenshot of the Day",
   "channelUsername": "screenshot_of_the_day",
-  "importedAt": "2026-05-31T11:58:09.168966Z",
+  "importedAt": "2026-06-11T19:54:28.345067Z",
   "posts": [
+    {
+      "id": "2025",
+      "messageIds": [
+        2025
+      ],
+      "mediaGroupId": null,
+      "telegramUrl": "https://t.me/screenshot_of_the_day/2025",
+      "date": "2026-06-11T19:54:27Z",
+      "dateUnixtime": 1781207667,
+      "edited": null,
+      "text": "Любопытно, как они пришли к решению сделать меню «ещё» в виде трёх точек из андроид Вселенной. Это пасхалка как в мирах Марвел?",
+      "entities": [],
+      "media": [
+        {
+          "type": "photo",
+          "src": "/assets/telegram/live/2026/06/11/2025-photo-file_19.jpg",
+          "width": 1178,
+          "height": 2560,
+          "size": 177300,
+          "mimeType": "image/jpeg",
+          "duration": null,
+          "name": "file_19.jpg",
+          "sourceMessageId": 2025
+        }
+      ],
+      "reactions": []
+    },
+    {
+      "id": "2024",
+      "messageIds": [
+        2024
+      ],
+      "mediaGroupId": null,
+      "telegramUrl": "https://t.me/screenshot_of_the_day/2024",
+      "date": "2026-06-11T19:52:10Z",
+      "dateUnixtime": 1781207530,
+      "edited": null,
+      "text": "у меня случился полный ресет приложения и оно теперь заново мои 39к заливает. ну и изменилось сильно",
+      "entities": [],
+      "media": [],
+      "reactions": []
+    },
+    {
+      "id": "2023",
+      "messageIds": [
+        2023
+      ],
+      "mediaGroupId": null,
+      "telegramUrl": "https://t.me/screenshot_of_the_day/2023",
+      "date": "2026-06-11T16:33:00Z",
+      "dateUnixtime": 1781195580,
+      "edited": null,
+      "text": "Ребят, новости \n\nPool доступен всем\n\nВыпем за э то ✨",
+      "entities": [
+        {
+          "type": "plain",
+          "text": "Ребят, новости \n\n",
+          "href": null
+        },
+        {
+          "type": "text_link",
+          "text": "Pool",
+          "href": "https://t.me/screenshot_of_the_day/1963"
+        },
+        {
+          "type": "plain",
+          "text": " доступен всем\n\nВыпем за э то ✨",
+          "href": null
+        }
+      ],
+      "media": [
+        {
+          "type": "photo",
+          "src": "/assets/telegram/live/2026/06/11/2023-photo-file_18.jpg",
+          "width": 1178,
+          "height": 2560,
+          "size": 172219,
+          "mimeType": "image/jpeg",
+          "duration": null,
+          "name": "file_18.jpg",
+          "sourceMessageId": 2023
+        }
+      ],
+      "reactions": []
+    },
+    {
+      "id": "2022",
+      "messageIds": [
+        2022
+      ],
+      "mediaGroupId": null,
+      "telegramUrl": "https://t.me/screenshot_of_the_day/2022",
+      "date": "2026-06-11T10:56:06Z",
+      "dateUnixtime": 1781175366,
+      "edited": null,
+      "text": "А это красивые съёмки вчерашнего события: \n\nПапа Лев XIV отслужил Святую Мессу в Саграда Фамилия и благословил высочайший шпиль теперь самой высокой церкви в мире. \n\nИнаугурация Башни Иисуса Христа\n\nУдивительное явление. Гауди при жизни застал только фасад одного из входов (а их четыре). Человек умер, а его дело живёт и движется на протяжении следующих 100 лет",
+      "entities": [],
+      "media": [
+        {
+          "type": "video",
+          "src": "/assets/telegram/live/2026/06/11/2022-video-La_Sagrada_Familia_We_see_the_tower_of_Jesus_Christ_illuminate.mp4",
+          "width": 1080,
+          "height": 1920,
+          "size": 16322433,
+          "mimeType": "video/mp4",
+          "duration": 53,
+          "name": "La_Sagrada_Familia_We_see_the_tower_of_Jesus_Christ_illuminate.mp4",
+          "sourceMessageId": 2022
+        }
+      ],
+      "reactions": []
+    },
+    {
+      "id": "2021",
+      "messageIds": [
+        2021
+      ],
+      "mediaGroupId": null,
+      "telegramUrl": "https://t.me/screenshot_of_the_day/2021",
+      "date": "2026-06-11T10:50:57Z",
+      "dateUnixtime": 1781175057,
+      "edited": null,
+      "text": "А это красивый монтаж",
+      "entities": [],
+      "media": [
+        {
+          "type": "video",
+          "src": "/assets/telegram/live/2026/06/11/2021-video-Richard_T_Watson_Probably_just_found_my_new_favourite_video_of_all.mp4",
+          "width": 2160,
+          "height": 3840,
+          "size": 55976136,
+          "mimeType": "video/mp4",
+          "duration": 31,
+          "name": "Richard_T_Watson_Probably_just_found_my_new_favourite_video_of_all.mp4",
+          "sourceMessageId": 2021
+        }
+      ],
+      "reactions": []
+    },
+    {
+      "id": "2018",
+      "messageIds": [
+        2018,
+        2019,
+        2020
+      ],
+      "mediaGroupId": "14249399028831874",
+      "telegramUrl": "https://t.me/screenshot_of_the_day/2018",
+      "date": "2026-06-11T10:47:58Z",
+      "dateUnixtime": 1781174878,
+      "edited": null,
+      "text": "Я тебя ещё вооот такой помню. 2013 год, 10 июня",
+      "entities": [],
+      "media": [
+        {
+          "type": "photo",
+          "src": "/assets/telegram/live/2026/06/11/2018-photo-file_13.jpg",
+          "width": 2048,
+          "height": 1536,
+          "size": 156976,
+          "mimeType": "image/jpeg",
+          "duration": null,
+          "name": "file_13.jpg",
+          "sourceMessageId": 2018
+        },
+        {
+          "type": "photo",
+          "src": "/assets/telegram/live/2026/06/11/2019-photo-file_14.jpg",
+          "width": 2048,
+          "height": 1536,
+          "size": 281941,
+          "mimeType": "image/jpeg",
+          "duration": null,
+          "name": "file_14.jpg",
+          "sourceMessageId": 2019
+        },
+        {
+          "type": "photo",
+          "src": "/assets/telegram/live/2026/06/11/2020-photo-file_15.jpg",
+          "width": 1536,
+          "height": 2048,
+          "size": 296346,
+          "mimeType": "image/jpeg",
+          "duration": null,
+          "name": "file_15.jpg",
+          "sourceMessageId": 2020
+        }
+      ],
+      "reactions": []
+    },
+    {
+      "id": "2016",
+      "messageIds": [
+        2016,
+        2017
+      ],
+      "mediaGroupId": "14248765574044354",
+      "telegramUrl": "https://t.me/screenshot_of_the_day/2016",
+      "date": "2026-06-10T12:48:16Z",
+      "dateUnixtime": 1781095696,
+      "edited": null,
+      "text": "Первая wow-находка из ios 27 developer beta \n\nТеперь шорткат таймера в Control Center вызывает Dynamic Island интерфейс настройки длительности таймера \n\nВыглядит скеоморфично — горизонтальное колесо со шкалой. Интуитивно понятно куда и что крутить",
+      "entities": [],
+      "media": [
+        {
+          "type": "photo",
+          "src": "/assets/telegram/live/2026/06/10/2016-photo-file_11.jpg",
+          "width": 1178,
+          "height": 2560,
+          "size": 214110,
+          "mimeType": "image/jpeg",
+          "duration": null,
+          "name": "file_11.jpg",
+          "sourceMessageId": 2016
+        },
+        {
+          "type": "video",
+          "src": "/assets/telegram/live/2026/06/10/2017-video-IMG_0772.MP4",
+          "width": 880,
+          "height": 1920,
+          "size": 5278880,
+          "mimeType": "video/mp4",
+          "duration": 12,
+          "name": "IMG_0772.MP4",
+          "sourceMessageId": 2017
+        }
+      ],
+      "reactions": []
+    },
+    {
+      "id": "2015",
+      "messageIds": [
+        2015
+      ],
+      "mediaGroupId": null,
+      "telegramUrl": "https://t.me/screenshot_of_the_day/2015",
+      "date": "2026-06-09T11:57:04Z",
+      "dateUnixtime": 1781006224,
+      "edited": null,
+      "text": "И правда!",
+      "entities": [],
+      "media": [
+        {
+          "type": "photo",
+          "src": "/assets/telegram/live/2026/06/09/2015-photo-file_10.jpg",
+          "width": 2560,
+          "height": 1771,
+          "size": 311701,
+          "mimeType": "image/jpeg",
+          "duration": null,
+          "name": "file_10.jpg",
+          "sourceMessageId": 2015
+        }
+      ],
+      "reactions": []
+    },
+    {
+      "id": "2014",
+      "messageIds": [
+        2014
+      ],
+      "mediaGroupId": null,
+      "telegramUrl": "https://t.me/screenshot_of_the_day/2014",
+      "date": "2026-06-09T11:56:52Z",
+      "dateUnixtime": 1781006212,
+      "edited": null,
+      "text": "Понаделали! \nhttps://scrn.gallery/app/yandex-music",
+      "entities": [
+        {
+          "type": "plain",
+          "text": "Понаделали! \n",
+          "href": null
+        },
+        {
+          "type": "text_link",
+          "text": "https://scrn.gallery/app/yandex-music",
+          "href": "https://scrn.gallery/app/yandex-music"
+        }
+      ],
+      "media": [],
+      "reactions": []
+    },
     {
       "id": "2008",
       "messageIds": [

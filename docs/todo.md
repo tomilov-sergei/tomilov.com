@@ -22,7 +22,7 @@
 
 ## Product Ideas
 
-- [ ] Add English versions of the site and post pages.
+- [x] Add English versions of the site and post pages.
 - [ ] Add a "Обсудить" link to each blog card, pointing to the original Telegram post.
 - [x] Create a "Фотолента" section for sharing photography.
 - [ ] Design a "related posts" mechanic.
@@ -48,7 +48,8 @@
 ## Infra / Deploy
 
 - [ ] Document production nginx config beyond the examples in `ops/`.
-- [ ] Add a deploy verification checklist.
+- [x] Add a deploy verification checklist.
+- [x] Add local static integrity checks and GitHub Actions validation.
 - [ ] Add a lightweight production smoke test for photo upload rejection/acceptance paths.
 - [ ] Consider cache headers for generated HTML, JSON, CSS, JS, and media.
 

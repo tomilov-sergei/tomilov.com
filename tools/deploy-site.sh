@@ -12,6 +12,8 @@ LOCAL_TELEGRAM_DIR="$ROOT_DIR/assets/telegram"
 REMOTE_TELEGRAM_DIR="$REMOTE_STORAGE_ROOT/shared/assets/telegram"
 LOCAL_PHOTOS_DIR="$ROOT_DIR/assets/photos"
 REMOTE_PHOTOS_DIR="$REMOTE_STORAGE_ROOT/shared/assets/photos"
+LOCAL_BARCELONA_DIR="$ROOT_DIR/assets/barcelona-guide"
+REMOTE_BARCELONA_DIR="$REMOTE_STORAGE_ROOT/shared/assets/barcelona-guide"
 PHOTOS_ONLY="${PHOTOS_ONLY:-0}"
 
 cd "$ROOT_DIR"
@@ -29,7 +31,7 @@ if [ ! -f '$REMOTE_PHOTOS_DIR/photos.json' ]; then
 fi"
 else
   mkdir -p "$LOCAL_TELEGRAM_DIR" "$LOCAL_PHOTOS_DIR"
-  ssh -i "$KEY" -o IdentitiesOnly=yes "$SERVER" "mkdir -p '$REMOTE_ROOT' '$REMOTE_TELEGRAM_DIR' '$REMOTE_PHOTOS_DIR'
+  ssh -i "$KEY" -o IdentitiesOnly=yes "$SERVER" "mkdir -p '$REMOTE_ROOT' '$REMOTE_TELEGRAM_DIR' '$REMOTE_PHOTOS_DIR' '$REMOTE_BARCELONA_DIR'
 if [ ! -f '$REMOTE_PHOTOS_DIR/photos.json' ]; then
   printf '{\n  \"source\": \"Photo upload service\",\n  \"updatedAt\": null,\n  \"photos\": []\n}\n' > '$REMOTE_PHOTOS_DIR/photos.json'
 fi"
@@ -113,6 +115,17 @@ if [[ "${PUSH_LOCAL_PHOTOS:-0}" == "1" && -f "$LOCAL_PHOTOS_DIR/photos.json" ]];
     "$SERVER:$REMOTE_PHOTOS_DIR/"
 fi
 
+if [[ -d "$LOCAL_BARCELONA_DIR" && "${SKIP_BARCELONA_SYNC:-0}" != "1" ]]; then
+  rsync -a --partial --progress --stats \
+    --exclude ".DS_Store" \
+    --exclude "._*" \
+    -e "ssh -i \"$KEY\" -o IdentitiesOnly=yes" \
+    "$LOCAL_BARCELONA_DIR/" \
+    "$SERVER:$REMOTE_BARCELONA_DIR/"
+else
+  echo "Skipping Barcelona guide image sync"
+fi
+
 if [[ "${SKIP_MEDIA_SYNC:-0}" != "1" ]]; then
   rsync -a --partial --progress --stats \
     --exclude "posts.json" \
@@ -125,7 +138,7 @@ else
   echo "Skipping Telegram media sync because SKIP_MEDIA_SYNC=1"
 fi
 
-COPYFILE_DISABLE=1 tar --no-xattrs --exclude "assets/telegram" --exclude "assets/photos" --exclude "tools/__pycache__" -czf "$ARCHIVE" \
+COPYFILE_DISABLE=1 tar --no-xattrs --exclude "assets/telegram" --exclude "assets/photos" --exclude "assets/barcelona-guide" --exclude "tools/__pycache__" -czf "$ARCHIVE" \
   index.html \
   styles.css \
   script.js \
@@ -136,6 +149,7 @@ COPYFILE_DISABLE=1 tar --no-xattrs --exclude "assets/telegram" --exclude "assets
   yandex_251bf4498768ab1a.html \
   assets \
   about \
+  barcelona-guide \
   en \
   photos \
   ops \
@@ -156,6 +170,7 @@ mkdir -p '$REMOTE_STORAGE_ROOT/releases/'\$stamp'/assets'
 telegram_shared='$REMOTE_STORAGE_ROOT/shared/assets/telegram'
 ln -sfn \"\$telegram_shared\" '$REMOTE_STORAGE_ROOT/releases/'\$stamp'/assets/telegram'
 ln -sfn '$REMOTE_STORAGE_ROOT/shared/assets/photos' '$REMOTE_STORAGE_ROOT/releases/'\$stamp'/assets/photos'
+ln -sfn '$REMOTE_STORAGE_ROOT/shared/assets/barcelona-guide' '$REMOTE_STORAGE_ROOT/releases/'\$stamp'/assets/barcelona-guide'
 if [ -f /etc/tomilov-telegram-live.env ]; then
   release_telegram_dir=\$(readlink -f '$REMOTE_STORAGE_ROOT/releases/'\$stamp'/assets/telegram')
   live_posts_path=\$(awk -F= '\$1 == \"POSTS_JSON_PATH\" { print \$2 }' /etc/tomilov-telegram-live.env | tail -n 1)
