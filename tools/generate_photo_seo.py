@@ -7,6 +7,7 @@ from datetime import datetime, timezone
 from email.utils import format_datetime
 from pathlib import Path
 from urllib.parse import quote
+from zoneinfo import ZoneInfo
 
 
 ROOT_DIR = Path(__file__).resolve().parent.parent
@@ -35,6 +36,7 @@ CHANNEL_TITLE = "Screenshot of the Day"
 TELEGRAM_MEDIA_BASE = "https://s3.twcstorage.ru/00df5bd5-137f-492a-8d95-c7ee2cc2d851"
 FEED_LIMIT = 50
 LANGUAGES = ("ru", "en")
+TELEGRAM_EXPORT_TZ = ZoneInfo("Europe/Moscow")
 
 STRINGS = {
     "ru": {
@@ -901,14 +903,19 @@ def rss_date(value):
 
 def parse_date(value):
     if isinstance(value, datetime):
-        return value.astimezone(timezone.utc)
-    if not value:
+        date = value
+    elif not value:
         return datetime.now(timezone.utc)
-    text = str(value).replace("Z", "+00:00")
-    try:
-        return datetime.fromisoformat(text).astimezone(timezone.utc)
-    except ValueError:
-        return datetime.now(timezone.utc)
+    else:
+        text = str(value).replace("Z", "+00:00")
+        try:
+            date = datetime.fromisoformat(text)
+        except ValueError:
+            return datetime.now(timezone.utc)
+
+    if date.tzinfo is None:
+        date = date.replace(tzinfo=TELEGRAM_EXPORT_TZ)
+    return date.astimezone(timezone.utc)
 
 
 def guess_mime_type(value=""):
