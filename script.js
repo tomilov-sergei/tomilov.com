@@ -456,6 +456,18 @@ function createPost(post, lang) {
   article.id = `post-${post.id}`;
 
   if (post.media?.length) {
+    const [singleMedia] = post.media;
+    const isSinglePortrait =
+      post.media.length === 1 &&
+      (singleMedia.type === "photo" || singleMedia.type === "sticker") &&
+      singleMedia.width &&
+      singleMedia.height &&
+      singleMedia.height > singleMedia.width;
+
+    if (isSinglePortrait) {
+      article.classList.add("has-single-portrait");
+    }
+
     article.append(createMedia(post.media, post, lang));
   }
 

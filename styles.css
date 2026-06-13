@@ -466,6 +466,23 @@ a {
   background: #111;
 }
 
+@media (min-width: 1200px) {
+  .screenshot-post.has-single-portrait {
+    width: min(100%, 560px);
+    margin-inline: auto;
+  }
+
+  .screenshot-post.has-single-portrait .screenshot-media-item {
+    min-height: 0;
+    aspect-ratio: auto !important;
+  }
+
+  .screenshot-post.has-single-portrait .screenshot-media-item img {
+    width: auto;
+    height: auto;
+  }
+}
+
 .screenshot-body {
   display: grid;
   gap: 20px;
