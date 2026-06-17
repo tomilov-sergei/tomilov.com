@@ -1,8 +1,220 @@
 {
   "source": "Screenshot of the Day",
   "channelUsername": "screenshot_of_the_day",
-  "importedAt": "2026-06-11T19:54:28.345067Z",
+  "importedAt": "2026-06-17T18:56:29.846579Z",
   "posts": [
+    {
+      "id": "2028",
+      "messageIds": [
+        2028,
+        2029,
+        2030,
+        2031
+      ],
+      "mediaGroupId": "14253780608981650",
+      "telegramUrl": "https://t.me/screenshot_of_the_day/2028",
+      "date": "2026-06-17T18:56:16Z",
+      "dateUnixtime": 1781722576,
+      "edited": null,
+      "text": "Siri is Ready\n\nНачала подъезжать новая Сири в iOS27 Developer Beta \n\nОтвечает через раз. Оценить «умность» — в другой раз. Сегодня любоваться внешним видом. Liquid glass только ради неё можно было вводить. Напоминаю, что не только ради внешнего вида трансформация ОС Apple \n\nНравится, что новая Siri не отметает прежнюю, а последовательно эволюционирует: были и сфера, и волны-лепестки\n\nКогда мы разрабатываем или обновляем фичи, полезно заглянуть в стол и провести ревизию наработок. Особенно тех, что были в проде. \n\nЗнакомое — проще для восприятия. Проще для восприятия — быстрее проходит adoption",
+      "entities": [
+        {
+          "type": "bold",
+          "text": "Siri is Ready",
+          "href": null
+        },
+        {
+          "type": "plain",
+          "text": "\n\nНачала подъезжать новая Сири в iOS27 Developer Beta \n\nОтвечает через раз. Оценить «умность» — в другой раз. Сегодня любоваться внешним видом. Liquid glass только ради неё можно было вводить. ",
+          "href": null
+        },
+        {
+          "type": "text_link",
+          "text": "Напоминаю",
+          "href": "https://t.me/screenshot_of_the_day/1447"
+        },
+        {
+          "type": "plain",
+          "text": ", что не только ради внешнего вида трансформация ОС Apple \n\nНравится, что новая Siri не отметает прежнюю, а последовательно эволюционирует: были и сфера, и волны-лепестки\n\nКогда мы разрабатываем или обновляем фичи, полезно заглянуть в стол и провести ревизию наработок. Особенно тех, что были в проде. \n\nЗнакомое — проще для восприятия. Проще для восприятия — быстрее проходит adoption",
+          "href": null
+        }
+      ],
+      "media": [
+        {
+          "type": "photo",
+          "src": "/assets/telegram/live/2026/06/17/2028-photo-file_23.jpg",
+          "width": 1178,
+          "height": 2560,
+          "size": 202596,
+          "mimeType": "image/jpeg",
+          "duration": null,
+          "name": "file_23.jpg",
+          "sourceMessageId": 2028
+        },
+        {
+          "type": "video",
+          "src": "/assets/telegram/live/2026/06/17/2029-video-ScreenRecording_06-17-2026%2020-55-49_1.mp4",
+          "width": 1320,
+          "height": 2868,
+          "size": 9990820,
+          "mimeType": "video/mp4",
+          "duration": 24,
+          "name": "ScreenRecording_06-17-2026 20-55-49_1.mp4",
+          "sourceMessageId": 2029
+        },
+        {
+          "type": "video",
+          "src": "/assets/telegram/live/2026/06/17/2030-video-ScreenRecording_06-17-2026%2020-50-08_1.mp4",
+          "width": 1320,
+          "height": 2868,
+          "size": 9111598,
+          "mimeType": "video/mp4",
+          "duration": 12,
+          "name": "ScreenRecording_06-17-2026 20-50-08_1.mp4",
+          "sourceMessageId": 2030
+        },
+        {
+          "type": "video",
+          "src": "/assets/telegram/live/2026/06/17/2031-video-ScreenRecording_06-17-2026%2020-49-23_1.mp4",
+          "width": 1320,
+          "height": 2868,
+          "size": 10543841,
+          "mimeType": "video/mp4",
+          "duration": 9,
+          "name": "ScreenRecording_06-17-2026 20-49-23_1.mp4",
+          "sourceMessageId": 2031
+        }
+      ],
+      "reactions": []
+    },
+    {
+      "id": "2027",
+      "messageIds": [
+        2027
+      ],
+      "mediaGroupId": null,
+      "telegramUrl": "https://t.me/screenshot_of_the_day/2027",
+      "date": "2026-06-16T07:55:37Z",
+      "dateUnixtime": 1781596537,
+      "edited": null,
+      "text": "Будут слайды",
+      "entities": [],
+      "media": [
+        {
+          "type": "photo",
+          "src": "/assets/telegram/live/2026/06/16/2027-photo-file_22.jpg",
+          "width": 2172,
+          "height": 1216,
+          "size": 95214,
+          "mimeType": "image/jpeg",
+          "duration": null,
+          "name": "file_22.jpg",
+          "sourceMessageId": 2027
+        }
+      ],
+      "reactions": []
+    },
+    {
+      "id": "2026",
+      "messageIds": [
+        2026
+      ],
+      "mediaGroupId": null,
+      "telegramUrl": "https://t.me/screenshot_of_the_day/2026",
+      "date": "2026-06-16T07:55:20Z",
+      "dateUnixtime": 1781596520,
+      "edited": null,
+      "text": "Завтра — 16 июня в 17:00 мск — в гостях реально ЛЕГЕНДА Серёжа Томилов!!! 🌠🩷\n\nСерёжа — руководитель дизайна и креатива Яндекс.Музыки, который создал новую Мою волну и Звук, Дзен, первые устройства Яндекса и получил 12 патентов на дизайн-решения. Короче, его главный интерес — эстетика, объединяющая продукт, бренд-коммуникацию и команду. Супер-актуально! \n\nЧто будет:\n\n● Обсудим, как работать с эстетикой (в том числе как удерживать консистентность, когда продукт, бренд и команда живут по разным правилам)\n\n● Заглянем в нейрофизиологию и страхи!!! (+ расскажем, в чем вред чтения)\n\n● Поглядим на то, что Серёжа сам любит, смотрит и слушает \n\n☘️ Подписаться на канал Серёжи\n\n☘️ Подрубаемся в зум по постоянной ссылке",
+      "entities": [
+        {
+          "type": "bold",
+          "text": "Завтра — 16 июня в 17:00 мск — в гостях реально ЛЕГЕНДА Серёжа Томилов!!!",
+          "href": null
+        },
+        {
+          "type": "plain",
+          "text": " ",
+          "href": null
+        },
+        {
+          "type": "custom_emoji",
+          "text": "🌠",
+          "href": null
+        },
+        {
+          "type": "custom_emoji",
+          "text": "🩷",
+          "href": null
+        },
+        {
+          "type": "plain",
+          "text": "\n\nСерёжа — руководитель дизайна и креатива Яндекс.Музыки, который создал новую Мою волну и Звук, Дзен, первые устройства Яндекса и получил 12 патентов на дизайн-решения. Короче, его главный интерес — эстетика, объединяющая продукт, бренд-коммуникацию и команду. Супер-актуально! \n\n",
+          "href": null
+        },
+        {
+          "type": "bold",
+          "text": "Что будет:",
+          "href": null
+        },
+        {
+          "type": "plain",
+          "text": "\n\n● Обсудим, как работать с эстетикой (в том числе как удерживать консистентность, когда продукт, бренд и команда живут по разным правилам)\n\n● Заглянем в нейрофизиологию и страхи!!! (+ расскажем, в чем вред чтения)\n\n● Поглядим на то, что Серёжа сам любит, смотрит и слушает \n\n",
+          "href": null
+        },
+        {
+          "type": "bold",
+          "text": "☘️",
+          "href": null
+        },
+        {
+          "type": "custom_emoji",
+          "text": "☘️",
+          "href": null
+        },
+        {
+          "type": "bold",
+          "text": " ",
+          "href": null
+        },
+        {
+          "type": "text_link",
+          "text": "Подписаться на канал Серёжи",
+          "href": "https://t.me/screenshot_of_the_day"
+        },
+        {
+          "type": "plain",
+          "text": "\n\n",
+          "href": null
+        },
+        {
+          "type": "bold",
+          "text": "☘️",
+          "href": null
+        },
+        {
+          "type": "custom_emoji",
+          "text": "☘️",
+          "href": null
+        },
+        {
+          "type": "plain",
+          "text": " ",
+          "href": null
+        },
+        {
+          "type": "text_link",
+          "text": "Подрубаемся в зум по постоянной ссылке",
+          "href": "https://us06web.zoom.us/j/83668592483?pwd=iaBS6isezIqGFOvgG6RcZVqU4N4aIa.1"
+        },
+        {
+          "type": "bold",
+          "text": "Подрубаемся в зум по постоянной ссылке",
+          "href": null
+        }
+      ],
+      "media": [],
+      "reactions": []
+    },
     {
       "id": "2025",
       "messageIds": [
@@ -241,19 +453,19 @@
       "telegramUrl": "https://t.me/screenshot_of_the_day/2015",
       "date": "2026-06-09T11:57:04Z",
       "dateUnixtime": 1781006224,
-      "edited": null,
+      "edited": "2026-06-16T07:29:48.334807Z",
       "text": "И правда!",
       "entities": [],
       "media": [
         {
           "type": "photo",
-          "src": "/assets/telegram/live/2026/06/09/2015-photo-file_10.jpg",
+          "src": "/assets/telegram/live/2026/06/09/2015-photo-file_20.jpg",
           "width": 2560,
           "height": 1771,
           "size": 311701,
           "mimeType": "image/jpeg",
           "duration": null,
-          "name": "file_10.jpg",
+          "name": "file_20.jpg",
           "sourceMessageId": 2015
         }
       ],
@@ -58479,6 +58691,14 @@
       "size": 45950122,
       "error": "HTTP Error 400: Bad Request",
       "recordedAt": "2026-05-27T17:29:37.174943Z"
+    },
+    {
+      "messageId": 2026,
+      "fileId": "AgACAgIAAx0Cc9uHOQACB-pqMQFooo2D4FXaBU-NogaFeMaBaQACRBprG6NNgEm73VIXSWdHswEAAwIAA3kAAzsE",
+      "type": "photo",
+      "size": 142805,
+      "error": "<urlopen error [SSL: UNEXPECTED_EOF_WHILE_READING] EOF occurred in violation of protocol (_ssl.c:1007)>",
+      "recordedAt": "2026-06-16T07:57:00.955227Z"
     }
   ],
   "translationUpdatedAt": "2026-06-01T16:55:35.204Z"
