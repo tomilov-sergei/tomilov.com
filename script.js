@@ -721,7 +721,7 @@ function initHomeCanvasInteractions(root, viewport, surface, toolbar) {
 
 function homeCanvasDefaultScale(viewport) {
   if (viewport.clientWidth < 560) return 0.25;
-  return Math.min(0.46, Math.max(0.4, viewport.clientWidth / 3400));
+  return Math.min(0.46, Math.max(0.4, viewport.clientWidth / 2500));
 }
 
 function getHomePostMedia(post) {
