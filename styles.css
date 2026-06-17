@@ -165,6 +165,7 @@ a {
 
 .home-canvas-shell {
   position: relative;
+  overflow: visible;
   height: 90vh;
   min-height: 620px;
   background: var(--canvas-bg);
@@ -175,6 +176,7 @@ a {
   width: 100%;
   height: 100%;
   overflow: hidden;
+  border-radius: inherit;
   background: var(--canvas-bg);
   color: var(--canvas-text);
   cursor: grab;
@@ -557,6 +559,151 @@ a {
 
 .home-canvas-toolbar button:hover {
   background: color-mix(in srgb, var(--theme-color, #000) 8%, transparent);
+}
+
+.home-canvas-post-overlay {
+  position: absolute;
+  z-index: 40;
+  inset: 0;
+  pointer-events: none;
+}
+
+.home-canvas-post-overlay[hidden] {
+  display: none;
+}
+
+.home-canvas-post-scrim {
+  position: absolute;
+  inset: 0;
+  padding: 0;
+  border: 0;
+  background: rgb(255 255 255 / 0.1);
+  cursor: default;
+  pointer-events: auto;
+}
+
+.home-canvas-post-window {
+  position: absolute;
+  z-index: 1;
+  inset: -16px auto 12px 50%;
+  display: grid;
+  grid-template-rows: 48px minmax(0, 1fr);
+  width: min(610px, calc(100% - 72px));
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: 24px;
+  background: var(--panel-bg);
+  box-shadow: 0 24px 70px rgb(0 0 0 / 0.24), 0 2px 8px rgb(0 0 0 / 0.1);
+  color: var(--text);
+  outline: none;
+  pointer-events: auto;
+  transform: translateX(-50%);
+}
+
+.home-canvas-post-bar {
+  display: flex;
+  justify-content: flex-end;
+  gap: 6px;
+  align-items: center;
+  padding: 8px;
+  border-bottom: 1px solid var(--line);
+  background: color-mix(in srgb, var(--panel-bg) 94%, var(--canvas-bg) 6%);
+}
+
+.home-canvas-post-permalink,
+.home-canvas-post-close {
+  display: grid;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--muted);
+  cursor: pointer;
+  font-family: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 15px;
+  font-weight: 700;
+  line-height: 1;
+  place-items: center;
+  text-decoration: none;
+}
+
+.home-canvas-post-close {
+  font-size: 19px;
+}
+
+.home-canvas-post-permalink:hover,
+.home-canvas-post-close:hover {
+  background: color-mix(in srgb, var(--canvas-bg) 70%, var(--panel-bg) 30%);
+  color: var(--text);
+}
+
+.home-canvas-post-scroll {
+  overflow: auto;
+  padding: 18px;
+  overscroll-behavior: contain;
+  scrollbar-gutter: stable;
+}
+
+.home-canvas-post-status {
+  display: grid;
+  min-height: 220px;
+  color: var(--muted);
+  font-family: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 13px;
+  font-weight: 700;
+  place-items: center;
+}
+
+.home-canvas-post-window .screenshot-post,
+.home-canvas-post-window .photo-detail-figure,
+.home-canvas-post-window .photo-detail-meta {
+  box-shadow: none;
+}
+
+.home-canvas-post-window .screenshot-post {
+  border-radius: 14px;
+}
+
+.home-canvas-post-window .screenshot-post.has-single-portrait {
+  width: 100%;
+}
+
+.home-canvas-post-window .screenshot-body {
+  padding: 22px;
+}
+
+.home-canvas-post-window .post-title {
+  font-size: clamp(25px, 3.2vw, 36px);
+}
+
+.home-canvas-post-window .screenshot-text,
+.home-canvas-post-window .photo-detail-figure p {
+  font-size: 15px;
+  line-height: 1.58;
+}
+
+.home-canvas-post-window .screenshot-media.is-single .screenshot-media-item.is-video {
+  min-height: 300px;
+  padding: 24px;
+}
+
+.home-canvas-post-window .photo-detail {
+  grid-template-columns: 1fr;
+}
+
+.home-canvas-post-window .photo-detail-figure,
+.home-canvas-post-window .photo-detail-meta {
+  border-radius: 14px;
+}
+
+.home-canvas-post-window .photo-detail-figure figcaption {
+  padding: 22px;
+}
+
+.home-canvas-post-window .photo-detail-figure h1 {
+  font-size: clamp(25px, 3.2vw, 36px);
 }
 
 .about-shell {
@@ -1815,6 +1962,26 @@ a {
     min-width: 42px;
     height: 40px;
     padding-inline: 10px;
+  }
+
+  .home-canvas-post-window {
+    inset: -10px auto 10px 50%;
+    grid-template-rows: 44px minmax(0, 1fr);
+    width: calc(100% - 18px);
+    border-radius: 18px;
+  }
+
+  .home-canvas-post-bar {
+    padding: 6px;
+  }
+
+  .home-canvas-post-scroll {
+    padding: 10px;
+  }
+
+  .home-canvas-post-window .screenshot-body,
+  .home-canvas-post-window .photo-detail-figure figcaption {
+    padding: 18px;
   }
 
   .about-shell {

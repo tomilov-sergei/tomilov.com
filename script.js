@@ -13,6 +13,10 @@ const ui = {
     filmPhoto: "Плёночная фотография",
     fit: "Вписать",
     actual: "100%",
+    canvasPostLoading: "Загружаю пост...",
+    canvasPostLoadError: "Не получилось открыть пост.",
+    closePost: "Закрыть пост",
+    openPostPage: "Открыть страницу поста",
   },
   en: {
     postsEmpty: "No posts yet.",
@@ -25,6 +29,10 @@ const ui = {
     filmPhoto: "Film photograph",
     fit: "Fit",
     actual: "100%",
+    canvasPostLoading: "Loading post...",
+    canvasPostLoadError: "Could not open the post.",
+    closePost: "Close post",
+    openPostPage: "Open post page",
   },
 };
 
@@ -179,7 +187,7 @@ async function initHomeCanvas(root) {
     surface.append(layers);
     root.classList.add("is-ready");
     if (toolbar) toolbar.hidden = false;
-    initHomeCanvasInteractions(root, viewport, surface, toolbar);
+    initHomeCanvasInteractions(root, viewport, surface, toolbar, lang);
   } catch (error) {
     root.classList.add("has-error");
     if (fallback) {
@@ -463,13 +471,6 @@ function createHomeCanvasCard(item, index, lang) {
     link.append(createHomeNote(item, lang));
   }
 
-  link.addEventListener("click", (event) => {
-    if (link.dataset.dragMoved === "true") {
-      event.preventDefault();
-      delete link.dataset.dragMoved;
-    }
-  });
-
   return link;
 }
 
@@ -561,12 +562,13 @@ function createHomeNote(item, lang) {
   return note;
 }
 
-function initHomeCanvasInteractions(root, viewport, surface, toolbar) {
+function initHomeCanvasInteractions(root, viewport, surface, toolbar, lang) {
   const state = {
     x: 0,
     y: 0,
     scale: homeCanvasDefaultScale(viewport),
   };
+  const postOverlay = createHomeCanvasPostOverlay(root, lang);
   let pan = null;
   let nodeDrag = null;
 
@@ -689,6 +691,19 @@ function initHomeCanvasInteractions(root, viewport, surface, toolbar) {
       root.classList.remove("is-dragging-node");
       nodeDrag = null;
     });
+
+    node.addEventListener("click", (event) => {
+      if (node.dataset.dragMoved === "true") {
+        event.preventDefault();
+        delete node.dataset.dragMoved;
+        return;
+      }
+
+      if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+
+      event.preventDefault();
+      postOverlay.open(node.href, node);
+    });
   }
 
   toolbar?.addEventListener("click", (event) => {
@@ -717,6 +732,122 @@ function initHomeCanvasInteractions(root, viewport, surface, toolbar) {
   });
 
   resizeObserver.observe(viewport);
+}
+
+function createHomeCanvasPostOverlay(root, lang) {
+  const strings = getUi(lang);
+  const overlay = document.createElement("div");
+  const scrim = document.createElement("button");
+  const windowElement = document.createElement("section");
+  const bar = document.createElement("div");
+  const permalink = document.createElement("a");
+  const close = document.createElement("button");
+  const content = document.createElement("div");
+  let activeRequest = 0;
+  let restoreFocusTo = null;
+
+  overlay.className = "home-canvas-post-overlay";
+  overlay.hidden = true;
+  overlay.dataset.canvasPostOverlay = "true";
+
+  scrim.className = "home-canvas-post-scrim";
+  scrim.type = "button";
+  scrim.tabIndex = -1;
+  scrim.setAttribute("aria-label", strings.closePost);
+
+  windowElement.className = "home-canvas-post-window";
+  windowElement.setAttribute("role", "dialog");
+  windowElement.setAttribute("aria-modal", "true");
+  windowElement.setAttribute("aria-label", lang === "en" ? "Canvas post" : "Пост на холсте");
+  windowElement.tabIndex = -1;
+
+  bar.className = "home-canvas-post-bar";
+
+  permalink.className = "home-canvas-post-permalink";
+  permalink.textContent = "↗";
+  permalink.setAttribute("aria-label", strings.openPostPage);
+
+  close.className = "home-canvas-post-close";
+  close.type = "button";
+  close.textContent = "×";
+  close.setAttribute("aria-label", strings.closePost);
+
+  content.className = "home-canvas-post-scroll";
+
+  bar.append(permalink, close);
+  windowElement.append(bar, content);
+  overlay.append(scrim, windowElement);
+  root.append(overlay);
+
+  function closeOverlay() {
+    activeRequest += 1;
+    overlay.hidden = true;
+    overlay.removeAttribute("data-state");
+    root.classList.remove("has-post-overlay");
+    content.replaceChildren();
+
+    if (restoreFocusTo?.isConnected) {
+      restoreFocusTo.focus({ preventScroll: true });
+    }
+
+    restoreFocusTo = null;
+  }
+
+  async function open(href, trigger) {
+    const requestId = activeRequest + 1;
+    activeRequest = requestId;
+    restoreFocusTo = trigger || document.activeElement;
+    permalink.href = href;
+    overlay.hidden = false;
+    overlay.dataset.state = "loading";
+    root.classList.add("has-post-overlay");
+    content.replaceChildren(createHomeCanvasPostStatus(strings.canvasPostLoading));
+    close.focus({ preventScroll: true });
+
+    try {
+      const response = await fetch(href, { headers: { Accept: "text/html" } });
+      if (!response.ok) throw new Error(`${href}: HTTP ${response.status}`);
+
+      const html = await response.text();
+      if (requestId !== activeRequest) return;
+
+      const doc = new DOMParser().parseFromString(html, "text/html");
+      const article = doc.querySelector(".screenshot-post, .photo-detail");
+      if (!article) throw new Error(`${href}: article was not found`);
+
+      const importedArticle = document.importNode(article, true);
+      content.replaceChildren(importedArticle);
+      overlay.dataset.state = "ready";
+      windowElement.focus({ preventScroll: true });
+    } catch (error) {
+      if (requestId !== activeRequest) return;
+      overlay.dataset.state = "error";
+      content.replaceChildren(createHomeCanvasPostStatus(strings.canvasPostLoadError));
+      console.error(error);
+    }
+  }
+
+  scrim.addEventListener("click", closeOverlay);
+  close.addEventListener("click", closeOverlay);
+
+  overlay.addEventListener("keydown", (event) => {
+    if (event.key === "Escape") {
+      event.preventDefault();
+      closeOverlay();
+    }
+  });
+
+  return {
+    open,
+    close: closeOverlay,
+  };
+}
+
+function createHomeCanvasPostStatus(text) {
+  const status = document.createElement("div");
+  status.className = "home-canvas-post-status";
+  status.textContent = text;
+  return status;
 }
 
 function homeCanvasDefaultScale(viewport) {
