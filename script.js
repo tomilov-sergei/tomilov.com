@@ -334,7 +334,7 @@ function layoutHomeCanvasItems(items) {
     group.sort((first, second) => second.time - first.time);
   }
 
-  const lanePattern = [-0.55, 0.55, -1.02, 0.98, -0.18, 0.22];
+  const lanePattern = [0, -0.86, 0.88, -1.52, 1.46, -0.34, 0.36, -1.1, 1.08];
 
   return items.map((item) => {
     const theme = homeCanvasThemes.find((candidate) => candidate.id === item.themeId) || homeCanvasThemes[0];
@@ -343,13 +343,13 @@ function layoutHomeCanvasItems(items) {
     const groupProgress = group.length > 1 ? themeIndex / (group.length - 1) : 0;
     const normalizedTime = Number.isFinite(item.time) ? (item.time - oldest) / range : 0.65;
     const ageProgress = clamp(1 - normalizedTime, 0, 1);
-    const rayProgress = clamp(groupProgress * 0.82 + ageProgress * 0.18, 0, 1);
-    const radialJitter = (homeCanvasNoise(item.id, "radial") - 0.5) * 150;
-    const laneWidth = item.variant === "stack" ? 285 : item.variant === "photo" ? 235 : 205;
+    const rayProgress = clamp(groupProgress * 0.86 + ageProgress * 0.14, 0, 1);
+    const radialJitter = (homeCanvasNoise(item.id, "radial") - 0.5) * 120;
+    const laneWidth = item.variant === "stack" ? 360 : item.variant === "photo" ? 310 : 260;
     const tangentJitter =
-      lanePattern[themeIndex % lanePattern.length] * laneWidth + (homeCanvasNoise(item.id, "tangent") - 0.5) * 70;
-    const angle = theme.angle + (homeCanvasNoise(item.id, "angle") - 0.5) * 0.06;
-    const distance = clamp(560 + rayProgress * 2220 + radialJitter, 520, 2860);
+      lanePattern[themeIndex % lanePattern.length] * laneWidth + (homeCanvasNoise(item.id, "tangent") - 0.5) * 48;
+    const angle = theme.angle + (homeCanvasNoise(item.id, "angle") - 0.5) * 0.045;
+    const distance = clamp(680 + rayProgress * 3180 + radialJitter, 620, 3980);
     const normal = angle + Math.PI / 2;
     const x = homeCanvasSize.centerX + Math.cos(angle) * distance + Math.cos(normal) * tangentJitter;
     const y = homeCanvasSize.centerY + Math.sin(angle) * distance + Math.sin(normal) * tangentJitter;
@@ -385,13 +385,13 @@ function createHomeCanvasThemeLayer(lang) {
   labels.className = "home-canvas-theme-labels";
 
   for (const theme of homeCanvasThemes) {
-    const endDistance = theme.id === "myphotos" ? 1280 : 1160;
+    const endDistance = theme.id === "myphotos" ? 1720 : 1560;
     const endX = homeCanvasSize.centerX + Math.cos(theme.angle) * endDistance;
     const endY = homeCanvasSize.centerY + Math.sin(theme.angle) * endDistance;
     const normal = theme.angle + Math.PI / 2;
-    const curve = theme.id === "products" ? -130 : (homeCanvasNoise(theme.id, "curve") - 0.5) * 260;
-    const controlOneX = homeCanvasSize.centerX + Math.cos(theme.angle) * 360 + Math.cos(normal) * curve;
-    const controlOneY = homeCanvasSize.centerY + Math.sin(theme.angle) * 360 + Math.sin(normal) * curve;
+    const curve = theme.id === "products" ? -160 : (homeCanvasNoise(theme.id, "curve") - 0.5) * 320;
+    const controlOneX = homeCanvasSize.centerX + Math.cos(theme.angle) * 430 + Math.cos(normal) * curve;
+    const controlOneY = homeCanvasSize.centerY + Math.sin(theme.angle) * 430 + Math.sin(normal) * curve;
     const controlTwoX =
       homeCanvasSize.centerX + Math.cos(theme.angle) * (endDistance * 0.82) - Math.cos(normal) * curve * 0.55;
     const controlTwoY =
