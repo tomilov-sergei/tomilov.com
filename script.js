@@ -29,6 +29,66 @@ const ui = {
 };
 
 let photoViewerState = null;
+let homeCanvasDataPromise = null;
+
+const homeCanvasSize = {
+  width: 3400,
+  height: 2300,
+  centerX: 1700,
+  centerY: 1150,
+};
+
+const homeCanvasThemes = [
+  {
+    id: "ai",
+    angle: -1.62,
+    color: "#7b65d8",
+    label: { ru: "AI", en: "AI" },
+    patterns: [/(^|\s)(ai|ии)(\s|$)/i, /gpt|openai|нейро|llm|chatgpt|midjourney|claude|генератив|agent|агент|codex/i],
+  },
+  {
+    id: "photos",
+    angle: -0.82,
+    color: "#2fae91",
+    label: { ru: "Фото", en: "Photos" },
+    patterns: [/фото|камера|снимок|снимки|leica|iphone|hdr|объектив|пл[её]нк|фотограф|съ[её]мк/i],
+  },
+  {
+    id: "products",
+    angle: -0.08,
+    color: "#2f8ad8",
+    label: { ru: "Продукты", en: "Products" },
+    patterns: [/продукт|стартап|сервис|прилож|пользователь|фича|запуск|подписк|монетиз|платформ|рекомендац/i],
+  },
+  {
+    id: "design",
+    angle: 0.58,
+    color: "#df5c4f",
+    label: { ru: "Дизайн", en: "Design" },
+    patterns: [/дизайн|интерфейс|\bui\b|\bux\b|figma|шрифт|визуал|лендинг|экран|кнопк|цвет|типограф|анимац|микро/i],
+  },
+  {
+    id: "myphotos",
+    angle: 1.2,
+    color: "#c7922f",
+    label: { ru: "Мои фото", en: "My photos" },
+    patterns: [],
+  },
+  {
+    id: "games",
+    angle: 2.42,
+    color: "#6171d4",
+    label: { ru: "Игры", en: "Games" },
+    patterns: [/игр|\bgame\b|gaming|doom|silent hill|nintendo|playstation|xbox|steam|sekiro|dead space|гейм|mixtape|wicked/i],
+  },
+  {
+    id: "brands",
+    angle: -2.62,
+    color: "#8b8780",
+    label: { ru: "Бренды", en: "Brands" },
+    patterns: [/бренд|\bbrand\b|nike|apple|google|teenage engineering|dyson|sony|tesla|ikea|leica|nothing|airbnb|ferrari|anthropic/i],
+  },
+];
 
 document.addEventListener("click", (event) => {
   const languageLink = event.target.closest("[data-language-link]");
@@ -74,11 +134,649 @@ function initPage() {
     initPhotoFeed(photoFeed);
   }
 
+  const homeCanvas = document.querySelector("[data-home-canvas]");
+  if (homeCanvas && !homeCanvas.dataset.canvasReady) {
+    homeCanvas.dataset.canvasReady = "true";
+    initHomeCanvas(homeCanvas);
+  }
+
   const barcelonaGuide = document.querySelector("[data-barcelona-guide]");
   if (barcelonaGuide && !barcelonaGuide.dataset.guideReady) {
     barcelonaGuide.dataset.guideReady = "true";
     initBarcelonaGuide(barcelonaGuide);
   }
+}
+
+async function initHomeCanvas(root) {
+  const lang = currentLanguage();
+  const viewport = root.querySelector("[data-canvas-viewport]");
+  const surface = root.querySelector("[data-canvas-surface]");
+  const toolbar = root.querySelector("[data-canvas-toolbar]");
+  const fallback = root.querySelector("[data-canvas-fallback]");
+
+  if (!viewport || !surface) return;
+
+  try {
+    const data = await loadHomeCanvasData();
+    if (!root.isConnected) return;
+
+    const items = layoutHomeCanvasItems(buildHomeCanvasItems(data, lang));
+    const layers = document.createDocumentFragment();
+    const nodes = document.createElement("div");
+
+    surface.style.width = `${homeCanvasSize.width}px`;
+    surface.style.height = `${homeCanvasSize.height}px`;
+    surface.replaceChildren();
+
+    nodes.className = "home-canvas-nodes";
+    nodes.append(createHomeCanvasAvatar(lang));
+
+    for (const [index, item] of items.entries()) {
+      nodes.append(createHomeCanvasCard(item, index, lang));
+    }
+
+    layers.append(createHomeCanvasThemeLayer(lang), nodes);
+    surface.append(layers);
+    root.classList.add("is-ready");
+    if (toolbar) toolbar.hidden = false;
+    initHomeCanvasInteractions(root, viewport, surface, toolbar);
+  } catch (error) {
+    root.classList.add("has-error");
+    if (fallback) {
+      fallback.querySelector("p").textContent =
+        lang === "en" ? "Could not load the canvas yet." : "Пока не получилось загрузить карту.";
+    }
+    console.error(error);
+  }
+}
+
+async function loadHomeCanvasData() {
+  if (!homeCanvasDataPromise) {
+    homeCanvasDataPromise = Promise.all([
+      fetchJson("/assets/telegram/posts.json"),
+      fetchJson("/assets/photos/photos.json").catch(() => ({ photos: [] })),
+    ]).then(([postsData, photosData]) => ({
+      posts: postsData.posts || [],
+      photos: photosData.photos || [],
+    }));
+  }
+
+  return homeCanvasDataPromise;
+}
+
+async function fetchJson(url) {
+  const response = await fetch(url);
+  if (!response.ok) throw new Error(`${url}: HTTP ${response.status}`);
+  return response.json();
+}
+
+function buildHomeCanvasItems(data, lang) {
+  const postsByTheme = new Map(homeCanvasThemes.map((theme) => [theme.id, []]));
+  const items = [];
+  const themeLimits = {
+    design: 10,
+    products: 10,
+    brands: 8,
+    games: 8,
+    ai: 8,
+    photos: 7,
+  };
+
+  for (const post of data.posts || []) {
+    if (!getPostText(post, lang) && !post.media?.length) continue;
+    postsByTheme.get(classifyHomeCanvasPost(post, lang))?.push(post);
+  }
+
+  for (const theme of homeCanvasThemes) {
+    if (theme.id === "myphotos") continue;
+
+    const selected = selectSpread(postsByTheme.get(theme.id) || [], themeLimits[theme.id] || 9);
+    for (const post of selected) {
+      const text = getPostText(post, lang);
+      const media = getHomePostMedia(post);
+      const linkEntity = getHomePostLink(post, lang);
+
+      items.push({
+        id: `post-${post.id}`,
+        kind: "post",
+        themeId: theme.id,
+        href: `${lang === "en" ? "/en" : ""}/screenshots/${post.id}/`,
+        sourceUrl: post.telegramUrl,
+        date: post.date,
+        time: new Date(post.date).getTime(),
+        title: homeCanvasTitle(text),
+        text,
+        media,
+        linkEntity,
+        variant: homeCanvasPostVariant(media, linkEntity, text),
+      });
+    }
+  }
+
+  for (const photo of selectSpread(getPhotosByUploadOrder(data.photos || []), 9)) {
+    const title = photoCaption(photo, lang) || makePhotoCaption(photo, lang);
+    items.push({
+      id: `photo-${photo.id}`,
+      kind: "photo",
+      themeId: "myphotos",
+      href: `${lang === "en" ? "/en" : ""}/photos/${photo.id}/`,
+      date: photo.uploadedAt || photo.date,
+      time: new Date(photo.uploadedAt || photo.date).getTime(),
+      title,
+      text: title,
+      media: [
+        {
+          src: getHomePhotoAssetUrl(photo.src),
+          width: photo.width,
+          height: photo.height,
+        },
+      ],
+      variant: "photo",
+    });
+  }
+
+  return items;
+}
+
+function classifyHomeCanvasPost(post, lang) {
+  const text = `${post.text || ""} ${post.translations?.en?.text || ""} ${getPostText(post, lang)}`.toLowerCase();
+  let bestTheme = "products";
+  let bestScore = 0;
+
+  for (const theme of homeCanvasThemes) {
+    if (theme.id === "myphotos") continue;
+
+    const score = theme.patterns.reduce((sum, pattern) => sum + (pattern.test(text) ? 1 : 0), 0);
+    if (score > bestScore) {
+      bestTheme = theme.id;
+      bestScore = score;
+    }
+  }
+
+  return bestTheme;
+}
+
+function selectSpread(items, limit) {
+  if (items.length <= limit) return items;
+
+  const selected = new Map();
+  const recentCount = Math.min(4, limit);
+
+  for (const item of items.slice(0, recentCount)) {
+    selected.set(item.id, item);
+  }
+
+  const rest = items.slice(recentCount);
+  const spreadCount = limit - selected.size;
+
+  for (let index = 0; index < spreadCount; index++) {
+    const restIndex = spreadCount <= 1 ? 0 : Math.round((index * (rest.length - 1)) / (spreadCount - 1));
+    const item = rest[restIndex];
+    if (item) selected.set(item.id, item);
+  }
+
+  return [...selected.values()].slice(0, limit);
+}
+
+function layoutHomeCanvasItems(items) {
+  const times = items.map((item) => item.time).filter((time) => Number.isFinite(time));
+  const oldest = Math.min(...times);
+  const newest = Math.max(...times);
+  const range = newest - oldest || 1;
+  const grouped = new Map();
+
+  for (const item of items) {
+    if (!grouped.has(item.themeId)) grouped.set(item.themeId, []);
+    grouped.get(item.themeId).push(item);
+  }
+
+  for (const group of grouped.values()) {
+    group.sort((first, second) => second.time - first.time);
+  }
+
+  return items.map((item) => {
+    const theme = homeCanvasThemes.find((candidate) => candidate.id === item.themeId) || homeCanvasThemes[0];
+    const group = grouped.get(item.themeId) || [];
+    const themeIndex = Math.max(0, group.indexOf(item));
+    const normalizedTime = Number.isFinite(item.time) ? (item.time - oldest) / range : 0.65;
+    const ageDistance = 360 + Math.pow(1 - normalizedTime, 0.82) * 860;
+    const radialJitter = (homeCanvasNoise(item.id, "radial") - 0.5) * 130;
+    const tangentJitter = (homeCanvasNoise(item.id, "tangent") - 0.5) * (item.variant === "stack" ? 430 : 320);
+    const angle = theme.angle + (homeCanvasNoise(item.id, "angle") - 0.5) * 0.16;
+    const distance = Math.min(1320, ageDistance + radialJitter + themeIndex * 72);
+    const normal = angle + Math.PI / 2;
+    const x = homeCanvasSize.centerX + Math.cos(angle) * distance + Math.cos(normal) * tangentJitter;
+    const y = homeCanvasSize.centerY + Math.sin(angle) * distance + Math.sin(normal) * tangentJitter;
+
+    return {
+      ...item,
+      theme,
+      x: clamp(x, 170, homeCanvasSize.width - 170),
+      y: clamp(y, 140, homeCanvasSize.height - 140),
+      rotation: (homeCanvasNoise(item.id, "rotation") - 0.5) * (item.variant === "note" ? 5 : 8),
+      z: Math.round(5000 - distance) + themeIndex,
+      size: homeCanvasNodeSize(item, themeIndex),
+    };
+  });
+}
+
+function homeCanvasNodeSize(item, index) {
+  if (item.variant === "stack") return index % 2 ? "is-large" : "is-wide";
+  if (item.variant === "photo") return index % 3 === 0 ? "is-tall" : "is-small";
+  if (item.variant === "note") return index % 4 === 0 ? "is-large" : "is-small";
+  if (item.variant === "link") return "is-small";
+  return index % 5 === 0 ? "is-large" : "is-medium";
+}
+
+function createHomeCanvasThemeLayer(lang) {
+  const fragment = document.createDocumentFragment();
+  const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+  const labels = document.createElement("div");
+
+  svg.classList.add("home-canvas-paths");
+  svg.setAttribute("viewBox", `0 0 ${homeCanvasSize.width} ${homeCanvasSize.height}`);
+  svg.setAttribute("aria-hidden", "true");
+  labels.className = "home-canvas-theme-labels";
+
+  for (const theme of homeCanvasThemes) {
+    const endDistance = theme.id === "myphotos" ? 760 : 820;
+    const endX = homeCanvasSize.centerX + Math.cos(theme.angle) * endDistance;
+    const endY = homeCanvasSize.centerY + Math.sin(theme.angle) * endDistance;
+    const normal = theme.angle + Math.PI / 2;
+    const curve = theme.id === "products" ? -100 : (homeCanvasNoise(theme.id, "curve") - 0.5) * 220;
+    const controlOneX = homeCanvasSize.centerX + Math.cos(theme.angle) * 300 + Math.cos(normal) * curve;
+    const controlOneY = homeCanvasSize.centerY + Math.sin(theme.angle) * 300 + Math.sin(normal) * curve;
+    const controlTwoX = homeCanvasSize.centerX + Math.cos(theme.angle) * 820 - Math.cos(normal) * curve * 0.55;
+    const controlTwoY = homeCanvasSize.centerY + Math.sin(theme.angle) * 820 - Math.sin(normal) * curve * 0.55;
+    const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
+    const label = document.createElement("div");
+
+    path.setAttribute(
+      "d",
+      `M ${homeCanvasSize.centerX} ${homeCanvasSize.centerY} C ${controlOneX} ${controlOneY}, ${controlTwoX} ${controlTwoY}, ${endX} ${endY}`,
+    );
+    path.style.setProperty("--theme-color", theme.color);
+    svg.append(path);
+
+    label.className = "home-canvas-theme-label";
+    label.textContent = theme.label[lang] || theme.label.ru;
+    label.style.left = `${endX}px`;
+    label.style.top = `${endY}px`;
+    label.style.setProperty("--theme-color", theme.color);
+    labels.append(label);
+  }
+
+  fragment.append(svg, labels);
+  return fragment;
+}
+
+function createHomeCanvasAvatar(lang) {
+  const avatar = document.createElement("a");
+  const image = document.createElement("img");
+  const caption = document.createElement("span");
+
+  avatar.className = "home-canvas-avatar";
+  avatar.href = lang === "en" ? "/en/about/" : "/about/";
+  avatar.style.left = `${homeCanvasSize.centerX}px`;
+  avatar.style.top = `${homeCanvasSize.centerY}px`;
+  avatar.setAttribute("aria-label", lang === "en" ? "About Seryozha Tomilov" : "О Серёже Томилове");
+
+  image.src = "/assets/og.png";
+  image.alt = "";
+  image.loading = "eager";
+  image.decoding = "async";
+
+  caption.textContent = "SS/84";
+  avatar.append(image, caption);
+  return avatar;
+}
+
+function createHomeCanvasCard(item, index, lang) {
+  const link = document.createElement("a");
+
+  link.className = `home-canvas-node is-${item.variant} ${item.size}`;
+  link.href = item.href;
+  link.draggable = false;
+  link.dataset.homeNode = "true";
+  link.style.left = `${item.x}px`;
+  link.style.top = `${item.y}px`;
+  link.style.setProperty("--rotation", `${item.rotation.toFixed(2)}deg`);
+  link.style.setProperty("--z", String(item.z));
+  link.style.setProperty("--theme-color", item.theme.color);
+  link.setAttribute("aria-label", item.title || item.theme.label[lang] || item.theme.label.ru);
+
+  if (item.variant === "stack") {
+    link.append(createHomeMediaStack(item, index), createHomeCardText(item, lang, 120));
+  } else if (item.variant === "media" || item.variant === "photo") {
+    link.append(createHomeMediaFrame(item, index), createHomeCardText(item, lang, item.variant === "photo" ? 80 : 130));
+  } else if (item.variant === "link") {
+    link.append(createHomeLinkPreview(item, lang));
+  } else {
+    link.append(createHomeNote(item, lang));
+  }
+
+  link.addEventListener("click", (event) => {
+    if (link.dataset.dragMoved === "true") {
+      event.preventDefault();
+      delete link.dataset.dragMoved;
+    }
+  });
+
+  return link;
+}
+
+function createHomeMediaStack(item, index) {
+  const stack = document.createElement("div");
+  stack.className = "home-canvas-media-stack";
+
+  for (const [mediaIndex, media] of item.media.slice(0, 3).entries()) {
+    stack.append(createHomeImage(media, item.title, index + mediaIndex));
+  }
+
+  return stack;
+}
+
+function createHomeMediaFrame(item, index) {
+  const frame = document.createElement("div");
+  frame.className = "home-canvas-media-frame";
+  frame.append(createHomeImage(item.media[0], item.title, index));
+  return frame;
+}
+
+function createHomeImage(media, alt, index) {
+  const image = document.createElement("img");
+
+  image.src = media.src;
+  image.alt = alt || "";
+  image.draggable = false;
+  image.loading = index < 10 ? "eager" : "lazy";
+  image.decoding = "async";
+
+  if (media.width && media.height) {
+    image.style.aspectRatio = `${media.width} / ${media.height}`;
+  }
+
+  image.addEventListener("error", () => {
+    image.hidden = true;
+    image.closest(".home-canvas-node")?.classList.add("has-missing-media");
+  });
+
+  return image;
+}
+
+function createHomeCardText(item, lang, maxLength) {
+  const copy = document.createElement("div");
+  const title = document.createElement("strong");
+  const meta = document.createElement("time");
+
+  copy.className = "home-canvas-card-copy";
+  title.textContent = truncate(item.title || item.text || item.theme.label[lang], maxLength);
+  meta.className = "home-canvas-date";
+  meta.dateTime = item.date || "";
+  meta.textContent = item.date ? formatDate(item.date, lang) : item.theme.label[lang] || item.theme.label.ru;
+  copy.append(title, meta);
+
+  return copy;
+}
+
+function createHomeLinkPreview(item, lang) {
+  const preview = document.createElement("div");
+  const domain = document.createElement("span");
+  const title = document.createElement("strong");
+  const excerpt = document.createElement("p");
+  const meta = document.createElement("time");
+
+  preview.className = "home-canvas-link-preview";
+  domain.textContent = homeCanvasDomain(item.linkEntity?.href) || item.theme.label[lang] || item.theme.label.ru;
+  title.textContent = truncate(item.linkEntity?.text || item.title, 78);
+  excerpt.textContent = truncate(item.text, 170);
+  meta.className = "home-canvas-date";
+  meta.dateTime = item.date || "";
+  meta.textContent = item.date ? formatDate(item.date, lang) : "";
+  preview.append(domain, title, excerpt, meta);
+
+  return preview;
+}
+
+function createHomeNote(item, lang) {
+  const note = document.createElement("div");
+  const text = document.createElement("p");
+  const meta = document.createElement("time");
+
+  note.className = "home-canvas-note";
+  text.textContent = truncate(item.text || item.title || item.theme.label[lang], item.size === "is-large" ? 260 : 190);
+  meta.className = "home-canvas-date";
+  meta.dateTime = item.date || "";
+  meta.textContent = item.date ? formatDate(item.date, lang) : "";
+  note.append(text, meta);
+
+  return note;
+}
+
+function initHomeCanvasInteractions(root, viewport, surface, toolbar) {
+  const state = {
+    x: 0,
+    y: 0,
+    scale: homeCanvasDefaultScale(viewport),
+  };
+  let pan = null;
+  let nodeDrag = null;
+
+  function applyView() {
+    surface.style.setProperty("--canvas-x", `${state.x}px`);
+    surface.style.setProperty("--canvas-y", `${state.y}px`);
+    surface.style.setProperty("--canvas-scale", state.scale.toFixed(3));
+
+    const reset = toolbar?.querySelector('[data-canvas-action="reset"]');
+    if (reset) reset.textContent = `${Math.round(state.scale * 100)}%`;
+  }
+
+  function resetView() {
+    state.scale = homeCanvasDefaultScale(viewport);
+    state.x = viewport.clientWidth / 2 - homeCanvasSize.centerX * state.scale;
+    state.y = viewport.clientHeight / 2 - homeCanvasSize.centerY * state.scale;
+    applyView();
+  }
+
+  function zoomAt(clientX, clientY, nextScale) {
+    const rect = viewport.getBoundingClientRect();
+    const x = clientX - rect.left;
+    const y = clientY - rect.top;
+    const contentX = (x - state.x) / state.scale;
+    const contentY = (y - state.y) / state.scale;
+
+    state.scale = clamp(nextScale, 0.32, 1.35);
+    state.x = x - contentX * state.scale;
+    state.y = y - contentY * state.scale;
+    applyView();
+  }
+
+  resetView();
+
+  viewport.addEventListener("wheel", (event) => {
+    event.preventDefault();
+
+    if (event.metaKey || event.ctrlKey) {
+      zoomAt(event.clientX, event.clientY, state.scale * (event.deltaY < 0 ? 1.1 : 0.9));
+    } else {
+      state.x -= event.deltaX;
+      state.y -= event.deltaY;
+      applyView();
+    }
+  }, { passive: false });
+
+  viewport.addEventListener("pointerdown", (event) => {
+    if (event.button !== 0 || event.target.closest("[data-home-node]") || event.target.closest("[data-canvas-toolbar]")) {
+      return;
+    }
+
+    event.preventDefault();
+    viewport.setPointerCapture(event.pointerId);
+    viewport.classList.add("is-panning");
+    pan = {
+      id: event.pointerId,
+      startX: event.clientX,
+      startY: event.clientY,
+      x: state.x,
+      y: state.y,
+    };
+  });
+
+  viewport.addEventListener("pointermove", (event) => {
+    if (!pan || pan.id !== event.pointerId) return;
+    state.x = pan.x + event.clientX - pan.startX;
+    state.y = pan.y + event.clientY - pan.startY;
+    applyView();
+  });
+
+  viewport.addEventListener("pointerup", (event) => {
+    if (!pan || pan.id !== event.pointerId) return;
+    viewport.classList.remove("is-panning");
+    pan = null;
+  });
+
+  viewport.addEventListener("pointercancel", () => {
+    viewport.classList.remove("is-panning");
+    pan = null;
+  });
+
+  for (const node of surface.querySelectorAll("[data-home-node]")) {
+    node.addEventListener("pointerdown", (event) => {
+      if (event.button !== 0) return;
+
+      event.stopPropagation();
+      node.setPointerCapture(event.pointerId);
+      root.classList.add("is-dragging-node");
+      nodeDrag = {
+        id: event.pointerId,
+        node,
+        startX: event.clientX,
+        startY: event.clientY,
+        left: parseFloat(node.style.left || "0"),
+        top: parseFloat(node.style.top || "0"),
+        moved: false,
+      };
+    });
+
+    node.addEventListener("pointermove", (event) => {
+      if (!nodeDrag || nodeDrag.id !== event.pointerId || nodeDrag.node !== node) return;
+
+      const deltaX = (event.clientX - nodeDrag.startX) / state.scale;
+      const deltaY = (event.clientY - nodeDrag.startY) / state.scale;
+      nodeDrag.moved = nodeDrag.moved || Math.abs(deltaX) + Math.abs(deltaY) > 4;
+      node.style.left = `${nodeDrag.left + deltaX}px`;
+      node.style.top = `${nodeDrag.top + deltaY}px`;
+      node.style.setProperty("--z", "7000");
+    });
+
+    node.addEventListener("pointerup", (event) => {
+      if (!nodeDrag || nodeDrag.id !== event.pointerId || nodeDrag.node !== node) return;
+
+      if (nodeDrag.moved) node.dataset.dragMoved = "true";
+      root.classList.remove("is-dragging-node");
+      nodeDrag = null;
+    });
+
+    node.addEventListener("pointercancel", () => {
+      root.classList.remove("is-dragging-node");
+      nodeDrag = null;
+    });
+  }
+
+  toolbar?.addEventListener("click", (event) => {
+    const button = event.target.closest("[data-canvas-action]");
+    if (!button) return;
+
+    const rect = viewport.getBoundingClientRect();
+    const centerX = rect.left + rect.width / 2;
+    const centerY = rect.top + rect.height / 2;
+
+    if (button.dataset.canvasAction === "zoom-in") {
+      zoomAt(centerX, centerY, state.scale * 1.14);
+    } else if (button.dataset.canvasAction === "zoom-out") {
+      zoomAt(centerX, centerY, state.scale * 0.86);
+    } else {
+      resetView();
+    }
+  });
+
+  const resizeObserver = new ResizeObserver(() => {
+    if (!root.isConnected) {
+      resizeObserver.disconnect();
+      return;
+    }
+    resetView();
+  });
+
+  resizeObserver.observe(viewport);
+}
+
+function homeCanvasDefaultScale(viewport) {
+  if (viewport.clientWidth < 560) return 0.31;
+  return Math.min(0.52, Math.max(0.4, viewport.clientWidth / 2500));
+}
+
+function getHomePostMedia(post) {
+  return (post.media || [])
+    .map((media) => {
+      const src = media.type === "video" || media.type === "animation" ? media.poster : media.src;
+      if (!src) return null;
+
+      return {
+        src: getTelegramAssetUrl(src),
+        width: media.width,
+        height: media.height,
+      };
+    })
+    .filter(Boolean);
+}
+
+function getHomePhotoAssetUrl(src) {
+  if (!src) return "";
+  if (location.hostname === "localhost" || location.hostname === "127.0.0.1") {
+    return `https://tomilov.com${src}`;
+  }
+  return src;
+}
+
+function getHomePostLink(post, lang) {
+  return getPostEntities(post, lang).find((entity) => entity.href);
+}
+
+function homeCanvasPostVariant(media, linkEntity, text) {
+  if (media.length > 1) return "stack";
+  if (media.length === 1) return "media";
+  if (linkEntity?.href) return "link";
+  return text.length > 170 ? "note" : "link";
+}
+
+function homeCanvasTitle(text) {
+  const [firstLine] = normalizeText(text).split(/\n+/);
+  return firstLine || normalizeText(text);
+}
+
+function homeCanvasDomain(value) {
+  try {
+    return new URL(value).hostname.replace(/^www\./, "");
+  } catch {
+    return "";
+  }
+}
+
+function homeCanvasNoise(value, salt) {
+  const text = `${value}:${salt}`;
+  let hash = 2166136261;
+
+  for (let index = 0; index < text.length; index++) {
+    hash ^= text.charCodeAt(index);
+    hash = Math.imul(hash, 16777619);
+  }
+
+  return ((hash >>> 0) % 10000) / 10000;
+}
+
+function clamp(value, min, max) {
+  return Math.min(max, Math.max(min, value));
 }
 
 function initBarcelonaGuide(root) {

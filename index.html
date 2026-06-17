@@ -23,7 +23,7 @@
     <link rel="icon" href="/assets/favicon.png">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500;700&family=Lora:wght@600&family=Manrope:wght@800&display=swap">
-    <link rel="stylesheet" href="/styles.css?v=20260602-header-lang-color">
+    <link rel="stylesheet" href="/styles.css?v=20260617-home-canvas-3">
   </head>
   <body>
     <main class="page" data-page-lang="ru">
@@ -39,15 +39,27 @@
         </nav>
       </header>
 
-      <section class="shell home-embed" aria-label="Miro board">
-        <iframe
-          src="https://miro.com/app/live-embed/uXjVPT_AAGg=/?embedAutoplay=true"
-          loading="lazy"
-          referrerpolicy="no-referrer"
-          sandbox="allow-same-origin allow-scripts allow-downloads allow-forms allow-modals allow-orientation-lock allow-pointer-lock allow-popups allow-popups-to-escape-sandbox allow-presentation allow-storage-access-by-user-activation allow-top-navigation-by-user-activation"
-          title="SS/84 Miro board"></iframe>
+      <section
+        class="shell home-canvas-shell"
+        aria-labelledby="home-canvas-title"
+        data-home-canvas>
+        <h1 id="home-canvas-title" class="visually-hidden">Интернет Серёжи Томилова</h1>
+        <div class="home-canvas-viewport" data-canvas-viewport>
+          <div class="home-canvas-surface" data-canvas-surface>
+            <div class="home-canvas-fallback" data-canvas-fallback>
+              <p>Блог и фото собираются в карту интересов.</p>
+              <a href="/screenshots/">Блог</a>
+              <a href="/photos/">Фото</a>
+            </div>
+          </div>
+        </div>
+        <div class="home-canvas-toolbar" data-canvas-toolbar aria-label="Управление полотном" hidden>
+          <button type="button" data-canvas-action="zoom-out" aria-label="Уменьшить">−</button>
+          <button type="button" data-canvas-action="reset" aria-label="Вернуться к центру">100%</button>
+          <button type="button" data-canvas-action="zoom-in" aria-label="Увеличить">+</button>
+        </div>
       </section>
     </main>
-    <script src="/script.js?v=20260602-header-lang-color"></script>
+    <script src="/script.js?v=20260617-home-canvas-3"></script>
   </body>
 </html>
