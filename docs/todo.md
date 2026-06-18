@@ -26,7 +26,7 @@
 - [ ] Add a "Обсудить" link to each blog card, pointing to the original Telegram post.
 - [x] Create a "Фотолента" section for sharing photography.
 - [ ] Design a "related posts" mechanic.
-- [ ] Replace the Miro embed on the home page with a custom canvas containing scattered blog post previews.
+- [x] Replace the Miro embed on the home page with a custom canvas containing scattered blog post previews.
 
 ## Photos
 

@@ -103,6 +103,63 @@ V1 остается в существующем стеке проекта:
 
 DOM-элементы предпочтительнее настоящего `<canvas>`, потому что карточки остаются ссылками, изображения лениво грузятся, текст индексируем и проще поддерживать адаптив.
 
+## Implementation snapshot
+
+Baseline before smooth zoom animation work:
+
+- production commit: `61c2a2b9`;
+- production asset version: `20260618-home-canvas-8`;
+- GitHub backup branch: `backup/canvas-zoom60-v8`;
+- GitHub stable tag: `canvas-zoom60-v8-stable`;
+- deploy release verified before backup: `20260618-112940`.
+
+The current implementation is deliberately DOM-based:
+
+- `index.html` and `en/index.html` contain `.home-canvas-shell`, `.home-canvas-viewport`, `.home-canvas-surface`, fallback text and the toolbar;
+- `script.js` builds paths, theme labels, avatar and cards from `assets/telegram/posts.json` plus `assets/photos/photos.json`;
+- `styles.css` owns the grid, card styling, toolbar, post overlay and responsive rules;
+- generated post/photo pages also carry the same asset version so overlay-opened articles get the same CSS and JS cache state.
+
+Current viewport behavior:
+
+- desktop default scale is `0.6`;
+- narrow mobile viewports below `560px` start at `0.25`;
+- reset recenters on the avatar using the current viewport dimensions;
+- toolbar zoom currently changes scale in discrete button steps around the viewport center;
+- wheel/trackpad pan updates position immediately;
+- `meta`/`ctrl` + wheel zooms around the pointer;
+- the toolbar label shows `Math.round(scale * 100)%`.
+
+Current visual style:
+
+- card-like canvas objects keep `box-shadow: var(--canvas-shadow)`;
+- media frames, media-stack images, link previews and text card copies do not have the previous 1px gray card border;
+- avatar badge and zoom toolbar still use borders as UI chrome, not as canvas card styling.
+
+Current overlay behavior:
+
+- clicking a card prevents normal navigation and opens a post/photo overlay above the canvas;
+- modifier-click keeps normal browser behavior;
+- the overlay fetches the permanent HTML page and imports `.screenshot-post` or `.photo-detail`;
+- the overlay top edge protrudes above the canvas shell to preserve the "over the board" feeling;
+- close works through the close button, scrim and `Escape`;
+- the permanent page link remains available in the overlay bar.
+
+Rollback if smooth zoom hurts performance:
+
+```sh
+git switch main
+git reset --hard canvas-zoom60-v8-stable
+git push --force-with-lease origin main
+PATH=/Users/tomilov/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/bin:$PATH ./tools/deploy-site.sh
+```
+
+For a non-destructive inspection instead of rollback:
+
+```sh
+git switch backup/canvas-zoom60-v8
+```
+
 ## Later ideas
 
 - тематические страницы или фильтры по лучам;

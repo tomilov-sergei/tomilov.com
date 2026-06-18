@@ -6,7 +6,7 @@ This file is the project map for future Codex chats.
 
 `tomilov.com` is a personal static site with five public sections:
 
-- `/` - home page with a Miro live embed.
+- `/` - home canvas with thematic rays, post/photo cards, pan/zoom, draggable cards, and in-place post overlay.
 - `/about/` - talks, videos, and personal profile material.
 - `/screenshots/` - archive of the Telegram channel "Screenshot of the Day".
 - `/photos/` - personal photo feed.
