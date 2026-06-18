@@ -852,7 +852,7 @@ function createHomeCanvasPostStatus(text) {
 
 function homeCanvasDefaultScale(viewport) {
   if (viewport.clientWidth < 560) return 0.25;
-  return Math.min(0.46, Math.max(0.4, viewport.clientWidth / 2500));
+  return 0.6;
 }
 
 function getHomePostMedia(post) {

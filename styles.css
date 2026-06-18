@@ -365,7 +365,6 @@ a {
 .home-canvas-media-frame,
 .home-canvas-media-stack img,
 .home-canvas-link-preview {
-  border: 1px solid var(--canvas-card-border);
   background: color-mix(in srgb, var(--canvas-bg) 82%, var(--theme-color) 18%);
   box-shadow: var(--canvas-shadow);
 }
@@ -440,8 +439,6 @@ a {
   display: grid;
   gap: 8px;
   padding: 12px 13px 13px;
-  border: 1px solid var(--canvas-card-border);
-  border-top: 0;
   border-radius: 0 0 6px 6px;
   background: var(--canvas-card-bg);
   box-shadow: var(--canvas-shadow);
@@ -452,7 +449,6 @@ a {
   z-index: 1;
   width: min(260px, 86%);
   margin-top: -12px;
-  border: 1px solid var(--canvas-card-border);
   border-radius: 6px;
 }
 
