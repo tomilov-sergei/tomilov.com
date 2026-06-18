@@ -45,6 +45,7 @@ const homeCanvasSize = {
   centerX: 3500,
   centerY: 3300,
 };
+const homeCanvasZoomAnimationMs = 280;
 
 const homeCanvasThemes = [
   {
@@ -571,6 +572,8 @@ function initHomeCanvasInteractions(root, viewport, surface, toolbar, lang) {
   const postOverlay = createHomeCanvasPostOverlay(root, lang);
   let pan = null;
   let nodeDrag = null;
+  let viewAnimationFrame = 0;
+  const reduceMotion = window.matchMedia?.("(prefers-reduced-motion: reduce)");
 
   function applyView() {
     surface.style.setProperty("--canvas-x", `${state.x}px`);
@@ -581,30 +584,97 @@ function initHomeCanvasInteractions(root, viewport, surface, toolbar, lang) {
     if (reset) reset.textContent = `${Math.round(state.scale * 100)}%`;
   }
 
-  function resetView() {
-    state.scale = homeCanvasDefaultScale(viewport);
-    state.x = viewport.clientWidth / 2 - homeCanvasSize.centerX * state.scale;
-    state.y = viewport.clientHeight / 2 - homeCanvasSize.centerY * state.scale;
+  function cancelViewAnimation() {
+    if (!viewAnimationFrame) return;
+    cancelAnimationFrame(viewAnimationFrame);
+    viewAnimationFrame = 0;
+  }
+
+  function setView(nextState) {
+    state.x = nextState.x;
+    state.y = nextState.y;
+    state.scale = nextState.scale;
     applyView();
   }
 
-  function zoomAt(clientX, clientY, nextScale) {
+  function animateViewTo(nextState) {
+    cancelViewAnimation();
+
+    if (reduceMotion?.matches) {
+      setView(nextState);
+      return;
+    }
+
+    const start = {
+      x: state.x,
+      y: state.y,
+      scale: state.scale,
+    };
+    const startTime = performance.now();
+
+    function step(timestamp) {
+      const progress = clamp((timestamp - startTime) / homeCanvasZoomAnimationMs, 0, 1);
+      const eased = progress < 0.5
+        ? 4 * progress * progress * progress
+        : 1 - Math.pow(-2 * progress + 2, 3) / 2;
+
+      state.x = start.x + (nextState.x - start.x) * eased;
+      state.y = start.y + (nextState.y - start.y) * eased;
+      state.scale = start.scale + (nextState.scale - start.scale) * eased;
+      applyView();
+
+      if (progress < 1) {
+        viewAnimationFrame = requestAnimationFrame(step);
+      } else {
+        viewAnimationFrame = 0;
+        setView(nextState);
+      }
+    }
+
+    viewAnimationFrame = requestAnimationFrame(step);
+  }
+
+  function resetView() {
+    cancelViewAnimation();
+    const scale = homeCanvasDefaultScale(viewport);
+    setView({
+      scale,
+      x: viewport.clientWidth / 2 - homeCanvasSize.centerX * scale,
+      y: viewport.clientHeight / 2 - homeCanvasSize.centerY * scale,
+    });
+  }
+
+  function getZoomState(clientX, clientY, nextScale) {
     const rect = viewport.getBoundingClientRect();
     const x = clientX - rect.left;
     const y = clientY - rect.top;
     const contentX = (x - state.x) / state.scale;
     const contentY = (y - state.y) / state.scale;
+    const scale = clamp(nextScale, 0.22, 1.35);
 
-    state.scale = clamp(nextScale, 0.22, 1.35);
-    state.x = x - contentX * state.scale;
-    state.y = y - contentY * state.scale;
-    applyView();
+    return {
+      scale,
+      x: x - contentX * scale,
+      y: y - contentY * scale,
+    };
+  }
+
+  function zoomAt(clientX, clientY, nextScale, options = {}) {
+    const nextState = getZoomState(clientX, clientY, nextScale);
+
+    if (options.animated) {
+      animateViewTo(nextState);
+    } else {
+      cancelViewAnimation();
+      setView(nextState);
+    }
   }
 
   resetView();
 
   viewport.addEventListener("wheel", (event) => {
     event.preventDefault();
+    cancelViewAnimation();
 
     if (event.metaKey || event.ctrlKey) {
       zoomAt(event.clientX, event.clientY, state.scale * (event.deltaY < 0 ? 1.1 : 0.9));
@@ -621,6 +691,7 @@ function initHomeCanvasInteractions(root, viewport, surface, toolbar, lang) {
     }
 
     event.preventDefault();
+    cancelViewAnimation();
     viewport.setPointerCapture(event.pointerId);
     viewport.classList.add("is-panning");
     pan = {
@@ -655,6 +726,7 @@ function initHomeCanvasInteractions(root, viewport, surface, toolbar, lang) {
       if (event.button !== 0) return;
 
       event.stopPropagation();
+      cancelViewAnimation();
       node.setPointerCapture(event.pointerId);
       root.classList.add("is-dragging-node");
       nodeDrag = {
@@ -715,9 +787,9 @@ function initHomeCanvasInteractions(root, viewport, surface, toolbar, lang) {
     const centerY = rect.top + rect.height / 2;
 
     if (button.dataset.canvasAction === "zoom-in") {
-      zoomAt(centerX, centerY, state.scale * 1.14);
+      zoomAt(centerX, centerY, state.scale * 1.14, { animated: true });
     } else if (button.dataset.canvasAction === "zoom-out") {
-      zoomAt(centerX, centerY, state.scale * 0.86);
+      zoomAt(centerX, centerY, state.scale * 0.86, { animated: true });
     } else {
       resetView();
     }

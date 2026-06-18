@@ -130,6 +130,13 @@ Current viewport behavior:
 - `meta`/`ctrl` + wheel zooms around the pointer;
 - the toolbar label shows `Math.round(scale * 100)%`.
 
+Smooth zoom animation added after the baseline:
+
+- toolbar `+` and `-` animate the same centered zoom target over `280ms`;
+- animation interpolates only `x`, `y` and `scale` on `.home-canvas-surface`;
+- wheel zoom, wheel pan, pointer pan, card drag and resize cancel an in-flight animation;
+- `prefers-reduced-motion: reduce` skips the interpolation and applies the final view immediately.
+
 Current visual style:
 
 - card-like canvas objects keep `box-shadow: var(--canvas-shadow)`;
