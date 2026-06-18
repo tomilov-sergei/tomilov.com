@@ -610,9 +610,10 @@ function initHomeCanvasInteractions(root, viewport, surface, toolbar, lang) {
       y: state.y,
       scale: state.scale,
     };
-    const startTime = performance.now();
+    let startTime = null;
 
     function step(timestamp) {
+      if (startTime === null) startTime = timestamp;
       const progress = clamp((timestamp - startTime) / homeCanvasZoomAnimationMs, 0, 1);
       const eased = progress < 0.5
         ? 4 * progress * progress * progress
