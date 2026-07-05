@@ -1,16 +1,17 @@
 # SEO and LLM Indexing Plan
 
-Last updated: 2026-06-01.
+Last updated: 2026-07-05.
 
 ## Current Production Shape
 
 `tomilov.com` is now crawlable as a static site, not just as JavaScript-fed feeds.
 
 - `robots.txt` is open and points to `https://tomilov.com/sitemap.xml`.
-- `sitemap.xml` includes top-level pages, `/screenshots/posts/`, every `/screenshots/<id>/` page, `/photos/`, `/photos/archive/`, and every `/photos/<id>/` page.
-- The current generated sitemap has 648 URLs and 9 image sitemap entries for photo pages.
+- `sitemap.xml` includes top-level pages, `/places/`, `/screenshots/posts/`, every `/screenshots/<id>/` page, `/photos/`, `/photos/archive/`, `/photos/film/`, `/photos/iphone/`, and every `/photos/<id>/` page.
+- The current generated sitemap has 1433 URLs and 48 image sitemap entries for photo pages.
 - `/screenshots/` still has a JavaScript-enhanced feed UI, but every post also has standalone HTML.
 - `/photos/` has static content for crawlers before JavaScript runs, plus a JavaScript photo viewer for people.
+- `/places/`, `/photos/film/`, and `/photos/iphone/` are static discovery pages with English mirrors.
 - RSS feeds exist at `/feed.xml`, `/screenshots/feed.xml`, and `/photos/feed.xml`.
 
 ## Indexing Model
@@ -26,6 +27,7 @@ The site exposes two indexable content collections:
 2. Photos:
    - canonical photo URLs: `/photos/<photo-id>/`;
    - complete static link graph: `/photos/archive/`;
+   - curated static entry points: `/photos/film/` and `/photos/iphone/`;
    - `ImageObject` JSON-LD on photo pages;
    - image sitemap metadata with title, caption, and CC BY 4.0 license;
    - RSS freshness signal: `/photos/feed.xml`.

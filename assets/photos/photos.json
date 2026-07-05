@@ -1,7 +1,1300 @@
 {
   "source": "Photo upload service",
-  "updatedAt": "2026-05-31T17:35:15.672431Z",
+  "updatedAt": "2026-07-05T17:13:35.863548Z",
   "photos": [
+    {
+      "id": "20260705-171335-59b05428",
+      "date": "2026-06-11T14:57:03Z",
+      "src": "/assets/photos/originals/2026/07/20260705-171335-59b05428-shortcut-upload.jpg",
+      "width": 3076,
+      "height": 2039,
+      "caption": "",
+      "alt": "",
+      "hdr": false,
+      "mimeType": "image/jpeg",
+      "size": 6980846,
+      "location": {
+        "name": null,
+        "latitude": null,
+        "longitude": null,
+        "label": null
+      },
+      "technical": {
+        "hasExif": false,
+        "camera": "Leica M6",
+        "cameraLine": "Leica M6 — плёнка",
+        "lensLine": "Плёночная фотография",
+        "format": "JPEG",
+        "megapixels": 6,
+        "dimensions": "3076 × 2039",
+        "size": "6,7 MB",
+        "summary": "6 MP • 3076 × 2039 • 6,7 MB",
+        "settings": []
+      },
+      "uploadedAt": "2026-07-05T17:13:35.863548Z"
+    },
+    {
+      "id": "20260705-171258-1db22d23",
+      "date": "2026-07-05T17:12:58.946148Z",
+      "src": "/assets/photos/originals/2026/07/20260705-171258-1db22d23-shortcut-upload.jpg",
+      "width": 3130,
+      "height": 2075,
+      "caption": "",
+      "alt": "",
+      "hdr": false,
+      "mimeType": "image/jpeg",
+      "size": 5928908,
+      "location": {
+        "name": null,
+        "latitude": null,
+        "longitude": null,
+        "label": null
+      },
+      "technical": {
+        "hasExif": false,
+        "camera": "Leica M6",
+        "cameraLine": "Leica M6 — плёнка",
+        "lensLine": "Плёночная фотография",
+        "format": "JPEG",
+        "megapixels": 6,
+        "dimensions": "3130 × 2075",
+        "size": "5,7 MB",
+        "summary": "6 MP • 3130 × 2075 • 5,7 MB",
+        "settings": []
+      },
+      "uploadedAt": "2026-07-05T17:12:58.946148Z"
+    },
+    {
+      "id": "20260705-171230-5007df86",
+      "date": "2026-07-05T17:12:30.370990Z",
+      "src": "/assets/photos/originals/2026/07/20260705-171230-5007df86-shortcut-upload.jpg",
+      "width": 3130,
+      "height": 2075,
+      "caption": "",
+      "alt": "",
+      "hdr": false,
+      "mimeType": "image/jpeg",
+      "size": 1901395,
+      "location": {
+        "name": null,
+        "latitude": null,
+        "longitude": null,
+        "label": null
+      },
+      "technical": {
+        "hasExif": false,
+        "camera": "Leica M6",
+        "cameraLine": "Leica M6 — плёнка",
+        "lensLine": "Плёночная фотография",
+        "format": "JPEG",
+        "megapixels": 6,
+        "dimensions": "3130 × 2075",
+        "size": "1,8 MB",
+        "summary": "6 MP • 3130 × 2075 • 1,8 MB",
+        "settings": []
+      },
+      "uploadedAt": "2026-07-05T17:12:30.370990Z"
+    },
+    {
+      "id": "20260705-171205-91c3ab77",
+      "date": "2026-07-05T17:12:05.114536Z",
+      "src": "/assets/photos/originals/2026/07/20260705-171205-91c3ab77-shortcut-upload.jpg",
+      "width": 3130,
+      "height": 2075,
+      "caption": "",
+      "alt": "",
+      "hdr": false,
+      "mimeType": "image/jpeg",
+      "size": 5265099,
+      "location": {
+        "name": null,
+        "latitude": null,
+        "longitude": null,
+        "label": null
+      },
+      "technical": {
+        "hasExif": false,
+        "camera": "Leica M6",
+        "cameraLine": "Leica M6 — плёнка",
+        "lensLine": "Плёночная фотография",
+        "format": "JPEG",
+        "megapixels": 6,
+        "dimensions": "3130 × 2075",
+        "size": "5,0 MB",
+        "summary": "6 MP • 3130 × 2075 • 5,0 MB",
+        "settings": []
+      },
+      "uploadedAt": "2026-07-05T17:12:05.114536Z"
+    },
+    {
+      "id": "20260705-171151-300de437",
+      "date": "2026-07-05T17:11:51.505883Z",
+      "src": "/assets/photos/originals/2026/07/20260705-171151-300de437-shortcut-upload.jpg",
+      "width": 3130,
+      "height": 2075,
+      "caption": "",
+      "alt": "",
+      "hdr": false,
+      "mimeType": "image/jpeg",
+      "size": 5329126,
+      "location": {
+        "name": null,
+        "latitude": null,
+        "longitude": null,
+        "label": null
+      },
+      "technical": {
+        "hasExif": false,
+        "camera": "Leica M6",
+        "cameraLine": "Leica M6 — плёнка",
+        "lensLine": "Плёночная фотография",
+        "format": "JPEG",
+        "megapixels": 6,
+        "dimensions": "3130 × 2075",
+        "size": "5,1 MB",
+        "summary": "6 MP • 3130 × 2075 • 5,1 MB",
+        "settings": []
+      },
+      "uploadedAt": "2026-07-05T17:11:51.505883Z"
+    },
+    {
+      "id": "20260705-171136-92c4e421",
+      "date": "2026-07-05T17:11:36.701653Z",
+      "src": "/assets/photos/originals/2026/07/20260705-171136-92c4e421-shortcut-upload.jpg",
+      "width": 3130,
+      "height": 2075,
+      "caption": "",
+      "alt": "",
+      "hdr": false,
+      "mimeType": "image/jpeg",
+      "size": 2676166,
+      "location": {
+        "name": null,
+        "latitude": null,
+        "longitude": null,
+        "label": null
+      },
+      "technical": {
+        "hasExif": false,
+        "camera": "Leica M6",
+        "cameraLine": "Leica M6 — плёнка",
+        "lensLine": "Плёночная фотография",
+        "format": "JPEG",
+        "megapixels": 6,
+        "dimensions": "3130 × 2075",
+        "size": "2,6 MB",
+        "summary": "6 MP • 3130 × 2075 • 2,6 MB",
+        "settings": []
+      },
+      "uploadedAt": "2026-07-05T17:11:36.701653Z"
+    },
+    {
+      "id": "20260705-171120-db265246",
+      "date": "2026-06-11T14:57:19Z",
+      "src": "/assets/photos/originals/2026/07/20260705-171120-db265246-shortcut-upload.jpg",
+      "width": 3082,
+      "height": 2043,
+      "caption": "",
+      "alt": "",
+      "hdr": false,
+      "mimeType": "image/jpeg",
+      "size": 7425609,
+      "location": {
+        "name": null,
+        "latitude": null,
+        "longitude": null,
+        "label": null
+      },
+      "technical": {
+        "hasExif": false,
+        "camera": "Leica M6",
+        "cameraLine": "Leica M6 — плёнка",
+        "lensLine": "Плёночная фотография",
+        "format": "JPEG",
+        "megapixels": 6,
+        "dimensions": "3082 × 2043",
+        "size": "7,1 MB",
+        "summary": "6 MP • 3082 × 2043 • 7,1 MB",
+        "settings": []
+      },
+      "uploadedAt": "2026-07-05T17:11:20.264872Z"
+    },
+    {
+      "id": "20260705-171102-f505dade",
+      "date": "2026-05-09T18:45:57Z",
+      "src": "/assets/photos/originals/2026/07/20260705-171102-f505dade-shortcut-upload.jpg",
+      "width": 3130,
+      "height": 2075,
+      "caption": "",
+      "alt": "",
+      "hdr": false,
+      "mimeType": "image/jpeg",
+      "size": 2133460,
+      "location": {
+        "name": null,
+        "latitude": null,
+        "longitude": null,
+        "label": null
+      },
+      "technical": {
+        "hasExif": false,
+        "camera": "Leica M6",
+        "cameraLine": "Leica M6 — плёнка",
+        "lensLine": "Плёночная фотография",
+        "format": "JPEG",
+        "megapixels": 6,
+        "dimensions": "3130 × 2075",
+        "size": "2,0 MB",
+        "summary": "6 MP • 3130 × 2075 • 2,0 MB",
+        "settings": []
+      },
+      "uploadedAt": "2026-07-05T17:11:02.118636Z"
+    },
+    {
+      "id": "20260705-171040-e1efa766",
+      "date": "2026-05-09T18:45:40Z",
+      "src": "/assets/photos/originals/2026/07/20260705-171040-e1efa766-shortcut-upload.jpg",
+      "width": 3130,
+      "height": 2075,
+      "caption": "",
+      "alt": "",
+      "hdr": false,
+      "mimeType": "image/jpeg",
+      "size": 2245750,
+      "location": {
+        "name": null,
+        "latitude": null,
+        "longitude": null,
+        "label": null
+      },
+      "technical": {
+        "hasExif": false,
+        "camera": "Leica M6",
+        "cameraLine": "Leica M6 — плёнка",
+        "lensLine": "Плёночная фотография",
+        "format": "JPEG",
+        "megapixels": 6,
+        "dimensions": "3130 × 2075",
+        "size": "2,1 MB",
+        "summary": "6 MP • 3130 × 2075 • 2,1 MB",
+        "settings": []
+      },
+      "uploadedAt": "2026-07-05T17:10:40.504187Z"
+    },
+    {
+      "id": "20260705-171021-d04b98c4",
+      "date": "2026-05-09T18:45:29Z",
+      "src": "/assets/photos/originals/2026/07/20260705-171021-d04b98c4-shortcut-upload.jpg",
+      "width": 3130,
+      "height": 2075,
+      "caption": "",
+      "alt": "",
+      "hdr": false,
+      "mimeType": "image/jpeg",
+      "size": 2235343,
+      "location": {
+        "name": null,
+        "latitude": null,
+        "longitude": null,
+        "label": null
+      },
+      "technical": {
+        "hasExif": false,
+        "camera": "Leica M6",
+        "cameraLine": "Leica M6 — плёнка",
+        "lensLine": "Плёночная фотография",
+        "format": "JPEG",
+        "megapixels": 6,
+        "dimensions": "3130 × 2075",
+        "size": "2,1 MB",
+        "summary": "6 MP • 3130 × 2075 • 2,1 MB",
+        "settings": []
+      },
+      "uploadedAt": "2026-07-05T17:10:21.283519Z"
+    },
+    {
+      "id": "20260705-170952-51327356",
+      "date": "2026-01-25T17:26:37Z",
+      "src": "/assets/photos/originals/2026/07/20260705-170952-51327356-shortcut-upload.jpg",
+      "width": 3130,
+      "height": 2075,
+      "caption": "",
+      "alt": "",
+      "hdr": false,
+      "mimeType": "image/jpeg",
+      "size": 5937660,
+      "location": {
+        "name": null,
+        "latitude": null,
+        "longitude": null,
+        "label": null
+      },
+      "technical": {
+        "hasExif": false,
+        "camera": "Leica M6",
+        "cameraLine": "Leica M6 — плёнка",
+        "lensLine": "Плёночная фотография",
+        "format": "JPEG",
+        "megapixels": 6,
+        "dimensions": "3130 × 2075",
+        "size": "5,7 MB",
+        "summary": "6 MP • 3130 × 2075 • 5,7 MB",
+        "settings": []
+      },
+      "uploadedAt": "2026-07-05T17:09:52.290705Z"
+    },
+    {
+      "id": "20260705-170930-2a547608",
+      "date": "2026-01-25T17:32:37Z",
+      "src": "/assets/photos/originals/2026/07/20260705-170930-2a547608-shortcut-upload.jpg",
+      "width": 3130,
+      "height": 2075,
+      "caption": "",
+      "alt": "",
+      "hdr": false,
+      "mimeType": "image/jpeg",
+      "size": 5271931,
+      "location": {
+        "name": null,
+        "latitude": null,
+        "longitude": null,
+        "label": null
+      },
+      "technical": {
+        "hasExif": false,
+        "camera": "Leica M6",
+        "cameraLine": "Leica M6 — плёнка",
+        "lensLine": "Плёночная фотография",
+        "format": "JPEG",
+        "megapixels": 6,
+        "dimensions": "3130 × 2075",
+        "size": "5,0 MB",
+        "summary": "6 MP • 3130 × 2075 • 5,0 MB",
+        "settings": []
+      },
+      "uploadedAt": "2026-07-05T17:09:30.836568Z"
+    },
+    {
+      "id": "20260705-170916-c407c399",
+      "date": "2026-01-25T17:30:42Z",
+      "src": "/assets/photos/originals/2026/07/20260705-170916-c407c399-shortcut-upload.jpg",
+      "width": 3130,
+      "height": 2075,
+      "caption": "",
+      "alt": "",
+      "hdr": false,
+      "mimeType": "image/jpeg",
+      "size": 6192867,
+      "location": {
+        "name": null,
+        "latitude": null,
+        "longitude": null,
+        "label": null
+      },
+      "technical": {
+        "hasExif": false,
+        "camera": "Leica M6",
+        "cameraLine": "Leica M6 — плёнка",
+        "lensLine": "Плёночная фотография",
+        "format": "JPEG",
+        "megapixels": 6,
+        "dimensions": "3130 × 2075",
+        "size": "5,9 MB",
+        "summary": "6 MP • 3130 × 2075 • 5,9 MB",
+        "settings": []
+      },
+      "uploadedAt": "2026-07-05T17:09:16.691500Z"
+    },
+    {
+      "id": "20260705-170810-aa5498a1",
+      "date": "2025-11-08T18:16:08Z",
+      "src": "/assets/photos/originals/2026/07/20260705-170810-aa5498a1-shortcut-upload.jpg",
+      "width": 3130,
+      "height": 2075,
+      "caption": "",
+      "alt": "",
+      "hdr": false,
+      "mimeType": "image/jpeg",
+      "size": 4763455,
+      "location": {
+        "name": null,
+        "latitude": null,
+        "longitude": null,
+        "label": null
+      },
+      "technical": {
+        "hasExif": false,
+        "camera": "Leica M6",
+        "cameraLine": "Leica M6 — плёнка",
+        "lensLine": "Плёночная фотография",
+        "format": "JPEG",
+        "megapixels": 6,
+        "dimensions": "3130 × 2075",
+        "size": "4,5 MB",
+        "summary": "6 MP • 3130 × 2075 • 4,5 MB",
+        "settings": []
+      },
+      "uploadedAt": "2026-07-05T17:08:10.084435Z"
+    },
+    {
+      "id": "20260705-170725-ab6b83bd",
+      "date": "2025-11-08T18:14:50Z",
+      "src": "/assets/photos/originals/2026/07/20260705-170725-ab6b83bd-shortcut-upload.jpg",
+      "width": 3130,
+      "height": 2075,
+      "caption": "",
+      "alt": "",
+      "hdr": false,
+      "mimeType": "image/jpeg",
+      "size": 6114053,
+      "location": {
+        "name": null,
+        "latitude": null,
+        "longitude": null,
+        "label": null
+      },
+      "technical": {
+        "hasExif": false,
+        "camera": "Leica M6",
+        "cameraLine": "Leica M6 — плёнка",
+        "lensLine": "Плёночная фотография",
+        "format": "JPEG",
+        "megapixels": 6,
+        "dimensions": "3130 × 2075",
+        "size": "5,8 MB",
+        "summary": "6 MP • 3130 × 2075 • 5,8 MB",
+        "settings": []
+      },
+      "uploadedAt": "2026-07-05T17:07:25.112837Z"
+    },
+    {
+      "id": "20260705-170651-1133c59a",
+      "date": "2025-11-08T18:14:35Z",
+      "src": "/assets/photos/originals/2026/07/20260705-170651-1133c59a-shortcut-upload.jpg",
+      "width": 3130,
+      "height": 2075,
+      "caption": "",
+      "alt": "",
+      "hdr": false,
+      "mimeType": "image/jpeg",
+      "size": 6156768,
+      "location": {
+        "name": null,
+        "latitude": null,
+        "longitude": null,
+        "label": null
+      },
+      "technical": {
+        "hasExif": false,
+        "camera": "Leica M6",
+        "cameraLine": "Leica M6 — плёнка",
+        "lensLine": "Плёночная фотография",
+        "format": "JPEG",
+        "megapixels": 6,
+        "dimensions": "3130 × 2075",
+        "size": "5,9 MB",
+        "summary": "6 MP • 3130 × 2075 • 5,9 MB",
+        "settings": []
+      },
+      "uploadedAt": "2026-07-05T17:06:51.698469Z"
+    },
+    {
+      "id": "20260705-170609-fe7c8242",
+      "date": "2026-01-26T17:41:36Z",
+      "src": "/assets/photos/originals/2026/07/20260705-170609-fe7c8242-shortcut-upload.jpg",
+      "width": 3130,
+      "height": 2075,
+      "caption": "",
+      "alt": "",
+      "hdr": false,
+      "mimeType": "image/jpeg",
+      "size": 5084849,
+      "location": {
+        "name": null,
+        "latitude": null,
+        "longitude": null,
+        "label": null
+      },
+      "technical": {
+        "hasExif": false,
+        "camera": "Leica M6",
+        "cameraLine": "Leica M6 — плёнка",
+        "lensLine": "Плёночная фотография",
+        "format": "JPEG",
+        "megapixels": 6,
+        "dimensions": "3130 × 2075",
+        "size": "4,8 MB",
+        "summary": "6 MP • 3130 × 2075 • 4,8 MB",
+        "settings": []
+      },
+      "uploadedAt": "2026-07-05T17:06:09.428892Z"
+    },
+    {
+      "id": "20260705-170518-8ee85311",
+      "date": "2026-07-05T17:05:18.744693Z",
+      "src": "/assets/photos/originals/2026/07/20260705-170518-8ee85311-shortcut-upload.jpg",
+      "width": 3130,
+      "height": 2075,
+      "caption": "",
+      "alt": "",
+      "hdr": false,
+      "mimeType": "image/jpeg",
+      "size": 6001008,
+      "location": {
+        "name": null,
+        "latitude": null,
+        "longitude": null,
+        "label": null
+      },
+      "technical": {
+        "hasExif": false,
+        "camera": "Leica M6",
+        "cameraLine": "Leica M6 — плёнка",
+        "lensLine": "Плёночная фотография",
+        "format": "JPEG",
+        "megapixels": 6,
+        "dimensions": "3130 × 2075",
+        "size": "5,7 MB",
+        "summary": "6 MP • 3130 × 2075 • 5,7 MB",
+        "settings": []
+      },
+      "uploadedAt": "2026-07-05T17:05:18.744693Z"
+    },
+    {
+      "id": "20260705-170504-e2c53909",
+      "date": "2026-07-05T17:05:04.542684Z",
+      "src": "/assets/photos/originals/2026/07/20260705-170504-e2c53909-shortcut-upload.jpg",
+      "width": 3130,
+      "height": 2075,
+      "caption": "",
+      "alt": "",
+      "hdr": false,
+      "mimeType": "image/jpeg",
+      "size": 6042960,
+      "location": {
+        "name": null,
+        "latitude": null,
+        "longitude": null,
+        "label": null
+      },
+      "technical": {
+        "hasExif": false,
+        "camera": "Leica M6",
+        "cameraLine": "Leica M6 — плёнка",
+        "lensLine": "Плёночная фотография",
+        "format": "JPEG",
+        "megapixels": 6,
+        "dimensions": "3130 × 2075",
+        "size": "5,8 MB",
+        "summary": "6 MP • 3130 × 2075 • 5,8 MB",
+        "settings": []
+      },
+      "uploadedAt": "2026-07-05T17:05:04.542684Z"
+    },
+    {
+      "id": "20260705-170426-f22c6906",
+      "date": "2026-07-05T17:04:26.035859Z",
+      "src": "/assets/photos/originals/2026/07/20260705-170426-f22c6906-shortcut-upload.jpg",
+      "width": 3130,
+      "height": 2075,
+      "caption": "",
+      "alt": "",
+      "hdr": false,
+      "mimeType": "image/jpeg",
+      "size": 3435219,
+      "location": {
+        "name": null,
+        "latitude": null,
+        "longitude": null,
+        "label": null
+      },
+      "technical": {
+        "hasExif": false,
+        "camera": "Leica M6",
+        "cameraLine": "Leica M6 — плёнка",
+        "lensLine": "Плёночная фотография",
+        "format": "JPEG",
+        "megapixels": 6,
+        "dimensions": "3130 × 2075",
+        "size": "3,3 MB",
+        "summary": "6 MP • 3130 × 2075 • 3,3 MB",
+        "settings": []
+      },
+      "uploadedAt": "2026-07-05T17:04:26.035859Z"
+    },
+    {
+      "id": "20260705-170347-4c29a0c6",
+      "date": "2026-07-05T17:03:47.051346Z",
+      "src": "/assets/photos/originals/2026/07/20260705-170347-4c29a0c6-shortcut-upload.jpg",
+      "width": null,
+      "height": null,
+      "caption": "",
+      "alt": "",
+      "hdr": false,
+      "mimeType": "image/jpeg",
+      "size": 6436680,
+      "location": {
+        "name": null,
+        "latitude": null,
+        "longitude": null,
+        "label": null
+      },
+      "technical": {
+        "hasExif": false,
+        "camera": "Leica M6",
+        "cameraLine": "Leica M6 — плёнка",
+        "lensLine": "Плёночная фотография",
+        "format": "JPEG",
+        "megapixels": null,
+        "dimensions": null,
+        "size": "6,1 MB",
+        "summary": "6,1 MB",
+        "settings": []
+      },
+      "uploadedAt": "2026-07-05T17:03:47.051346Z"
+    },
+    {
+      "id": "20260705-170322-e10c081d",
+      "date": "2026-07-05T17:03:22.134095Z",
+      "src": "/assets/photos/originals/2026/07/20260705-170322-e10c081d-shortcut-upload.jpg",
+      "width": null,
+      "height": null,
+      "caption": "",
+      "alt": "",
+      "hdr": false,
+      "mimeType": "image/jpeg",
+      "size": 7008087,
+      "location": {
+        "name": null,
+        "latitude": null,
+        "longitude": null,
+        "label": null
+      },
+      "technical": {
+        "hasExif": false,
+        "camera": "Leica M6",
+        "cameraLine": "Leica M6 — плёнка",
+        "lensLine": "Плёночная фотография",
+        "format": "JPEG",
+        "megapixels": null,
+        "dimensions": null,
+        "size": "6,7 MB",
+        "summary": "6,7 MB",
+        "settings": []
+      },
+      "uploadedAt": "2026-07-05T17:03:22.134095Z"
+    },
+    {
+      "id": "20260705-170304-873725d1",
+      "date": "2025-05-12T12:54:13Z",
+      "src": "/assets/photos/originals/2026/07/20260705-170304-873725d1-shortcut-upload.jpg",
+      "width": 3637,
+      "height": 2433,
+      "caption": "",
+      "alt": "",
+      "hdr": false,
+      "mimeType": "image/jpeg",
+      "size": 8611775,
+      "location": {
+        "name": null,
+        "latitude": null,
+        "longitude": null,
+        "label": null
+      },
+      "technical": {
+        "hasExif": true,
+        "camera": "Камера",
+        "cameraLine": "Камера",
+        "lensLine": "Камера",
+        "format": "JPEG",
+        "megapixels": 9,
+        "dimensions": "3637 × 2433",
+        "size": "8,2 MB",
+        "summary": "9 MP • 3637 × 2433 • 8,2 MB",
+        "settings": [
+          {
+            "label": "ISO",
+            "value": null
+          },
+          {
+            "label": "ФР",
+            "value": null
+          },
+          {
+            "label": "EV",
+            "value": "0 ev"
+          },
+          {
+            "label": "ƒ",
+            "value": null
+          },
+          {
+            "label": "S",
+            "value": null
+          }
+        ]
+      },
+      "uploadedAt": "2026-07-05T17:03:04.704889Z"
+    },
+    {
+      "id": "20260705-170242-4cdf43bb",
+      "date": "2026-07-05T17:02:42.343961Z",
+      "src": "/assets/photos/originals/2026/07/20260705-170242-4cdf43bb-shortcut-upload.jpg",
+      "width": null,
+      "height": null,
+      "caption": "",
+      "alt": "",
+      "hdr": false,
+      "mimeType": "image/jpeg",
+      "size": 3629722,
+      "location": {
+        "name": null,
+        "latitude": null,
+        "longitude": null,
+        "label": null
+      },
+      "technical": {
+        "hasExif": false,
+        "camera": "Leica M6",
+        "cameraLine": "Leica M6 — плёнка",
+        "lensLine": "Плёночная фотография",
+        "format": "JPEG",
+        "megapixels": null,
+        "dimensions": null,
+        "size": "3,5 MB",
+        "summary": "3,5 MB",
+        "settings": []
+      },
+      "uploadedAt": "2026-07-05T17:02:42.343961Z"
+    },
+    {
+      "id": "20260705-170138-961d13c4",
+      "date": "2026-07-05T17:01:38.850341Z",
+      "src": "/assets/photos/originals/2026/07/20260705-170138-961d13c4-shortcut-upload.jpg",
+      "width": null,
+      "height": null,
+      "caption": "",
+      "alt": "",
+      "hdr": false,
+      "mimeType": "image/jpeg",
+      "size": 5880304,
+      "location": {
+        "name": null,
+        "latitude": null,
+        "longitude": null,
+        "label": null
+      },
+      "technical": {
+        "hasExif": false,
+        "camera": "Leica M6",
+        "cameraLine": "Leica M6 — плёнка",
+        "lensLine": "Плёночная фотография",
+        "format": "JPEG",
+        "megapixels": null,
+        "dimensions": null,
+        "size": "5,6 MB",
+        "summary": "5,6 MB",
+        "settings": []
+      },
+      "uploadedAt": "2026-07-05T17:01:38.850341Z"
+    },
+    {
+      "id": "20260705-170038-e064a592",
+      "date": "2026-07-05T17:00:38.032214Z",
+      "src": "/assets/photos/originals/2026/07/20260705-170038-e064a592-shortcut-upload.jpg",
+      "width": 3130,
+      "height": 2075,
+      "caption": "",
+      "alt": "",
+      "hdr": false,
+      "mimeType": "image/jpeg",
+      "size": 4443932,
+      "location": {
+        "name": null,
+        "latitude": null,
+        "longitude": null,
+        "label": null
+      },
+      "technical": {
+        "hasExif": false,
+        "camera": "Leica M6",
+        "cameraLine": "Leica M6 — плёнка",
+        "lensLine": "Плёночная фотография",
+        "format": "JPEG",
+        "megapixels": 6,
+        "dimensions": "3130 × 2075",
+        "size": "4,2 MB",
+        "summary": "6 MP • 3130 × 2075 • 4,2 MB",
+        "settings": []
+      },
+      "uploadedAt": "2026-07-05T17:00:38.032214Z"
+    },
+    {
+      "id": "20260705-165936-bcc3973e",
+      "date": "2026-07-05T16:59:36.917294Z",
+      "src": "/assets/photos/originals/2026/07/20260705-165936-bcc3973e-shortcut-upload.jpg",
+      "width": 3130,
+      "height": 2075,
+      "caption": "",
+      "alt": "",
+      "hdr": false,
+      "mimeType": "image/jpeg",
+      "size": 5048111,
+      "location": {
+        "name": null,
+        "latitude": null,
+        "longitude": null,
+        "label": null
+      },
+      "technical": {
+        "hasExif": false,
+        "camera": "Leica M6",
+        "cameraLine": "Leica M6 — плёнка",
+        "lensLine": "Плёночная фотография",
+        "format": "JPEG",
+        "megapixels": 6,
+        "dimensions": "3130 × 2075",
+        "size": "4,8 MB",
+        "summary": "6 MP • 3130 × 2075 • 4,8 MB",
+        "settings": []
+      },
+      "uploadedAt": "2026-07-05T16:59:36.917294Z"
+    },
+    {
+      "id": "20260705-165649-32d68db2",
+      "date": "2026-07-05T16:56:49.086651Z",
+      "src": "/assets/photos/originals/2026/07/20260705-165649-32d68db2-shortcut-upload.jpg",
+      "width": 4000,
+      "height": 2562,
+      "caption": "",
+      "alt": "",
+      "hdr": false,
+      "mimeType": "image/jpeg",
+      "size": 4170655,
+      "location": {
+        "name": null,
+        "latitude": null,
+        "longitude": null,
+        "label": null
+      },
+      "technical": {
+        "hasExif": false,
+        "camera": "Leica M6",
+        "cameraLine": "Leica M6 — плёнка",
+        "lensLine": "Плёночная фотография",
+        "format": "JPEG",
+        "megapixels": 10,
+        "dimensions": "4000 × 2562",
+        "size": "4,0 MB",
+        "summary": "10 MP • 4000 × 2562 • 4,0 MB",
+        "settings": []
+      },
+      "uploadedAt": "2026-07-05T16:56:49.086651Z"
+    },
+    {
+      "id": "20260705-165610-42caa299",
+      "date": "2026-07-05T16:56:10.164230Z",
+      "src": "/assets/photos/originals/2026/07/20260705-165610-42caa299-shortcut-upload.jpg",
+      "width": 4000,
+      "height": 2562,
+      "caption": "",
+      "alt": "",
+      "hdr": false,
+      "mimeType": "image/jpeg",
+      "size": 5089678,
+      "location": {
+        "name": null,
+        "latitude": null,
+        "longitude": null,
+        "label": null
+      },
+      "technical": {
+        "hasExif": false,
+        "camera": "Leica M6",
+        "cameraLine": "Leica M6 — плёнка",
+        "lensLine": "Плёночная фотография",
+        "format": "JPEG",
+        "megapixels": 10,
+        "dimensions": "4000 × 2562",
+        "size": "4,9 MB",
+        "summary": "10 MP • 4000 × 2562 • 4,9 MB",
+        "settings": []
+      },
+      "uploadedAt": "2026-07-05T16:56:10.164230Z"
+    },
+    {
+      "id": "20260705-165546-a438cb31",
+      "date": "2026-07-05T16:55:46.045758Z",
+      "src": "/assets/photos/originals/2026/07/20260705-165546-a438cb31-shortcut-upload.jpg",
+      "width": 4000,
+      "height": 2562,
+      "caption": "",
+      "alt": "",
+      "hdr": false,
+      "mimeType": "image/jpeg",
+      "size": 9889679,
+      "location": {
+        "name": null,
+        "latitude": null,
+        "longitude": null,
+        "label": null
+      },
+      "technical": {
+        "hasExif": false,
+        "camera": "Leica M6",
+        "cameraLine": "Leica M6 — плёнка",
+        "lensLine": "Плёночная фотография",
+        "format": "JPEG",
+        "megapixels": 10,
+        "dimensions": "4000 × 2562",
+        "size": "9,4 MB",
+        "summary": "10 MP • 4000 × 2562 • 9,4 MB",
+        "settings": []
+      },
+      "uploadedAt": "2026-07-05T16:55:46.045758Z"
+    },
+    {
+      "id": "20260705-165338-3611f9d8",
+      "date": "2026-07-05T16:53:38.156700Z",
+      "src": "/assets/photos/originals/2026/07/20260705-165338-3611f9d8-shortcut-upload.jpg",
+      "width": 4000,
+      "height": 2562,
+      "caption": "",
+      "alt": "",
+      "hdr": false,
+      "mimeType": "image/jpeg",
+      "size": 8312518,
+      "location": {
+        "name": null,
+        "latitude": null,
+        "longitude": null,
+        "label": null
+      },
+      "technical": {
+        "hasExif": false,
+        "camera": "Leica M6",
+        "cameraLine": "Leica M6 — плёнка",
+        "lensLine": "Плёночная фотография",
+        "format": "JPEG",
+        "megapixels": 10,
+        "dimensions": "4000 × 2562",
+        "size": "7,9 MB",
+        "summary": "10 MP • 4000 × 2562 • 7,9 MB",
+        "settings": []
+      },
+      "uploadedAt": "2026-07-05T16:53:38.156700Z"
+    },
+    {
+      "id": "20260705-165245-2005b725",
+      "date": "2026-07-05T16:52:45.857581Z",
+      "src": "/assets/photos/originals/2026/07/20260705-165245-2005b725-shortcut-upload.jpg",
+      "width": 3130,
+      "height": 2075,
+      "caption": "",
+      "alt": "",
+      "hdr": false,
+      "mimeType": "image/jpeg",
+      "size": 4667706,
+      "location": {
+        "name": null,
+        "latitude": null,
+        "longitude": null,
+        "label": null
+      },
+      "technical": {
+        "hasExif": false,
+        "camera": "Leica M6",
+        "cameraLine": "Leica M6 — плёнка",
+        "lensLine": "Плёночная фотография",
+        "format": "JPEG",
+        "megapixels": 6,
+        "dimensions": "3130 × 2075",
+        "size": "4,5 MB",
+        "summary": "6 MP • 3130 × 2075 • 4,5 MB",
+        "settings": []
+      },
+      "uploadedAt": "2026-07-05T16:52:45.857581Z"
+    },
+    {
+      "id": "20260705-165226-028d76ee",
+      "date": "2026-07-05T16:52:26.998050Z",
+      "src": "/assets/photos/originals/2026/07/20260705-165226-028d76ee-shortcut-upload.jpg",
+      "width": 3130,
+      "height": 2075,
+      "caption": "",
+      "alt": "",
+      "hdr": false,
+      "mimeType": "image/jpeg",
+      "size": 4817570,
+      "location": {
+        "name": null,
+        "latitude": null,
+        "longitude": null,
+        "label": null
+      },
+      "technical": {
+        "hasExif": false,
+        "camera": "Leica M6",
+        "cameraLine": "Leica M6 — плёнка",
+        "lensLine": "Плёночная фотография",
+        "format": "JPEG",
+        "megapixels": 6,
+        "dimensions": "3130 × 2075",
+        "size": "4,6 MB",
+        "summary": "6 MP • 3130 × 2075 • 4,6 MB",
+        "settings": []
+      },
+      "uploadedAt": "2026-07-05T16:52:26.998050Z"
+    },
+    {
+      "id": "20260703-132249-eca2200f",
+      "date": "2026-07-03T13:22:49.906005Z",
+      "src": "/assets/photos/originals/2026/07/20260703-132249-eca2200f-shortcut-upload.jpg",
+      "width": 3130,
+      "height": 2075,
+      "caption": "",
+      "alt": "",
+      "hdr": false,
+      "mimeType": "image/jpeg",
+      "size": 305401,
+      "location": {
+        "name": null,
+        "latitude": null,
+        "longitude": null,
+        "label": null
+      },
+      "technical": {
+        "hasExif": false,
+        "camera": "Leica M6",
+        "cameraLine": "Leica M6 — плёнка",
+        "lensLine": "Плёночная фотография",
+        "format": "JPEG",
+        "megapixels": 6,
+        "dimensions": "3130 × 2075",
+        "size": "298 KB",
+        "summary": "6 MP • 3130 × 2075 • 298 KB",
+        "settings": []
+      },
+      "uploadedAt": "2026-07-03T13:22:49.906005Z"
+    },
+    {
+      "id": "20260703-132042-f3595b85",
+      "date": "2026-07-03T13:20:42.949912Z",
+      "src": "/assets/photos/originals/2026/07/20260703-132042-f3595b85-shortcut-upload.jpg",
+      "width": 3130,
+      "height": 2075,
+      "caption": "",
+      "alt": "",
+      "hdr": false,
+      "mimeType": "image/jpeg",
+      "size": 5481641,
+      "location": {
+        "name": null,
+        "latitude": null,
+        "longitude": null,
+        "label": null
+      },
+      "technical": {
+        "hasExif": false,
+        "camera": "Leica M6",
+        "cameraLine": "Leica M6 — плёнка",
+        "lensLine": "Плёночная фотография",
+        "format": "JPEG",
+        "megapixels": 6,
+        "dimensions": "3130 × 2075",
+        "size": "5,2 MB",
+        "summary": "6 MP • 3130 × 2075 • 5,2 MB",
+        "settings": []
+      },
+      "uploadedAt": "2026-07-03T13:20:42.949912Z"
+    },
+    {
+      "id": "20260624-102016-5985f767",
+      "date": "2026-01-25T17:32:39Z",
+      "src": "/assets/photos/originals/2026/06/20260624-102016-5985f767-shortcut-upload.jpg",
+      "width": 3130,
+      "height": 2075,
+      "caption": "",
+      "alt": "",
+      "hdr": false,
+      "mimeType": "image/jpeg",
+      "size": 5171855,
+      "location": {
+        "name": null,
+        "latitude": null,
+        "longitude": null,
+        "label": null
+      },
+      "technical": {
+        "hasExif": false,
+        "camera": "Leica M6",
+        "cameraLine": "Leica M6 — плёнка",
+        "lensLine": "Плёночная фотография",
+        "format": "JPEG",
+        "megapixels": 6,
+        "dimensions": "3130 × 2075",
+        "size": "4,9 MB",
+        "summary": "6 MP • 3130 × 2075 • 4,9 MB",
+        "settings": []
+      },
+      "uploadedAt": "2026-06-24T10:20:16.522712Z"
+    },
+    {
+      "id": "20260624-101954-e80b4917",
+      "date": "2026-02-09T16:10:42Z",
+      "src": "/assets/photos/originals/2026/06/20260624-101954-e80b4917-shortcut-upload.jpg",
+      "width": 1851,
+      "height": 3290,
+      "caption": "",
+      "alt": "",
+      "hdr": false,
+      "mimeType": "image/jpeg",
+      "size": 879274,
+      "location": {
+        "name": null,
+        "latitude": 57.983581,
+        "longitude": 55.438983,
+        "label": "Нытвенский муниципальный округ, Пермский край"
+      },
+      "technical": {
+        "hasExif": true,
+        "camera": "Apple iPhone 17 Pro Max",
+        "cameraLine": "Apple iPhone 17 Pro Max",
+        "lensLine": "Main Camera — 200 mm ƒ2,8",
+        "format": "JPEG",
+        "megapixels": 6,
+        "dimensions": "1851 × 3290",
+        "size": "859 KB",
+        "summary": "6 MP • 1851 × 3290 • 859 KB",
+        "settings": [
+          {
+            "label": "ISO",
+            "value": "20"
+          },
+          {
+            "label": "ФР",
+            "value": "200 mm"
+          },
+          {
+            "label": "EV",
+            "value": "+0,0 ev"
+          },
+          {
+            "label": "ƒ",
+            "value": "ƒ2,8"
+          },
+          {
+            "label": "S",
+            "value": "1/639 s"
+          }
+        ]
+      },
+      "uploadedAt": "2026-06-24T10:19:54.851929Z"
+    },
+    {
+      "id": "20260624-101924-82a52d05",
+      "date": "2026-03-03T15:00:31Z",
+      "src": "/assets/photos/originals/2026/06/20260624-101924-82a52d05-shortcut-upload.jpg",
+      "width": 3024,
+      "height": 4032,
+      "caption": "",
+      "alt": "",
+      "hdr": false,
+      "mimeType": "image/jpeg",
+      "size": 3068601,
+      "location": {
+        "name": null,
+        "latitude": 41.387244,
+        "longitude": 2.16575,
+        "label": "Эшампле, Барселона, Каталония"
+      },
+      "technical": {
+        "hasExif": true,
+        "camera": "Apple iPhone 17 Pro Max",
+        "cameraLine": "Apple iPhone 17 Pro Max",
+        "lensLine": "Main Camera — 100 mm ƒ2,8",
+        "format": "JPEG",
+        "megapixels": 12,
+        "dimensions": "3024 × 4032",
+        "size": "2,9 MB",
+        "summary": "12 MP • 3024 × 4032 • 2,9 MB",
+        "settings": [
+          {
+            "label": "ISO",
+            "value": "50"
+          },
+          {
+            "label": "ФР",
+            "value": "100 mm"
+          },
+          {
+            "label": "EV",
+            "value": "+0,0 ev"
+          },
+          {
+            "label": "ƒ",
+            "value": "ƒ2,8"
+          },
+          {
+            "label": "S",
+            "value": "1/596 s"
+          }
+        ]
+      },
+      "uploadedAt": "2026-06-24T10:19:24.434164Z"
+    },
+    {
+      "id": "20260624-101749-ebbe05f8",
+      "date": "2026-05-04T13:10:08Z",
+      "src": "/assets/photos/originals/2026/06/20260624-101749-ebbe05f8-shortcut-upload.jpg",
+      "width": 4032,
+      "height": 3024,
+      "caption": "",
+      "alt": "",
+      "hdr": false,
+      "mimeType": "image/jpeg",
+      "size": 2532409,
+      "location": {
+        "name": null,
+        "latitude": 56.013592,
+        "longitude": 37.913558,
+        "label": "Пушкино, Московская область"
+      },
+      "technical": {
+        "hasExif": true,
+        "camera": "Apple iPhone 17 Pro Max",
+        "cameraLine": "Apple iPhone 17 Pro Max",
+        "lensLine": "Main Camera — 200 mm ƒ2,8",
+        "format": "JPEG",
+        "megapixels": 12,
+        "dimensions": "4032 × 3024",
+        "size": "2,4 MB",
+        "summary": "12 MP • 4032 × 3024 • 2,4 MB",
+        "settings": [
+          {
+            "label": "ISO",
+            "value": "50"
+          },
+          {
+            "label": "ФР",
+            "value": "200 mm"
+          },
+          {
+            "label": "EV",
+            "value": "+0,0 ev"
+          },
+          {
+            "label": "ƒ",
+            "value": "ƒ2,8"
+          },
+          {
+            "label": "S",
+            "value": "1/583 s"
+          }
+        ]
+      },
+      "uploadedAt": "2026-06-24T10:17:49.074846Z"
+    },
     {
       "id": "20260531-173136-e90ccf67",
       "date": "2026-05-04T14:38:01Z",

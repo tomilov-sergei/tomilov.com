@@ -150,6 +150,7 @@ COPYFILE_DISABLE=1 tar --no-xattrs --exclude "assets/telegram" --exclude "assets
   assets \
   about \
   barcelona-guide \
+  places \
   en \
   photos \
   ops \

@@ -6,15 +6,17 @@
 - `/about/` — страница с выступлениями и видео.
 - `/screenshots/` — архив канала Screenshot of the Day.
 - `/photos/` — фотолента для личных снимков.
+- `/photos/film/` и `/photos/iphone/` — тематические срезы фотоленты.
+- `/places/` — карта/индекс мест из личных маршрутов и фотографий.
 - `/barcelona-guide/` — личный гайд по местам в Барселоне.
 - `/en/` — английская версия сайта с теми же разделами и URL под префиксом `/en`.
 
 Главные файлы:
 
-- `index.html`, `about/index.html`, `photos/index.html`, `barcelona-guide/index.html` — структура страниц.
+- `index.html`, `about/index.html`, `photos/index.html`, `photos/film/index.html`, `photos/iphone/index.html`, `places/index.html`, `barcelona-guide/index.html` — структура страниц.
 - `screenshots/index.html` — страница архива Telegram-канала.
 - `styles.css` — общий дизайн, сетки, адаптив и темы.
-- `script.js` — включение YouTube-видео по клику, лента Telegram-архива и фотолента.
+- `script.js` — home canvas, включение YouTube-видео по клику, лента Telegram-архива, фотолента, places и overlays.
 - `assets/` — favicon, OG-картинка и превью видео.
 - `assets/barcelona-guide/**` — локальная рабочая копия изображений гида; игнорируется git и живёт в production shared storage.
 - `assets/photos/photos.json` — манифест личных фото; оригиналы лежат в `assets/photos/originals/**`, игнорируются git и живут в shared storage.
@@ -64,7 +66,7 @@ Production-хранилище по умолчанию лежит на второ
 Telegram-архив живёт отдельно в `/mnt/tomilov-data/tomilov.com/shared/assets/telegram/`, чтобы не упаковывать 10+ GB медиа в каждый release.
 Фото живут в `/mnt/tomilov-data/tomilov.com/shared/assets/photos/`, по той же модели shared storage.
 Изображения Barcelona Guide живут в `/mnt/tomilov-data/tomilov.com/shared/assets/barcelona-guide/` и подключаются в release через symlink.
-Публичные пути остаются прежними через symlink: `/var/www/tomilov.com/current/assets/telegram` и `/var/www/tomilov.com/current/assets/photos`.
+Публичные пути остаются прежними через symlink: `/var/www/tomilov.com/current/assets/telegram`, `/var/www/tomilov.com/current/assets/photos` и `/var/www/tomilov.com/current/assets/barcelona-guide`.
 
 По умолчанию production shared storage считается источником правды для `posts.json` и `photos.json`: перед SEO-генерацией деплой скачивает свежие JSON из `/mnt/tomilov-data/tomilov.com/shared/assets/**`, создаёт страницы, RSS и `sitemap.xml`, а затем выкладывает новый release. Это нужно, чтобы live-посты из Telegram и новые фото с телефона не терялись при обычном деплое.
 
@@ -107,7 +109,7 @@ PULL_REMOTE_POSTS=0 PUSH_LOCAL_TELEGRAM=1 REMOTE_STORAGE_ROOT=/mnt/tomilov-data/
 
 Для `tomilov.com`:
 
-После деплоя проверить `https://tomilov.com/`, `https://tomilov.com/about/`, `https://tomilov.com/screenshots/` и `https://tomilov.com/photos/`.
+После деплоя проверить `https://tomilov.com/`, `https://tomilov.com/about/`, `https://tomilov.com/screenshots/`, `https://tomilov.com/photos/`, `https://tomilov.com/places/` и `https://tomilov.com/barcelona-guide/`.
 
 ## Фото
 
@@ -130,7 +132,7 @@ PULL_REMOTE_POSTS=0 PUSH_LOCAL_TELEGRAM=1 REMOTE_STORAGE_ROOT=/mnt/tomilov-data/
 
 HDR/Ultra HDR поддерживается сохранением исходного файла без canvas, ресайза и перекодирования. Shortcut должен отправлять оригинальный HEIC/JPEG как файл. Лента показывает тот же оригинал лениво, а режим просмотра крупного снимка использует CSS `dynamic-range-limit: no-limit` там, где браузер и дисплей это поддерживают.
 
-После каждой успешной загрузки сервис запускает production SEO-генератор `tools/generate_photo_seo.py`. Новые фото получают страницы `/photos/<id>/`, попадают в `/photos/archive/`, `/photos/feed.xml`, `/feed.xml` и в `sitemap.xml`. Фотографии опубликованы по лицензии CC BY 4.0: использовать можно с указанием авторства и ссылки на страницу фото.
+После каждой успешной загрузки сервис запускает production SEO-генератор `tools/generate_photo_seo.py`. Новые фото получают страницы `/photos/<id>/`, попадают в `/photos/archive/`, тематические срезы `/photos/film/` и `/photos/iphone/`, `/photos/feed.xml`, `/feed.xml` и в `sitemap.xml`. Фотографии опубликованы по лицензии CC BY 4.0: использовать можно с указанием авторства и ссылки на страницу фото.
 
 ## SEO-генерация
 

@@ -15,15 +15,26 @@
   </url>
   <url>
     <loc>https://tomilov.com/photos/</loc>
-    <lastmod>2026-05-31</lastmod>
+    <lastmod>2026-07-05</lastmod>
+  </url>
+  <url>
+    <loc>https://tomilov.com/places/</loc>
+  </url>
+  <url>
+    <loc>https://tomilov.com/photos/film/</loc>
+    <lastmod>2026-07-05</lastmod>
+  </url>
+  <url>
+    <loc>https://tomilov.com/photos/iphone/</loc>
+    <lastmod>2026-07-05</lastmod>
   </url>
   <url>
     <loc>https://tomilov.com/photos/archive/</loc>
-    <lastmod>2026-05-31</lastmod>
+    <lastmod>2026-07-05</lastmod>
   </url>
   <url>
     <loc>https://tomilov.com/screenshots/posts/</loc>
-    <lastmod>2026-06-17</lastmod>
+    <lastmod>2026-07-02</lastmod>
   </url>
   <url>
     <loc>https://tomilov.com/en/</loc>
@@ -36,15 +47,82 @@
   </url>
   <url>
     <loc>https://tomilov.com/en/photos/</loc>
-    <lastmod>2026-05-31</lastmod>
+    <lastmod>2026-07-05</lastmod>
+  </url>
+  <url>
+    <loc>https://tomilov.com/en/places/</loc>
+  </url>
+  <url>
+    <loc>https://tomilov.com/en/photos/film/</loc>
+    <lastmod>2026-07-05</lastmod>
+  </url>
+  <url>
+    <loc>https://tomilov.com/en/photos/iphone/</loc>
+    <lastmod>2026-07-05</lastmod>
   </url>
   <url>
     <loc>https://tomilov.com/en/photos/archive/</loc>
-    <lastmod>2026-05-31</lastmod>
+    <lastmod>2026-07-05</lastmod>
   </url>
   <url>
     <loc>https://tomilov.com/en/screenshots/posts/</loc>
-    <lastmod>2026-06-17</lastmod>
+    <lastmod>2026-07-02</lastmod>
+  </url>
+  <url>
+    <loc>https://tomilov.com/screenshots/2068/</loc>
+    <lastmod>2026-07-02</lastmod>
+  </url>
+  <url>
+    <loc>https://tomilov.com/screenshots/2067/</loc>
+    <lastmod>2026-07-02</lastmod>
+  </url>
+  <url>
+    <loc>https://tomilov.com/screenshots/2066/</loc>
+    <lastmod>2026-07-01</lastmod>
+  </url>
+  <url>
+    <loc>https://tomilov.com/screenshots/2065/</loc>
+    <lastmod>2026-07-01</lastmod>
+  </url>
+  <url>
+    <loc>https://tomilov.com/screenshots/2064/</loc>
+    <lastmod>2026-07-01</lastmod>
+  </url>
+  <url>
+    <loc>https://tomilov.com/screenshots/2062/</loc>
+    <lastmod>2026-06-30</lastmod>
+  </url>
+  <url>
+    <loc>https://tomilov.com/screenshots/2058/</loc>
+    <lastmod>2026-06-29</lastmod>
+  </url>
+  <url>
+    <loc>https://tomilov.com/screenshots/2057/</loc>
+    <lastmod>2026-06-29</lastmod>
+  </url>
+  <url>
+    <loc>https://tomilov.com/screenshots/2049/</loc>
+    <lastmod>2026-06-25</lastmod>
+  </url>
+  <url>
+    <loc>https://tomilov.com/screenshots/2048/</loc>
+    <lastmod>2026-06-24</lastmod>
+  </url>
+  <url>
+    <loc>https://tomilov.com/screenshots/2042/</loc>
+    <lastmod>2026-06-23</lastmod>
+  </url>
+  <url>
+    <loc>https://tomilov.com/screenshots/2036/</loc>
+    <lastmod>2026-06-22</lastmod>
+  </url>
+  <url>
+    <loc>https://tomilov.com/screenshots/2035/</loc>
+    <lastmod>2026-06-19</lastmod>
+  </url>
+  <url>
+    <loc>https://tomilov.com/screenshots/2032/</loc>
+    <lastmod>2026-06-18</lastmod>
   </url>
   <url>
     <loc>https://tomilov.com/screenshots/2028/</loc>
@@ -2627,6 +2705,62 @@
     <lastmod>2023-05-29</lastmod>
   </url>
   <url>
+    <loc>https://tomilov.com/en/screenshots/2068/</loc>
+    <lastmod>2026-07-02</lastmod>
+  </url>
+  <url>
+    <loc>https://tomilov.com/en/screenshots/2067/</loc>
+    <lastmod>2026-07-02</lastmod>
+  </url>
+  <url>
+    <loc>https://tomilov.com/en/screenshots/2066/</loc>
+    <lastmod>2026-07-01</lastmod>
+  </url>
+  <url>
+    <loc>https://tomilov.com/en/screenshots/2065/</loc>
+    <lastmod>2026-07-01</lastmod>
+  </url>
+  <url>
+    <loc>https://tomilov.com/en/screenshots/2064/</loc>
+    <lastmod>2026-07-01</lastmod>
+  </url>
+  <url>
+    <loc>https://tomilov.com/en/screenshots/2062/</loc>
+    <lastmod>2026-06-30</lastmod>
+  </url>
+  <url>
+    <loc>https://tomilov.com/en/screenshots/2058/</loc>
+    <lastmod>2026-06-29</lastmod>
+  </url>
+  <url>
+    <loc>https://tomilov.com/en/screenshots/2057/</loc>
+    <lastmod>2026-06-29</lastmod>
+  </url>
+  <url>
+    <loc>https://tomilov.com/en/screenshots/2049/</loc>
+    <lastmod>2026-06-25</lastmod>
+  </url>
+  <url>
+    <loc>https://tomilov.com/en/screenshots/2048/</loc>
+    <lastmod>2026-06-24</lastmod>
+  </url>
+  <url>
+    <loc>https://tomilov.com/en/screenshots/2042/</loc>
+    <lastmod>2026-06-23</lastmod>
+  </url>
+  <url>
+    <loc>https://tomilov.com/en/screenshots/2036/</loc>
+    <lastmod>2026-06-22</lastmod>
+  </url>
+  <url>
+    <loc>https://tomilov.com/en/screenshots/2035/</loc>
+    <lastmod>2026-06-19</lastmod>
+  </url>
+  <url>
+    <loc>https://tomilov.com/en/screenshots/2032/</loc>
+    <lastmod>2026-06-18</lastmod>
+  </url>
+  <url>
     <loc>https://tomilov.com/en/screenshots/2028/</loc>
     <lastmod>2026-06-17</lastmod>
   </url>
@@ -5207,6 +5341,396 @@
     <lastmod>2023-05-29</lastmod>
   </url>
   <url>
+    <loc>https://tomilov.com/photos/20260705-171335-59b05428/</loc>
+    <lastmod>2026-07-05</lastmod>
+    <image:image>
+      <image:loc>https://tomilov.com/assets/photos/originals/2026/07/20260705-171335-59b05428-shortcut-upload.jpg</image:loc>
+      <image:title>Leica M6 — плёнка · 11 июня 2026 г.</image:title>
+      <image:caption>Leica M6 — плёнка · 11 июня 2026 г.</image:caption>
+      <image:license>https://creativecommons.org/licenses/by/4.0/</image:license>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://tomilov.com/photos/20260705-171258-1db22d23/</loc>
+    <lastmod>2026-07-05</lastmod>
+    <image:image>
+      <image:loc>https://tomilov.com/assets/photos/originals/2026/07/20260705-171258-1db22d23-shortcut-upload.jpg</image:loc>
+      <image:title>Leica M6 — плёнка · 5 июля 2026 г.</image:title>
+      <image:caption>Leica M6 — плёнка · 5 июля 2026 г.</image:caption>
+      <image:license>https://creativecommons.org/licenses/by/4.0/</image:license>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://tomilov.com/photos/20260705-171230-5007df86/</loc>
+    <lastmod>2026-07-05</lastmod>
+    <image:image>
+      <image:loc>https://tomilov.com/assets/photos/originals/2026/07/20260705-171230-5007df86-shortcut-upload.jpg</image:loc>
+      <image:title>Leica M6 — плёнка · 5 июля 2026 г.</image:title>
+      <image:caption>Leica M6 — плёнка · 5 июля 2026 г.</image:caption>
+      <image:license>https://creativecommons.org/licenses/by/4.0/</image:license>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://tomilov.com/photos/20260705-171205-91c3ab77/</loc>
+    <lastmod>2026-07-05</lastmod>
+    <image:image>
+      <image:loc>https://tomilov.com/assets/photos/originals/2026/07/20260705-171205-91c3ab77-shortcut-upload.jpg</image:loc>
+      <image:title>Leica M6 — плёнка · 5 июля 2026 г.</image:title>
+      <image:caption>Leica M6 — плёнка · 5 июля 2026 г.</image:caption>
+      <image:license>https://creativecommons.org/licenses/by/4.0/</image:license>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://tomilov.com/photos/20260705-171151-300de437/</loc>
+    <lastmod>2026-07-05</lastmod>
+    <image:image>
+      <image:loc>https://tomilov.com/assets/photos/originals/2026/07/20260705-171151-300de437-shortcut-upload.jpg</image:loc>
+      <image:title>Leica M6 — плёнка · 5 июля 2026 г.</image:title>
+      <image:caption>Leica M6 — плёнка · 5 июля 2026 г.</image:caption>
+      <image:license>https://creativecommons.org/licenses/by/4.0/</image:license>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://tomilov.com/photos/20260705-171136-92c4e421/</loc>
+    <lastmod>2026-07-05</lastmod>
+    <image:image>
+      <image:loc>https://tomilov.com/assets/photos/originals/2026/07/20260705-171136-92c4e421-shortcut-upload.jpg</image:loc>
+      <image:title>Leica M6 — плёнка · 5 июля 2026 г.</image:title>
+      <image:caption>Leica M6 — плёнка · 5 июля 2026 г.</image:caption>
+      <image:license>https://creativecommons.org/licenses/by/4.0/</image:license>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://tomilov.com/photos/20260705-171120-db265246/</loc>
+    <lastmod>2026-07-05</lastmod>
+    <image:image>
+      <image:loc>https://tomilov.com/assets/photos/originals/2026/07/20260705-171120-db265246-shortcut-upload.jpg</image:loc>
+      <image:title>Leica M6 — плёнка · 11 июня 2026 г.</image:title>
+      <image:caption>Leica M6 — плёнка · 11 июня 2026 г.</image:caption>
+      <image:license>https://creativecommons.org/licenses/by/4.0/</image:license>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://tomilov.com/photos/20260705-171102-f505dade/</loc>
+    <lastmod>2026-07-05</lastmod>
+    <image:image>
+      <image:loc>https://tomilov.com/assets/photos/originals/2026/07/20260705-171102-f505dade-shortcut-upload.jpg</image:loc>
+      <image:title>Leica M6 — плёнка · 9 мая 2026 г.</image:title>
+      <image:caption>Leica M6 — плёнка · 9 мая 2026 г.</image:caption>
+      <image:license>https://creativecommons.org/licenses/by/4.0/</image:license>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://tomilov.com/photos/20260705-171040-e1efa766/</loc>
+    <lastmod>2026-07-05</lastmod>
+    <image:image>
+      <image:loc>https://tomilov.com/assets/photos/originals/2026/07/20260705-171040-e1efa766-shortcut-upload.jpg</image:loc>
+      <image:title>Leica M6 — плёнка · 9 мая 2026 г.</image:title>
+      <image:caption>Leica M6 — плёнка · 9 мая 2026 г.</image:caption>
+      <image:license>https://creativecommons.org/licenses/by/4.0/</image:license>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://tomilov.com/photos/20260705-171021-d04b98c4/</loc>
+    <lastmod>2026-07-05</lastmod>
+    <image:image>
+      <image:loc>https://tomilov.com/assets/photos/originals/2026/07/20260705-171021-d04b98c4-shortcut-upload.jpg</image:loc>
+      <image:title>Leica M6 — плёнка · 9 мая 2026 г.</image:title>
+      <image:caption>Leica M6 — плёнка · 9 мая 2026 г.</image:caption>
+      <image:license>https://creativecommons.org/licenses/by/4.0/</image:license>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://tomilov.com/photos/20260705-170952-51327356/</loc>
+    <lastmod>2026-07-05</lastmod>
+    <image:image>
+      <image:loc>https://tomilov.com/assets/photos/originals/2026/07/20260705-170952-51327356-shortcut-upload.jpg</image:loc>
+      <image:title>Leica M6 — плёнка · 25 января 2026 г.</image:title>
+      <image:caption>Leica M6 — плёнка · 25 января 2026 г.</image:caption>
+      <image:license>https://creativecommons.org/licenses/by/4.0/</image:license>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://tomilov.com/photos/20260705-170930-2a547608/</loc>
+    <lastmod>2026-07-05</lastmod>
+    <image:image>
+      <image:loc>https://tomilov.com/assets/photos/originals/2026/07/20260705-170930-2a547608-shortcut-upload.jpg</image:loc>
+      <image:title>Leica M6 — плёнка · 25 января 2026 г.</image:title>
+      <image:caption>Leica M6 — плёнка · 25 января 2026 г.</image:caption>
+      <image:license>https://creativecommons.org/licenses/by/4.0/</image:license>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://tomilov.com/photos/20260705-170916-c407c399/</loc>
+    <lastmod>2026-07-05</lastmod>
+    <image:image>
+      <image:loc>https://tomilov.com/assets/photos/originals/2026/07/20260705-170916-c407c399-shortcut-upload.jpg</image:loc>
+      <image:title>Leica M6 — плёнка · 25 января 2026 г.</image:title>
+      <image:caption>Leica M6 — плёнка · 25 января 2026 г.</image:caption>
+      <image:license>https://creativecommons.org/licenses/by/4.0/</image:license>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://tomilov.com/photos/20260705-170810-aa5498a1/</loc>
+    <lastmod>2026-07-05</lastmod>
+    <image:image>
+      <image:loc>https://tomilov.com/assets/photos/originals/2026/07/20260705-170810-aa5498a1-shortcut-upload.jpg</image:loc>
+      <image:title>Leica M6 — плёнка · 8 ноября 2025 г.</image:title>
+      <image:caption>Leica M6 — плёнка · 8 ноября 2025 г.</image:caption>
+      <image:license>https://creativecommons.org/licenses/by/4.0/</image:license>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://tomilov.com/photos/20260705-170725-ab6b83bd/</loc>
+    <lastmod>2026-07-05</lastmod>
+    <image:image>
+      <image:loc>https://tomilov.com/assets/photos/originals/2026/07/20260705-170725-ab6b83bd-shortcut-upload.jpg</image:loc>
+      <image:title>Leica M6 — плёнка · 8 ноября 2025 г.</image:title>
+      <image:caption>Leica M6 — плёнка · 8 ноября 2025 г.</image:caption>
+      <image:license>https://creativecommons.org/licenses/by/4.0/</image:license>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://tomilov.com/photos/20260705-170651-1133c59a/</loc>
+    <lastmod>2026-07-05</lastmod>
+    <image:image>
+      <image:loc>https://tomilov.com/assets/photos/originals/2026/07/20260705-170651-1133c59a-shortcut-upload.jpg</image:loc>
+      <image:title>Leica M6 — плёнка · 8 ноября 2025 г.</image:title>
+      <image:caption>Leica M6 — плёнка · 8 ноября 2025 г.</image:caption>
+      <image:license>https://creativecommons.org/licenses/by/4.0/</image:license>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://tomilov.com/photos/20260705-170609-fe7c8242/</loc>
+    <lastmod>2026-07-05</lastmod>
+    <image:image>
+      <image:loc>https://tomilov.com/assets/photos/originals/2026/07/20260705-170609-fe7c8242-shortcut-upload.jpg</image:loc>
+      <image:title>Leica M6 — плёнка · 26 января 2026 г.</image:title>
+      <image:caption>Leica M6 — плёнка · 26 января 2026 г.</image:caption>
+      <image:license>https://creativecommons.org/licenses/by/4.0/</image:license>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://tomilov.com/photos/20260705-170518-8ee85311/</loc>
+    <lastmod>2026-07-05</lastmod>
+    <image:image>
+      <image:loc>https://tomilov.com/assets/photos/originals/2026/07/20260705-170518-8ee85311-shortcut-upload.jpg</image:loc>
+      <image:title>Leica M6 — плёнка · 5 июля 2026 г.</image:title>
+      <image:caption>Leica M6 — плёнка · 5 июля 2026 г.</image:caption>
+      <image:license>https://creativecommons.org/licenses/by/4.0/</image:license>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://tomilov.com/photos/20260705-170504-e2c53909/</loc>
+    <lastmod>2026-07-05</lastmod>
+    <image:image>
+      <image:loc>https://tomilov.com/assets/photos/originals/2026/07/20260705-170504-e2c53909-shortcut-upload.jpg</image:loc>
+      <image:title>Leica M6 — плёнка · 5 июля 2026 г.</image:title>
+      <image:caption>Leica M6 — плёнка · 5 июля 2026 г.</image:caption>
+      <image:license>https://creativecommons.org/licenses/by/4.0/</image:license>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://tomilov.com/photos/20260705-170426-f22c6906/</loc>
+    <lastmod>2026-07-05</lastmod>
+    <image:image>
+      <image:loc>https://tomilov.com/assets/photos/originals/2026/07/20260705-170426-f22c6906-shortcut-upload.jpg</image:loc>
+      <image:title>Leica M6 — плёнка · 5 июля 2026 г.</image:title>
+      <image:caption>Leica M6 — плёнка · 5 июля 2026 г.</image:caption>
+      <image:license>https://creativecommons.org/licenses/by/4.0/</image:license>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://tomilov.com/photos/20260705-170347-4c29a0c6/</loc>
+    <lastmod>2026-07-05</lastmod>
+    <image:image>
+      <image:loc>https://tomilov.com/assets/photos/originals/2026/07/20260705-170347-4c29a0c6-shortcut-upload.jpg</image:loc>
+      <image:title>Leica M6 — плёнка · 5 июля 2026 г.</image:title>
+      <image:caption>Leica M6 — плёнка · 5 июля 2026 г.</image:caption>
+      <image:license>https://creativecommons.org/licenses/by/4.0/</image:license>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://tomilov.com/photos/20260705-170322-e10c081d/</loc>
+    <lastmod>2026-07-05</lastmod>
+    <image:image>
+      <image:loc>https://tomilov.com/assets/photos/originals/2026/07/20260705-170322-e10c081d-shortcut-upload.jpg</image:loc>
+      <image:title>Leica M6 — плёнка · 5 июля 2026 г.</image:title>
+      <image:caption>Leica M6 — плёнка · 5 июля 2026 г.</image:caption>
+      <image:license>https://creativecommons.org/licenses/by/4.0/</image:license>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://tomilov.com/photos/20260705-170304-873725d1/</loc>
+    <lastmod>2026-07-05</lastmod>
+    <image:image>
+      <image:loc>https://tomilov.com/assets/photos/originals/2026/07/20260705-170304-873725d1-shortcut-upload.jpg</image:loc>
+      <image:title>Камера · 12 мая 2025 г.</image:title>
+      <image:caption>Камера · 12 мая 2025 г.</image:caption>
+      <image:license>https://creativecommons.org/licenses/by/4.0/</image:license>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://tomilov.com/photos/20260705-170242-4cdf43bb/</loc>
+    <lastmod>2026-07-05</lastmod>
+    <image:image>
+      <image:loc>https://tomilov.com/assets/photos/originals/2026/07/20260705-170242-4cdf43bb-shortcut-upload.jpg</image:loc>
+      <image:title>Leica M6 — плёнка · 5 июля 2026 г.</image:title>
+      <image:caption>Leica M6 — плёнка · 5 июля 2026 г.</image:caption>
+      <image:license>https://creativecommons.org/licenses/by/4.0/</image:license>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://tomilov.com/photos/20260705-170138-961d13c4/</loc>
+    <lastmod>2026-07-05</lastmod>
+    <image:image>
+      <image:loc>https://tomilov.com/assets/photos/originals/2026/07/20260705-170138-961d13c4-shortcut-upload.jpg</image:loc>
+      <image:title>Leica M6 — плёнка · 5 июля 2026 г.</image:title>
+      <image:caption>Leica M6 — плёнка · 5 июля 2026 г.</image:caption>
+      <image:license>https://creativecommons.org/licenses/by/4.0/</image:license>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://tomilov.com/photos/20260705-170038-e064a592/</loc>
+    <lastmod>2026-07-05</lastmod>
+    <image:image>
+      <image:loc>https://tomilov.com/assets/photos/originals/2026/07/20260705-170038-e064a592-shortcut-upload.jpg</image:loc>
+      <image:title>Leica M6 — плёнка · 5 июля 2026 г.</image:title>
+      <image:caption>Leica M6 — плёнка · 5 июля 2026 г.</image:caption>
+      <image:license>https://creativecommons.org/licenses/by/4.0/</image:license>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://tomilov.com/photos/20260705-165936-bcc3973e/</loc>
+    <lastmod>2026-07-05</lastmod>
+    <image:image>
+      <image:loc>https://tomilov.com/assets/photos/originals/2026/07/20260705-165936-bcc3973e-shortcut-upload.jpg</image:loc>
+      <image:title>Leica M6 — плёнка · 5 июля 2026 г.</image:title>
+      <image:caption>Leica M6 — плёнка · 5 июля 2026 г.</image:caption>
+      <image:license>https://creativecommons.org/licenses/by/4.0/</image:license>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://tomilov.com/photos/20260705-165649-32d68db2/</loc>
+    <lastmod>2026-07-05</lastmod>
+    <image:image>
+      <image:loc>https://tomilov.com/assets/photos/originals/2026/07/20260705-165649-32d68db2-shortcut-upload.jpg</image:loc>
+      <image:title>Leica M6 — плёнка · 5 июля 2026 г.</image:title>
+      <image:caption>Leica M6 — плёнка · 5 июля 2026 г.</image:caption>
+      <image:license>https://creativecommons.org/licenses/by/4.0/</image:license>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://tomilov.com/photos/20260705-165610-42caa299/</loc>
+    <lastmod>2026-07-05</lastmod>
+    <image:image>
+      <image:loc>https://tomilov.com/assets/photos/originals/2026/07/20260705-165610-42caa299-shortcut-upload.jpg</image:loc>
+      <image:title>Leica M6 — плёнка · 5 июля 2026 г.</image:title>
+      <image:caption>Leica M6 — плёнка · 5 июля 2026 г.</image:caption>
+      <image:license>https://creativecommons.org/licenses/by/4.0/</image:license>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://tomilov.com/photos/20260705-165546-a438cb31/</loc>
+    <lastmod>2026-07-05</lastmod>
+    <image:image>
+      <image:loc>https://tomilov.com/assets/photos/originals/2026/07/20260705-165546-a438cb31-shortcut-upload.jpg</image:loc>
+      <image:title>Leica M6 — плёнка · 5 июля 2026 г.</image:title>
+      <image:caption>Leica M6 — плёнка · 5 июля 2026 г.</image:caption>
+      <image:license>https://creativecommons.org/licenses/by/4.0/</image:license>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://tomilov.com/photos/20260705-165338-3611f9d8/</loc>
+    <lastmod>2026-07-05</lastmod>
+    <image:image>
+      <image:loc>https://tomilov.com/assets/photos/originals/2026/07/20260705-165338-3611f9d8-shortcut-upload.jpg</image:loc>
+      <image:title>Leica M6 — плёнка · 5 июля 2026 г.</image:title>
+      <image:caption>Leica M6 — плёнка · 5 июля 2026 г.</image:caption>
+      <image:license>https://creativecommons.org/licenses/by/4.0/</image:license>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://tomilov.com/photos/20260705-165245-2005b725/</loc>
+    <lastmod>2026-07-05</lastmod>
+    <image:image>
+      <image:loc>https://tomilov.com/assets/photos/originals/2026/07/20260705-165245-2005b725-shortcut-upload.jpg</image:loc>
+      <image:title>Leica M6 — плёнка · 5 июля 2026 г.</image:title>
+      <image:caption>Leica M6 — плёнка · 5 июля 2026 г.</image:caption>
+      <image:license>https://creativecommons.org/licenses/by/4.0/</image:license>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://tomilov.com/photos/20260705-165226-028d76ee/</loc>
+    <lastmod>2026-07-05</lastmod>
+    <image:image>
+      <image:loc>https://tomilov.com/assets/photos/originals/2026/07/20260705-165226-028d76ee-shortcut-upload.jpg</image:loc>
+      <image:title>Leica M6 — плёнка · 5 июля 2026 г.</image:title>
+      <image:caption>Leica M6 — плёнка · 5 июля 2026 г.</image:caption>
+      <image:license>https://creativecommons.org/licenses/by/4.0/</image:license>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://tomilov.com/photos/20260703-132249-eca2200f/</loc>
+    <lastmod>2026-07-03</lastmod>
+    <image:image>
+      <image:loc>https://tomilov.com/assets/photos/originals/2026/07/20260703-132249-eca2200f-shortcut-upload.jpg</image:loc>
+      <image:title>Leica M6 — плёнка · 3 июля 2026 г.</image:title>
+      <image:caption>Leica M6 — плёнка · 3 июля 2026 г.</image:caption>
+      <image:license>https://creativecommons.org/licenses/by/4.0/</image:license>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://tomilov.com/photos/20260703-132042-f3595b85/</loc>
+    <lastmod>2026-07-03</lastmod>
+    <image:image>
+      <image:loc>https://tomilov.com/assets/photos/originals/2026/07/20260703-132042-f3595b85-shortcut-upload.jpg</image:loc>
+      <image:title>Leica M6 — плёнка · 3 июля 2026 г.</image:title>
+      <image:caption>Leica M6 — плёнка · 3 июля 2026 г.</image:caption>
+      <image:license>https://creativecommons.org/licenses/by/4.0/</image:license>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://tomilov.com/photos/20260624-102016-5985f767/</loc>
+    <lastmod>2026-06-24</lastmod>
+    <image:image>
+      <image:loc>https://tomilov.com/assets/photos/originals/2026/06/20260624-102016-5985f767-shortcut-upload.jpg</image:loc>
+      <image:title>Leica M6 — плёнка · 25 января 2026 г.</image:title>
+      <image:caption>Leica M6 — плёнка · 25 января 2026 г.</image:caption>
+      <image:license>https://creativecommons.org/licenses/by/4.0/</image:license>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://tomilov.com/photos/20260624-101954-e80b4917/</loc>
+    <lastmod>2026-06-24</lastmod>
+    <image:image>
+      <image:loc>https://tomilov.com/assets/photos/originals/2026/06/20260624-101954-e80b4917-shortcut-upload.jpg</image:loc>
+      <image:title>Нытвенский муниципальный округ, Пермский край · Apple iPhone 17 Pro Max · 9 февраля 2026 г.</image:title>
+      <image:caption>Нытвенский муниципальный округ, Пермский край · Apple iPhone 17 Pro Max · 9 февраля 2026 г.</image:caption>
+      <image:license>https://creativecommons.org/licenses/by/4.0/</image:license>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://tomilov.com/photos/20260624-101924-82a52d05/</loc>
+    <lastmod>2026-06-24</lastmod>
+    <image:image>
+      <image:loc>https://tomilov.com/assets/photos/originals/2026/06/20260624-101924-82a52d05-shortcut-upload.jpg</image:loc>
+      <image:title>Эшампле, Барселона, Каталония · Apple iPhone 17 Pro Max · 3 марта 2026 г.</image:title>
+      <image:caption>Эшампле, Барселона, Каталония · Apple iPhone 17 Pro Max · 3 марта 2026 г.</image:caption>
+      <image:license>https://creativecommons.org/licenses/by/4.0/</image:license>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://tomilov.com/photos/20260624-101749-ebbe05f8/</loc>
+    <lastmod>2026-06-24</lastmod>
+    <image:image>
+      <image:loc>https://tomilov.com/assets/photos/originals/2026/06/20260624-101749-ebbe05f8-shortcut-upload.jpg</image:loc>
+      <image:title>Пушкино, Московская область · Apple iPhone 17 Pro Max · 4 мая 2026 г.</image:title>
+      <image:caption>Пушкино, Московская область · Apple iPhone 17 Pro Max · 4 мая 2026 г.</image:caption>
+      <image:license>https://creativecommons.org/licenses/by/4.0/</image:license>
+    </image:image>
+  </url>
+  <url>
     <loc>https://tomilov.com/photos/20260531-173136-e90ccf67/</loc>
     <lastmod>2026-05-31</lastmod>
     <image:image>
@@ -5293,6 +5817,396 @@
       <image:loc>https://tomilov.com/assets/photos/originals/2026/05/20260529-235227-c5697f57-shortcut-upload.jpg</image:loc>
       <image:title>Leica M6 — плёнка · 8 ноября 2025 г.</image:title>
       <image:caption>Leica M6 — плёнка · 8 ноября 2025 г.</image:caption>
+      <image:license>https://creativecommons.org/licenses/by/4.0/</image:license>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://tomilov.com/en/photos/20260705-171335-59b05428/</loc>
+    <lastmod>2026-07-05</lastmod>
+    <image:image>
+      <image:loc>https://tomilov.com/assets/photos/originals/2026/07/20260705-171335-59b05428-shortcut-upload.jpg</image:loc>
+      <image:title>Leica M6 — плёнка · June 11, 2026</image:title>
+      <image:caption>Leica M6 — плёнка · June 11, 2026</image:caption>
+      <image:license>https://creativecommons.org/licenses/by/4.0/</image:license>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://tomilov.com/en/photos/20260705-171258-1db22d23/</loc>
+    <lastmod>2026-07-05</lastmod>
+    <image:image>
+      <image:loc>https://tomilov.com/assets/photos/originals/2026/07/20260705-171258-1db22d23-shortcut-upload.jpg</image:loc>
+      <image:title>Leica M6 — плёнка · July 5, 2026</image:title>
+      <image:caption>Leica M6 — плёнка · July 5, 2026</image:caption>
+      <image:license>https://creativecommons.org/licenses/by/4.0/</image:license>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://tomilov.com/en/photos/20260705-171230-5007df86/</loc>
+    <lastmod>2026-07-05</lastmod>
+    <image:image>
+      <image:loc>https://tomilov.com/assets/photos/originals/2026/07/20260705-171230-5007df86-shortcut-upload.jpg</image:loc>
+      <image:title>Leica M6 — плёнка · July 5, 2026</image:title>
+      <image:caption>Leica M6 — плёнка · July 5, 2026</image:caption>
+      <image:license>https://creativecommons.org/licenses/by/4.0/</image:license>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://tomilov.com/en/photos/20260705-171205-91c3ab77/</loc>
+    <lastmod>2026-07-05</lastmod>
+    <image:image>
+      <image:loc>https://tomilov.com/assets/photos/originals/2026/07/20260705-171205-91c3ab77-shortcut-upload.jpg</image:loc>
+      <image:title>Leica M6 — плёнка · July 5, 2026</image:title>
+      <image:caption>Leica M6 — плёнка · July 5, 2026</image:caption>
+      <image:license>https://creativecommons.org/licenses/by/4.0/</image:license>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://tomilov.com/en/photos/20260705-171151-300de437/</loc>
+    <lastmod>2026-07-05</lastmod>
+    <image:image>
+      <image:loc>https://tomilov.com/assets/photos/originals/2026/07/20260705-171151-300de437-shortcut-upload.jpg</image:loc>
+      <image:title>Leica M6 — плёнка · July 5, 2026</image:title>
+      <image:caption>Leica M6 — плёнка · July 5, 2026</image:caption>
+      <image:license>https://creativecommons.org/licenses/by/4.0/</image:license>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://tomilov.com/en/photos/20260705-171136-92c4e421/</loc>
+    <lastmod>2026-07-05</lastmod>
+    <image:image>
+      <image:loc>https://tomilov.com/assets/photos/originals/2026/07/20260705-171136-92c4e421-shortcut-upload.jpg</image:loc>
+      <image:title>Leica M6 — плёнка · July 5, 2026</image:title>
+      <image:caption>Leica M6 — плёнка · July 5, 2026</image:caption>
+      <image:license>https://creativecommons.org/licenses/by/4.0/</image:license>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://tomilov.com/en/photos/20260705-171120-db265246/</loc>
+    <lastmod>2026-07-05</lastmod>
+    <image:image>
+      <image:loc>https://tomilov.com/assets/photos/originals/2026/07/20260705-171120-db265246-shortcut-upload.jpg</image:loc>
+      <image:title>Leica M6 — плёнка · June 11, 2026</image:title>
+      <image:caption>Leica M6 — плёнка · June 11, 2026</image:caption>
+      <image:license>https://creativecommons.org/licenses/by/4.0/</image:license>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://tomilov.com/en/photos/20260705-171102-f505dade/</loc>
+    <lastmod>2026-07-05</lastmod>
+    <image:image>
+      <image:loc>https://tomilov.com/assets/photos/originals/2026/07/20260705-171102-f505dade-shortcut-upload.jpg</image:loc>
+      <image:title>Leica M6 — плёнка · May 9, 2026</image:title>
+      <image:caption>Leica M6 — плёнка · May 9, 2026</image:caption>
+      <image:license>https://creativecommons.org/licenses/by/4.0/</image:license>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://tomilov.com/en/photos/20260705-171040-e1efa766/</loc>
+    <lastmod>2026-07-05</lastmod>
+    <image:image>
+      <image:loc>https://tomilov.com/assets/photos/originals/2026/07/20260705-171040-e1efa766-shortcut-upload.jpg</image:loc>
+      <image:title>Leica M6 — плёнка · May 9, 2026</image:title>
+      <image:caption>Leica M6 — плёнка · May 9, 2026</image:caption>
+      <image:license>https://creativecommons.org/licenses/by/4.0/</image:license>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://tomilov.com/en/photos/20260705-171021-d04b98c4/</loc>
+    <lastmod>2026-07-05</lastmod>
+    <image:image>
+      <image:loc>https://tomilov.com/assets/photos/originals/2026/07/20260705-171021-d04b98c4-shortcut-upload.jpg</image:loc>
+      <image:title>Leica M6 — плёнка · May 9, 2026</image:title>
+      <image:caption>Leica M6 — плёнка · May 9, 2026</image:caption>
+      <image:license>https://creativecommons.org/licenses/by/4.0/</image:license>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://tomilov.com/en/photos/20260705-170952-51327356/</loc>
+    <lastmod>2026-07-05</lastmod>
+    <image:image>
+      <image:loc>https://tomilov.com/assets/photos/originals/2026/07/20260705-170952-51327356-shortcut-upload.jpg</image:loc>
+      <image:title>Leica M6 — плёнка · January 25, 2026</image:title>
+      <image:caption>Leica M6 — плёнка · January 25, 2026</image:caption>
+      <image:license>https://creativecommons.org/licenses/by/4.0/</image:license>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://tomilov.com/en/photos/20260705-170930-2a547608/</loc>
+    <lastmod>2026-07-05</lastmod>
+    <image:image>
+      <image:loc>https://tomilov.com/assets/photos/originals/2026/07/20260705-170930-2a547608-shortcut-upload.jpg</image:loc>
+      <image:title>Leica M6 — плёнка · January 25, 2026</image:title>
+      <image:caption>Leica M6 — плёнка · January 25, 2026</image:caption>
+      <image:license>https://creativecommons.org/licenses/by/4.0/</image:license>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://tomilov.com/en/photos/20260705-170916-c407c399/</loc>
+    <lastmod>2026-07-05</lastmod>
+    <image:image>
+      <image:loc>https://tomilov.com/assets/photos/originals/2026/07/20260705-170916-c407c399-shortcut-upload.jpg</image:loc>
+      <image:title>Leica M6 — плёнка · January 25, 2026</image:title>
+      <image:caption>Leica M6 — плёнка · January 25, 2026</image:caption>
+      <image:license>https://creativecommons.org/licenses/by/4.0/</image:license>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://tomilov.com/en/photos/20260705-170810-aa5498a1/</loc>
+    <lastmod>2026-07-05</lastmod>
+    <image:image>
+      <image:loc>https://tomilov.com/assets/photos/originals/2026/07/20260705-170810-aa5498a1-shortcut-upload.jpg</image:loc>
+      <image:title>Leica M6 — плёнка · November 8, 2025</image:title>
+      <image:caption>Leica M6 — плёнка · November 8, 2025</image:caption>
+      <image:license>https://creativecommons.org/licenses/by/4.0/</image:license>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://tomilov.com/en/photos/20260705-170725-ab6b83bd/</loc>
+    <lastmod>2026-07-05</lastmod>
+    <image:image>
+      <image:loc>https://tomilov.com/assets/photos/originals/2026/07/20260705-170725-ab6b83bd-shortcut-upload.jpg</image:loc>
+      <image:title>Leica M6 — плёнка · November 8, 2025</image:title>
+      <image:caption>Leica M6 — плёнка · November 8, 2025</image:caption>
+      <image:license>https://creativecommons.org/licenses/by/4.0/</image:license>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://tomilov.com/en/photos/20260705-170651-1133c59a/</loc>
+    <lastmod>2026-07-05</lastmod>
+    <image:image>
+      <image:loc>https://tomilov.com/assets/photos/originals/2026/07/20260705-170651-1133c59a-shortcut-upload.jpg</image:loc>
+      <image:title>Leica M6 — плёнка · November 8, 2025</image:title>
+      <image:caption>Leica M6 — плёнка · November 8, 2025</image:caption>
+      <image:license>https://creativecommons.org/licenses/by/4.0/</image:license>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://tomilov.com/en/photos/20260705-170609-fe7c8242/</loc>
+    <lastmod>2026-07-05</lastmod>
+    <image:image>
+      <image:loc>https://tomilov.com/assets/photos/originals/2026/07/20260705-170609-fe7c8242-shortcut-upload.jpg</image:loc>
+      <image:title>Leica M6 — плёнка · January 26, 2026</image:title>
+      <image:caption>Leica M6 — плёнка · January 26, 2026</image:caption>
+      <image:license>https://creativecommons.org/licenses/by/4.0/</image:license>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://tomilov.com/en/photos/20260705-170518-8ee85311/</loc>
+    <lastmod>2026-07-05</lastmod>
+    <image:image>
+      <image:loc>https://tomilov.com/assets/photos/originals/2026/07/20260705-170518-8ee85311-shortcut-upload.jpg</image:loc>
+      <image:title>Leica M6 — плёнка · July 5, 2026</image:title>
+      <image:caption>Leica M6 — плёнка · July 5, 2026</image:caption>
+      <image:license>https://creativecommons.org/licenses/by/4.0/</image:license>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://tomilov.com/en/photos/20260705-170504-e2c53909/</loc>
+    <lastmod>2026-07-05</lastmod>
+    <image:image>
+      <image:loc>https://tomilov.com/assets/photos/originals/2026/07/20260705-170504-e2c53909-shortcut-upload.jpg</image:loc>
+      <image:title>Leica M6 — плёнка · July 5, 2026</image:title>
+      <image:caption>Leica M6 — плёнка · July 5, 2026</image:caption>
+      <image:license>https://creativecommons.org/licenses/by/4.0/</image:license>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://tomilov.com/en/photos/20260705-170426-f22c6906/</loc>
+    <lastmod>2026-07-05</lastmod>
+    <image:image>
+      <image:loc>https://tomilov.com/assets/photos/originals/2026/07/20260705-170426-f22c6906-shortcut-upload.jpg</image:loc>
+      <image:title>Leica M6 — плёнка · July 5, 2026</image:title>
+      <image:caption>Leica M6 — плёнка · July 5, 2026</image:caption>
+      <image:license>https://creativecommons.org/licenses/by/4.0/</image:license>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://tomilov.com/en/photos/20260705-170347-4c29a0c6/</loc>
+    <lastmod>2026-07-05</lastmod>
+    <image:image>
+      <image:loc>https://tomilov.com/assets/photos/originals/2026/07/20260705-170347-4c29a0c6-shortcut-upload.jpg</image:loc>
+      <image:title>Leica M6 — плёнка · July 5, 2026</image:title>
+      <image:caption>Leica M6 — плёнка · July 5, 2026</image:caption>
+      <image:license>https://creativecommons.org/licenses/by/4.0/</image:license>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://tomilov.com/en/photos/20260705-170322-e10c081d/</loc>
+    <lastmod>2026-07-05</lastmod>
+    <image:image>
+      <image:loc>https://tomilov.com/assets/photos/originals/2026/07/20260705-170322-e10c081d-shortcut-upload.jpg</image:loc>
+      <image:title>Leica M6 — плёнка · July 5, 2026</image:title>
+      <image:caption>Leica M6 — плёнка · July 5, 2026</image:caption>
+      <image:license>https://creativecommons.org/licenses/by/4.0/</image:license>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://tomilov.com/en/photos/20260705-170304-873725d1/</loc>
+    <lastmod>2026-07-05</lastmod>
+    <image:image>
+      <image:loc>https://tomilov.com/assets/photos/originals/2026/07/20260705-170304-873725d1-shortcut-upload.jpg</image:loc>
+      <image:title>Камера · May 12, 2025</image:title>
+      <image:caption>Камера · May 12, 2025</image:caption>
+      <image:license>https://creativecommons.org/licenses/by/4.0/</image:license>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://tomilov.com/en/photos/20260705-170242-4cdf43bb/</loc>
+    <lastmod>2026-07-05</lastmod>
+    <image:image>
+      <image:loc>https://tomilov.com/assets/photos/originals/2026/07/20260705-170242-4cdf43bb-shortcut-upload.jpg</image:loc>
+      <image:title>Leica M6 — плёнка · July 5, 2026</image:title>
+      <image:caption>Leica M6 — плёнка · July 5, 2026</image:caption>
+      <image:license>https://creativecommons.org/licenses/by/4.0/</image:license>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://tomilov.com/en/photos/20260705-170138-961d13c4/</loc>
+    <lastmod>2026-07-05</lastmod>
+    <image:image>
+      <image:loc>https://tomilov.com/assets/photos/originals/2026/07/20260705-170138-961d13c4-shortcut-upload.jpg</image:loc>
+      <image:title>Leica M6 — плёнка · July 5, 2026</image:title>
+      <image:caption>Leica M6 — плёнка · July 5, 2026</image:caption>
+      <image:license>https://creativecommons.org/licenses/by/4.0/</image:license>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://tomilov.com/en/photos/20260705-170038-e064a592/</loc>
+    <lastmod>2026-07-05</lastmod>
+    <image:image>
+      <image:loc>https://tomilov.com/assets/photos/originals/2026/07/20260705-170038-e064a592-shortcut-upload.jpg</image:loc>
+      <image:title>Leica M6 — плёнка · July 5, 2026</image:title>
+      <image:caption>Leica M6 — плёнка · July 5, 2026</image:caption>
+      <image:license>https://creativecommons.org/licenses/by/4.0/</image:license>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://tomilov.com/en/photos/20260705-165936-bcc3973e/</loc>
+    <lastmod>2026-07-05</lastmod>
+    <image:image>
+      <image:loc>https://tomilov.com/assets/photos/originals/2026/07/20260705-165936-bcc3973e-shortcut-upload.jpg</image:loc>
+      <image:title>Leica M6 — плёнка · July 5, 2026</image:title>
+      <image:caption>Leica M6 — плёнка · July 5, 2026</image:caption>
+      <image:license>https://creativecommons.org/licenses/by/4.0/</image:license>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://tomilov.com/en/photos/20260705-165649-32d68db2/</loc>
+    <lastmod>2026-07-05</lastmod>
+    <image:image>
+      <image:loc>https://tomilov.com/assets/photos/originals/2026/07/20260705-165649-32d68db2-shortcut-upload.jpg</image:loc>
+      <image:title>Leica M6 — плёнка · July 5, 2026</image:title>
+      <image:caption>Leica M6 — плёнка · July 5, 2026</image:caption>
+      <image:license>https://creativecommons.org/licenses/by/4.0/</image:license>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://tomilov.com/en/photos/20260705-165610-42caa299/</loc>
+    <lastmod>2026-07-05</lastmod>
+    <image:image>
+      <image:loc>https://tomilov.com/assets/photos/originals/2026/07/20260705-165610-42caa299-shortcut-upload.jpg</image:loc>
+      <image:title>Leica M6 — плёнка · July 5, 2026</image:title>
+      <image:caption>Leica M6 — плёнка · July 5, 2026</image:caption>
+      <image:license>https://creativecommons.org/licenses/by/4.0/</image:license>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://tomilov.com/en/photos/20260705-165546-a438cb31/</loc>
+    <lastmod>2026-07-05</lastmod>
+    <image:image>
+      <image:loc>https://tomilov.com/assets/photos/originals/2026/07/20260705-165546-a438cb31-shortcut-upload.jpg</image:loc>
+      <image:title>Leica M6 — плёнка · July 5, 2026</image:title>
+      <image:caption>Leica M6 — плёнка · July 5, 2026</image:caption>
+      <image:license>https://creativecommons.org/licenses/by/4.0/</image:license>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://tomilov.com/en/photos/20260705-165338-3611f9d8/</loc>
+    <lastmod>2026-07-05</lastmod>
+    <image:image>
+      <image:loc>https://tomilov.com/assets/photos/originals/2026/07/20260705-165338-3611f9d8-shortcut-upload.jpg</image:loc>
+      <image:title>Leica M6 — плёнка · July 5, 2026</image:title>
+      <image:caption>Leica M6 — плёнка · July 5, 2026</image:caption>
+      <image:license>https://creativecommons.org/licenses/by/4.0/</image:license>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://tomilov.com/en/photos/20260705-165245-2005b725/</loc>
+    <lastmod>2026-07-05</lastmod>
+    <image:image>
+      <image:loc>https://tomilov.com/assets/photos/originals/2026/07/20260705-165245-2005b725-shortcut-upload.jpg</image:loc>
+      <image:title>Leica M6 — плёнка · July 5, 2026</image:title>
+      <image:caption>Leica M6 — плёнка · July 5, 2026</image:caption>
+      <image:license>https://creativecommons.org/licenses/by/4.0/</image:license>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://tomilov.com/en/photos/20260705-165226-028d76ee/</loc>
+    <lastmod>2026-07-05</lastmod>
+    <image:image>
+      <image:loc>https://tomilov.com/assets/photos/originals/2026/07/20260705-165226-028d76ee-shortcut-upload.jpg</image:loc>
+      <image:title>Leica M6 — плёнка · July 5, 2026</image:title>
+      <image:caption>Leica M6 — плёнка · July 5, 2026</image:caption>
+      <image:license>https://creativecommons.org/licenses/by/4.0/</image:license>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://tomilov.com/en/photos/20260703-132249-eca2200f/</loc>
+    <lastmod>2026-07-03</lastmod>
+    <image:image>
+      <image:loc>https://tomilov.com/assets/photos/originals/2026/07/20260703-132249-eca2200f-shortcut-upload.jpg</image:loc>
+      <image:title>Leica M6 — плёнка · July 3, 2026</image:title>
+      <image:caption>Leica M6 — плёнка · July 3, 2026</image:caption>
+      <image:license>https://creativecommons.org/licenses/by/4.0/</image:license>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://tomilov.com/en/photos/20260703-132042-f3595b85/</loc>
+    <lastmod>2026-07-03</lastmod>
+    <image:image>
+      <image:loc>https://tomilov.com/assets/photos/originals/2026/07/20260703-132042-f3595b85-shortcut-upload.jpg</image:loc>
+      <image:title>Leica M6 — плёнка · July 3, 2026</image:title>
+      <image:caption>Leica M6 — плёнка · July 3, 2026</image:caption>
+      <image:license>https://creativecommons.org/licenses/by/4.0/</image:license>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://tomilov.com/en/photos/20260624-102016-5985f767/</loc>
+    <lastmod>2026-06-24</lastmod>
+    <image:image>
+      <image:loc>https://tomilov.com/assets/photos/originals/2026/06/20260624-102016-5985f767-shortcut-upload.jpg</image:loc>
+      <image:title>Leica M6 — плёнка · January 25, 2026</image:title>
+      <image:caption>Leica M6 — плёнка · January 25, 2026</image:caption>
+      <image:license>https://creativecommons.org/licenses/by/4.0/</image:license>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://tomilov.com/en/photos/20260624-101954-e80b4917/</loc>
+    <lastmod>2026-06-24</lastmod>
+    <image:image>
+      <image:loc>https://tomilov.com/assets/photos/originals/2026/06/20260624-101954-e80b4917-shortcut-upload.jpg</image:loc>
+      <image:title>Нытвенский муниципальный округ, Пермский край · Apple iPhone 17 Pro Max · February 9, 2026</image:title>
+      <image:caption>Нытвенский муниципальный округ, Пермский край · Apple iPhone 17 Pro Max · February 9, 2026</image:caption>
+      <image:license>https://creativecommons.org/licenses/by/4.0/</image:license>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://tomilov.com/en/photos/20260624-101924-82a52d05/</loc>
+    <lastmod>2026-06-24</lastmod>
+    <image:image>
+      <image:loc>https://tomilov.com/assets/photos/originals/2026/06/20260624-101924-82a52d05-shortcut-upload.jpg</image:loc>
+      <image:title>Эшампле, Барселона, Каталония · Apple iPhone 17 Pro Max · March 3, 2026</image:title>
+      <image:caption>Эшампле, Барселона, Каталония · Apple iPhone 17 Pro Max · March 3, 2026</image:caption>
+      <image:license>https://creativecommons.org/licenses/by/4.0/</image:license>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://tomilov.com/en/photos/20260624-101749-ebbe05f8/</loc>
+    <lastmod>2026-06-24</lastmod>
+    <image:image>
+      <image:loc>https://tomilov.com/assets/photos/originals/2026/06/20260624-101749-ebbe05f8-shortcut-upload.jpg</image:loc>
+      <image:title>Пушкино, Московская область · Apple iPhone 17 Pro Max · May 4, 2026</image:title>
+      <image:caption>Пушкино, Московская область · Apple iPhone 17 Pro Max · May 4, 2026</image:caption>
       <image:license>https://creativecommons.org/licenses/by/4.0/</image:license>
     </image:image>
   </url>

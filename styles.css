@@ -64,6 +64,12 @@ body {
   font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
 }
 
+html.is-photo-viewer-open,
+body.is-photo-viewer-open {
+  overflow: hidden;
+  overscroll-behavior: none;
+}
+
 a {
   color: inherit;
   text-decoration: none;
@@ -88,11 +94,14 @@ a {
 }
 
 .site-header {
+  --site-header-frame: min(calc(100vw - 64px), 1136px);
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 16px;
+  width: var(--site-header-frame);
   min-height: 47px;
+  margin-inline: calc((100% - var(--site-header-frame)) / 2);
   padding: 8px;
   color: var(--header-text);
 }
@@ -959,6 +968,20 @@ a {
   place-items: center;
 }
 
+.screenshot-image-trigger {
+  display: grid;
+  align-self: stretch;
+  justify-self: stretch;
+  min-width: 0;
+  min-height: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  cursor: zoom-in;
+  font: inherit;
+  place-items: center;
+}
+
 .screenshot-media-item img,
 .screenshot-media-item video {
   display: block;
@@ -970,6 +993,7 @@ a {
 
 .screenshot-media-item.is-image img {
   width: 100%;
+  cursor: zoom-in;
 }
 
 .screenshot-media.is-single .screenshot-media-item.is-video {
@@ -1142,6 +1166,49 @@ a {
   font-size: clamp(54px, 9vw, 112px);
   font-weight: 600;
   line-height: 0.95;
+}
+
+.photo-filter {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0;
+  padding: 0 8px 28px;
+  color: var(--muted);
+  font-family: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 13px;
+  font-weight: 700;
+  line-height: 1.35;
+}
+
+.photo-filter a {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  margin-right: 10px;
+  color: var(--muted);
+  text-decoration: none;
+}
+
+.photo-filter a + a::before {
+  margin-right: 10px;
+  color: var(--muted);
+  content: "/";
+  opacity: 0.5;
+}
+
+.photo-filter a:hover,
+.photo-filter a[aria-current="page"] {
+  color: var(--text);
+}
+
+.photo-filter a[aria-current="page"] span:first-child {
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+}
+
+.photo-filter-count {
+  opacity: 0.58;
 }
 
 .photos-footer {
@@ -1391,6 +1458,7 @@ a {
   border: 0;
   background: rgb(12 12 12 / 0.94);
   color: #fff;
+  overscroll-behavior: contain;
 }
 
 .photo-viewer::backdrop {
@@ -1403,22 +1471,31 @@ a {
   inset: 12px 12px auto;
   display: flex;
   justify-content: flex-end;
-  gap: 8px;
+  gap: 14px;
   pointer-events: none;
 }
 
 .photo-viewer-bar button {
-  min-width: 44px;
-  min-height: 36px;
-  border: 1px solid rgb(255 255 255 / 0.2);
-  border-radius: 999px;
-  background: rgb(0 0 0 / 0.46);
-  color: #fff;
+  min-width: 0;
+  min-height: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: rgb(255 255 255 / 0.82);
   cursor: pointer;
   font-family: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
   font-size: 12px;
   font-weight: 700;
+  line-height: 1.2;
   pointer-events: auto;
+  text-decoration: none;
+  text-underline-offset: 3px;
+}
+
+.photo-viewer-bar button:hover,
+.photo-viewer-bar button:focus-visible {
+  color: #fff;
+  text-decoration: underline;
 }
 
 .photo-viewer-stage {
@@ -1427,6 +1504,7 @@ a {
   margin: 0;
   padding: 64px 18px 28px;
   overflow: auto;
+  overscroll-behavior: contain;
   place-items: center;
 }
 
@@ -1448,6 +1526,83 @@ a {
   font-size: 14px;
   line-height: 1.5;
   text-align: center;
+}
+
+.places-page {
+  max-width: 1120px;
+}
+
+.places-intro {
+  display: grid;
+  gap: 14px;
+  padding: 88px 8px 34px;
+}
+
+.places-intro h1 {
+  max-width: 840px;
+  font-family: Lora, Georgia, serif;
+  font-size: clamp(54px, 9vw, 108px);
+  font-weight: 600;
+  line-height: 0.95;
+}
+
+.places-intro p:not(.eyebrow) {
+  max-width: 640px;
+  color: var(--muted);
+  font-family: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 13px;
+  font-weight: 700;
+  line-height: 1.55;
+}
+
+.places-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 16px;
+  padding: 0 8px 72px;
+}
+
+.places-guide-card {
+  display: grid;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--panel-bg);
+  box-shadow: var(--shadow);
+}
+
+.places-guide-card img {
+  display: block;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+  dynamic-range-limit: standard;
+}
+
+.places-guide-card-body {
+  display: grid;
+  gap: 10px;
+  padding: 18px;
+}
+
+.places-guide-card-body h2 {
+  font-family: Lora, Georgia, serif;
+  font-size: clamp(28px, 4vw, 42px);
+  font-weight: 600;
+  line-height: 1.05;
+}
+
+.places-guide-card-body p:not(.eyebrow),
+.places-guide-meta {
+  color: var(--muted);
+  font-family: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 1.5;
+}
+
+.places-guide-meta {
+  color: var(--text);
 }
 
 .guide-page {
@@ -1905,22 +2060,6 @@ a {
   cursor: zoom-out;
 }
 
-@media (dynamic-range: high) {
-  .photo-viewer-bar::before {
-    align-self: center;
-    padding: 6px 8px;
-    border-radius: 999px;
-    background: rgb(0 0 0 / 0.4);
-    color: rgb(255 255 255 / 0.72);
-    content: "HDR display";
-    font-family: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-    font-size: 10px;
-    font-weight: 700;
-    letter-spacing: 0;
-    pointer-events: auto;
-  }
-}
-
 @media (max-width: 1199px) {
   .page {
     width: min(100%, 390px);
@@ -1928,6 +2067,7 @@ a {
   }
 
   .site-header {
+    --site-header-frame: min(calc(100vw - 24px), 366px);
     gap: 10px;
     padding: 8px;
   }
@@ -2088,6 +2228,10 @@ a {
     font-size: 54px;
   }
 
+  .photo-filter {
+    padding: 0 8px 24px;
+  }
+
   .photos-footer {
     padding: 12px 8px 60px;
   }
@@ -2126,6 +2270,24 @@ a {
 
   .photo-viewer-stage img {
     max-height: calc(100vh - 126px);
+  }
+
+
+  .places-page {
+    width: min(100%, 430px);
+  }
+
+  .places-intro {
+    padding: 64px 8px 28px;
+  }
+
+  .places-intro h1 {
+    font-size: 52px;
+  }
+
+  .places-grid {
+    grid-template-columns: 1fr;
+    padding-bottom: 56px;
   }
 
   .guide-page {

@@ -8,11 +8,18 @@ const ui = {
     photosEmpty: "Фотографий пока нет.",
     photosLoadError: "Не получилось загрузить фотографии.",
     openPhoto: "Открыть фото",
+    viewer: "Просмотр фотографии",
+    previousPhoto: "Предыдущее фото",
+    nextPhoto: "Следующее фото",
+    closePhoto: "Закрыть",
+    allTechniques: "Все",
+    filmTechnique: "Плёнка",
+    iphoneTechnique: "iPhone",
     watchVideo: "Смотреть видео",
     filmCamera: "Leica M6 — плёнка",
     filmPhoto: "Плёночная фотография",
     fit: "Вписать",
-    actual: "100%",
+    actual: "Увеличить",
     canvasPostLoading: "Загружаю пост...",
     canvasPostLoadError: "Не получилось открыть пост.",
     closePost: "Закрыть пост",
@@ -24,11 +31,18 @@ const ui = {
     photosEmpty: "No photos yet.",
     photosLoadError: "Could not load photos.",
     openPhoto: "Open photo",
+    viewer: "Photo viewer",
+    previousPhoto: "Previous photo",
+    nextPhoto: "Next photo",
+    closePhoto: "Close",
+    allTechniques: "All",
+    filmTechnique: "Film",
+    iphoneTechnique: "iPhone",
     watchVideo: "Watch video",
     filmCamera: "Leica M6 — film",
     filmPhoto: "Film photograph",
     fit: "Fit",
-    actual: "100%",
+    actual: "Zoom",
     canvasPostLoading: "Loading post...",
     canvasPostLoadError: "Could not open the post.",
     closePost: "Close post",
@@ -37,7 +51,11 @@ const ui = {
 };
 
 let photoViewerState = null;
+let photoViewerScrollLockState = null;
 let homeCanvasDataPromise = null;
+
+const photoViewerSwipeCloseThreshold = 72;
+const photoViewerSwipeDirectionRatio = 1.25;
 
 const homeCanvasSize = {
   width: 7000,
@@ -110,6 +128,21 @@ document.addEventListener("click", (event) => {
   if (photoTrigger) {
     event.preventDefault();
     openPhoto(Number(photoTrigger.dataset.photoIndex || 0));
+    return;
+  }
+
+  const screenshotImageTrigger = event.target.closest("[data-screenshot-image]");
+  if (screenshotImageTrigger) {
+    event.preventDefault();
+    const image = screenshotImageTrigger.querySelector("img");
+    if (image) openScreenshotImage(image);
+    return;
+  }
+
+  const screenshotImage = event.target.closest(".screenshot-media-item.is-image > img");
+  if (screenshotImage) {
+    event.preventDefault();
+    openScreenshotImage(screenshotImage);
     return;
   }
 
@@ -1442,7 +1475,14 @@ function createMedia(mediaItems, post, lang) {
       img.loading = "lazy";
       img.decoding = "async";
       img.alt = mediaAlt(post, index, lang);
-      item.append(img);
+
+      const trigger = document.createElement("button");
+      trigger.className = "screenshot-image-trigger";
+      trigger.type = "button";
+      trigger.dataset.screenshotImage = "";
+      trigger.setAttribute("aria-label", img.alt || `${getUi(lang).openPhoto} ${index + 1}`);
+      trigger.append(img);
+      item.append(trigger);
     } else if (media.type === "video" || media.type === "animation") {
       item.classList.add("is-video");
       item.append(createVideoPreview(media, lang));
@@ -1497,6 +1537,38 @@ function createVideoPreview(media, lang) {
   });
 
   return trigger;
+}
+
+function openScreenshotImage(image) {
+  const photos = getScreenshotViewerPhotos();
+  if (!photos.length) return;
+
+  const index = Math.max(
+    0,
+    photos.findIndex((photo) => photo.element === image),
+  );
+
+  initPhotoViewer(photos, currentLanguage());
+  openPhoto(index);
+}
+
+function getScreenshotViewerPhotos() {
+  return [...document.querySelectorAll(".screenshot-media-item.is-image img")]
+    .map((image) => {
+      const article = image.closest(".screenshot-post");
+      const dateLabel = article?.querySelector(".screenshot-date")?.textContent.trim();
+      const caption = compactText([image.alt, dateLabel]);
+
+      return {
+        element: image,
+        src: image.currentSrc || image.src,
+        alt: image.alt || caption,
+        caption,
+        width: image.naturalWidth || undefined,
+        height: image.naturalHeight || undefined,
+      };
+    })
+    .filter((photo) => photo.src);
 }
 
 function getTelegramAssetUrl(src) {
@@ -1558,6 +1630,7 @@ async function initPhotoFeed(feedElement) {
   const lang = currentLanguage();
   const strings = getUi(lang);
   const status = document.querySelector("[data-photo-status]");
+  const filterElement = document.querySelector("[data-photo-filter]");
   const hasStaticFeed = feedElement.hasAttribute("data-static-photo-feed");
 
   try {
@@ -1580,8 +1653,14 @@ async function initPhotoFeed(feedElement) {
     feedElement.replaceChildren();
     feedElement.removeAttribute("data-static-photo-feed");
     status?.remove();
-    renderPhotos(feedElement, photos, lang);
-    initPhotoViewer(photos, lang);
+    const initialFilter = getCurrentPhotoFilterValue();
+    renderTechniqueFilters(filterElement, photos, lang, initialFilter, (filteredPhotos) => {
+      renderFilteredPhotos(feedElement, filteredPhotos, lang);
+      updatePhotoViewerPhotos(filteredPhotos, lang);
+    });
+    const initialPhotos = getPhotosByTechnique(photos, initialFilter);
+    renderFilteredPhotos(feedElement, initialPhotos, lang);
+    initPhotoViewer(initialPhotos, lang);
   } catch (error) {
     if (status) {
       status.textContent = strings.photosLoadError;
@@ -1590,6 +1669,54 @@ async function initPhotoFeed(feedElement) {
     }
     console.error(error);
   }
+}
+
+function renderTechniqueFilters(filterElement, photos, lang, activeValue, onChange) {
+  if (!filterElement) return;
+
+  const options = getPhotoTechniqueOptions(photos, lang);
+  filterElement.replaceChildren();
+
+  for (const option of options) {
+    const link = document.createElement("a");
+    link.href = getPhotoFilterPath(option.value, lang);
+    link.dataset.photoFilterValue = option.value;
+
+    if (option.value === activeValue) {
+      link.setAttribute("aria-current", "page");
+    }
+
+    const label = document.createElement("span");
+    label.textContent = option.label;
+    link.append(label);
+
+    const count = document.createElement("span");
+    count.className = "photo-filter-count";
+    count.textContent = String(option.count);
+    link.append(count);
+
+    link.addEventListener("click", (event) => {
+      event.preventDefault();
+
+      for (const sibling of filterElement.querySelectorAll("[data-photo-filter-value]")) {
+        if (sibling === link) {
+          sibling.setAttribute("aria-current", "page");
+        } else {
+          sibling.removeAttribute("aria-current");
+        }
+      }
+
+      history.pushState({}, "", link.href);
+      onChange(getPhotosByTechnique(photos, option.value));
+    });
+
+    filterElement.append(link);
+  }
+}
+
+function renderFilteredPhotos(feedElement, photos, lang) {
+  feedElement.replaceChildren();
+  renderPhotos(feedElement, photos, lang);
 }
 
 function renderPhotos(feedElement, photos, lang) {
@@ -1610,9 +1737,58 @@ function getPhotoUploadKey(photo) {
   return photo.uploadedAt || photo.id || photo.date || "";
 }
 
+function getPhotoTechniqueOptions(photos, lang) {
+  const strings = getUi(lang);
+  return [
+    { value: "all", label: strings.allTechniques, count: photos.length },
+    { value: "film", label: strings.filmTechnique, count: getPhotosByTechnique(photos, "film").length },
+    { value: "iphone", label: strings.iphoneTechnique, count: getPhotosByTechnique(photos, "iphone").length },
+  ];
+}
+
+function getPhotosByTechnique(photos, value) {
+  if (value === "all") return photos;
+  return photos.filter((photo) => getPhotoTechniqueKey(photo) === value);
+}
+
+function getPhotoTechniqueKey(photo) {
+  if (isFilmPhoto(photo)) return "film";
+  if (isIphonePhoto(photo)) return "iphone";
+  return "other";
+}
+
+function getPhotoCameraLine(photo) {
+  const technical = photo.technical || {};
+  return technical.cameraLine || technical.camera || "Camera";
+}
+
+function getCurrentPhotoFilterValue() {
+  const path = window.location.pathname.replace(/\/+$/, "");
+  if (path.endsWith("/photos/film") || path.endsWith("/en/photos/film")) return "film";
+  if (path.endsWith("/photos/iphone") || path.endsWith("/en/photos/iphone")) return "iphone";
+  return "all";
+}
+
+function getPhotoFilterPath(value, lang) {
+  const prefix = lang === "en" ? "/en" : "";
+  if (value === "film") return `${prefix}/photos/film/`;
+  if (value === "iphone") return `${prefix}/photos/iphone/`;
+  return `${prefix}/photos/`;
+}
+
+function isFilmPhoto(photo) {
+  const technical = photo.technical || {};
+  return technical.hasExif === false;
+}
+
+function isIphonePhoto(photo) {
+  return /iphone/i.test(getPhotoCameraLine(photo));
+}
+
 function createPhotoCard(photo, index, lang) {
   const article = document.createElement("article");
   article.className = "photo-entry";
+  article.dataset.photoTechnique = getPhotoTechniqueKey(photo);
 
   const button = document.createElement("button");
   button.className = "photo-card";
@@ -1697,16 +1873,70 @@ function createPhotoInfo(photo, lang) {
   return wrapper;
 }
 
-function initPhotoViewer(photos, lang) {
-  const dialog = document.querySelector("[data-photo-dialog]");
-  const image = document.querySelector("[data-photo-dialog-image]");
-  const caption = document.querySelector("[data-photo-dialog-caption]");
-  const close = document.querySelector("[data-photo-close]");
-  const prev = document.querySelector("[data-photo-prev]");
-  const next = document.querySelector("[data-photo-next]");
-  const actual = document.querySelector("[data-photo-actual]");
+function ensurePhotoViewerDialog(lang) {
+  const existing = document.querySelector("[data-photo-dialog]");
+  if (existing) return existing;
 
-  if (!dialog || !image || !caption) return;
+  const strings = getUi(lang);
+  const dialog = document.createElement("dialog");
+  dialog.className = "photo-viewer";
+  dialog.dataset.photoDialog = "";
+  dialog.setAttribute("aria-label", strings.viewer);
+
+  const bar = document.createElement("div");
+  bar.className = "photo-viewer-bar";
+
+  const prev = document.createElement("button");
+  prev.type = "button";
+  prev.dataset.photoPrev = "";
+  prev.setAttribute("aria-label", strings.previousPhoto);
+  prev.textContent = "‹";
+
+  const actual = document.createElement("button");
+  actual.type = "button";
+  actual.dataset.photoActual = "";
+  actual.textContent = strings.actual;
+
+  const next = document.createElement("button");
+  next.type = "button";
+  next.dataset.photoNext = "";
+  next.setAttribute("aria-label", strings.nextPhoto);
+  next.textContent = "›";
+
+  const close = document.createElement("button");
+  close.type = "button";
+  close.dataset.photoClose = "";
+  close.textContent = strings.closePhoto;
+
+  const figure = document.createElement("figure");
+  figure.className = "photo-viewer-stage";
+
+  const image = document.createElement("img");
+  image.dataset.photoDialogImage = "";
+  image.alt = "";
+
+  const caption = document.createElement("figcaption");
+  caption.dataset.photoDialogCaption = "";
+
+  bar.append(prev, actual, next, close);
+  figure.append(image, caption);
+  dialog.append(bar, figure);
+  document.body.append(dialog);
+
+  return dialog;
+}
+
+function initPhotoViewer(photos, lang) {
+  const dialog = ensurePhotoViewerDialog(lang);
+  const image = dialog.querySelector("[data-photo-dialog-image]");
+  const caption = dialog.querySelector("[data-photo-dialog-caption]");
+  const close = dialog.querySelector("[data-photo-close]");
+  const prev = dialog.querySelector("[data-photo-prev]");
+  const next = dialog.querySelector("[data-photo-next]");
+  const actual = dialog.querySelector("[data-photo-actual]");
+  const stage = image?.closest(".photo-viewer-stage");
+
+  if (!dialog || !image || !caption || !stage) return;
 
   photoViewerState = {
     photos,
@@ -1715,15 +1945,23 @@ function initPhotoViewer(photos, lang) {
     image,
     caption,
     actual,
+    stage,
     activeIndex: 0,
     isActualSize: false,
   };
 
-  close?.addEventListener("click", () => dialog.close());
+  if (dialog.dataset.photoViewerReady === "true") {
+    return;
+  }
+
+  dialog.dataset.photoViewerReady = "true";
+
+  close?.addEventListener("click", () => closePhotoViewer(dialog));
   prev?.addEventListener("click", () => openPhoto(photoViewerState.activeIndex - 1));
   next?.addEventListener("click", () => openPhoto(photoViewerState.activeIndex + 1));
   actual?.addEventListener("click", () => setActualSize(!photoViewerState.isActualSize));
   image.addEventListener("click", () => setActualSize(!photoViewerState.isActualSize));
+  initPhotoViewerSwipeToClose(dialog, stage);
 
   dialog.addEventListener("keydown", (event) => {
     if (event.key === "ArrowLeft") {
@@ -1738,7 +1976,196 @@ function initPhotoViewer(photos, lang) {
   dialog.addEventListener("close", () => {
     image.removeAttribute("src");
     setActualSize(false);
+    unlockPhotoViewerScroll();
   });
+}
+
+function initPhotoViewerSwipeToClose(dialog, stage) {
+  let swipe = null;
+  let pointerSwipe = null;
+
+  dialog.addEventListener("pointerdown", (event) => {
+    if (!shouldTrackPhotoViewerPointer(event) || !dialog.open || event.target.closest(".photo-viewer-bar")) {
+      pointerSwipe = null;
+      return;
+    }
+
+    pointerSwipe = {
+      id: event.pointerId,
+      startX: event.clientX,
+      startY: event.clientY,
+      currentX: event.clientX,
+      currentY: event.clientY,
+      scrollTop: stage.scrollTop,
+    };
+
+    event.target.setPointerCapture?.(event.pointerId);
+  });
+
+  dialog.addEventListener("pointermove", (event) => {
+    if (!pointerSwipe || pointerSwipe.id !== event.pointerId) return;
+
+    pointerSwipe.currentX = event.clientX;
+    pointerSwipe.currentY = event.clientY;
+
+    const deltaY = pointerSwipe.currentY - pointerSwipe.startY;
+    const deltaX = pointerSwipe.currentX - pointerSwipe.startX;
+
+    if (isPhotoViewerCloseSwipe(deltaX, deltaY, pointerSwipe.scrollTop)) {
+      event.preventDefault();
+    }
+  });
+
+  dialog.addEventListener("pointerup", (event) => {
+    if (!pointerSwipe || pointerSwipe.id !== event.pointerId) return;
+
+    const deltaY = pointerSwipe.currentY - pointerSwipe.startY;
+    const deltaX = pointerSwipe.currentX - pointerSwipe.startX;
+    const startScrollTop = pointerSwipe.scrollTop;
+    pointerSwipe = null;
+
+    if (isPhotoViewerCloseSwipe(deltaX, deltaY, startScrollTop)) {
+      event.preventDefault();
+      closePhotoViewer(dialog);
+    }
+  });
+
+  dialog.addEventListener("pointercancel", () => {
+    pointerSwipe = null;
+  });
+
+  dialog.addEventListener(
+    "touchstart",
+    (event) => {
+      if (!dialog.open || event.touches.length !== 1 || event.target.closest(".photo-viewer-bar")) {
+        swipe = null;
+        return;
+      }
+
+      const touch = event.touches[0];
+      swipe = {
+        startX: touch.clientX,
+        startY: touch.clientY,
+        currentX: touch.clientX,
+        currentY: touch.clientY,
+        scrollTop: stage.scrollTop,
+      };
+    },
+    { passive: true },
+  );
+
+  dialog.addEventListener(
+    "touchmove",
+    (event) => {
+      if (!swipe || event.touches.length !== 1) return;
+
+      const touch = event.touches[0];
+      swipe.currentX = touch.clientX;
+      swipe.currentY = touch.clientY;
+
+      const deltaY = swipe.currentY - swipe.startY;
+      const deltaX = swipe.currentX - swipe.startX;
+
+      if (!isPhotoViewerCloseSwipe(deltaX, deltaY, swipe.scrollTop)) return;
+
+      if (event.cancelable) {
+        event.preventDefault();
+      }
+    },
+    { passive: false },
+  );
+
+  dialog.addEventListener(
+    "touchend",
+    () => {
+      if (!swipe) return;
+
+      const deltaY = swipe.currentY - swipe.startY;
+      const deltaX = swipe.currentX - swipe.startX;
+      const startScrollTop = swipe.scrollTop;
+      swipe = null;
+
+      if (isPhotoViewerCloseSwipe(deltaX, deltaY, startScrollTop)) {
+        closePhotoViewer(dialog);
+      }
+    },
+    { passive: true },
+  );
+
+  dialog.addEventListener(
+    "touchcancel",
+    () => {
+      swipe = null;
+    },
+    { passive: true },
+  );
+}
+
+function isPhotoViewerCloseSwipe(deltaX, deltaY, startScrollTop) {
+  if (startScrollTop > 0 || deltaY < photoViewerSwipeCloseThreshold) return false;
+
+  return deltaY > Math.abs(deltaX) * photoViewerSwipeDirectionRatio;
+}
+
+function shouldTrackPhotoViewerPointer(event) {
+  return event.pointerType !== "mouse" || window.matchMedia("(max-width: 600px)").matches;
+}
+
+function closePhotoViewer(dialog) {
+  if (dialog.open) {
+    dialog.close();
+  }
+}
+
+function lockPhotoViewerScroll() {
+  if (photoViewerScrollLockState) return;
+
+  const { style } = document.body;
+  photoViewerScrollLockState = {
+    scrollX: window.scrollX,
+    scrollY: window.scrollY,
+    position: style.position,
+    top: style.top,
+    left: style.left,
+    right: style.right,
+    width: style.width,
+    overflow: style.overflow,
+  };
+
+  document.documentElement.classList.add("is-photo-viewer-open");
+  document.body.classList.add("is-photo-viewer-open");
+  style.position = "fixed";
+  style.top = `-${photoViewerScrollLockState.scrollY}px`;
+  style.left = `-${photoViewerScrollLockState.scrollX}px`;
+  style.right = "0";
+  style.width = "100%";
+  style.overflow = "hidden";
+}
+
+function unlockPhotoViewerScroll() {
+  if (!photoViewerScrollLockState) return;
+
+  const state = photoViewerScrollLockState;
+  const { style } = document.body;
+  photoViewerScrollLockState = null;
+
+  document.documentElement.classList.remove("is-photo-viewer-open");
+  document.body.classList.remove("is-photo-viewer-open");
+  style.position = state.position;
+  style.top = state.top;
+  style.left = state.left;
+  style.right = state.right;
+  style.width = state.width;
+  style.overflow = state.overflow;
+  window.scrollTo(state.scrollX, state.scrollY);
+}
+
+function updatePhotoViewerPhotos(photos, lang) {
+  if (!photoViewerState) return;
+
+  photoViewerState.photos = photos;
+  photoViewerState.lang = lang;
+  photoViewerState.activeIndex = 0;
 }
 
 function openPhoto(index) {
@@ -1752,6 +2179,7 @@ function openPhoto(index) {
   state.image.src = photo.src;
   state.image.alt = photoAlt(photo, state.lang);
   state.caption.textContent = photoCaption(photo, state.lang) || makePhotoCaption(photo, state.lang);
+  state.stage.scrollTo({ top: 0, left: 0, behavior: "auto" });
 
   if (photo.width && photo.height) {
     state.image.style.aspectRatio = `${photo.width} / ${photo.height}`;
@@ -1761,6 +2189,7 @@ function openPhoto(index) {
 
   if (!state.dialog.open) {
     state.dialog.showModal();
+    lockPhotoViewerScroll();
   }
 }
 
@@ -1781,7 +2210,7 @@ function makePhotoCaption(photo, lang) {
     technical.cameraLine,
     technical.lensLine,
     photoLocation(photo, lang),
-    formatDate(photo.date, lang),
+    photo.date ? formatDate(photo.date, lang) : "",
   ]);
 }
 

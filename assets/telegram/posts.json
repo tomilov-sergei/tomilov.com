@@ -1,8 +1,996 @@
 {
   "source": "Screenshot of the Day",
   "channelUsername": "screenshot_of_the_day",
-  "importedAt": "2026-06-17T18:56:29.846579Z",
+  "importedAt": "2026-07-02T17:29:13.838506Z",
   "posts": [
+    {
+      "id": "2068",
+      "messageIds": [
+        2068,
+        2069,
+        2070
+      ],
+      "mediaGroupId": "14264106773246418",
+      "telegramUrl": "https://t.me/screenshot_of_the_day/2068",
+      "date": "2026-07-02T17:29:06Z",
+      "dateUnixtime": 1783013346,
+      "edited": null,
+      "text": "Как приручить креативность\n\nApple на протяжении всего своего существования бьёт в точку креативности. Их кампании построены вокруг процесса творчества. Творчество играючи. И всю дорогу это играючи ведь было напускным. \n\nНу, в целом... да-а-а, играючи — просто сто часов сидеть в garage band крутить ручки, сто часов сидеть в final cut крутить ручки, сто часов сидеть в Aperture крутить ручки... \n\nНу понятно. Поговорили, идея заискрилась — пошли крутить ручки. Через сто часов встретимся \n\nМы тут с Мишей (5 лет) говорили\n— Представь, мы можем сделать свою игру. О чём её сделать? \n— Сделай, ну, например про Зубастика. Ну, про разных драконов. Я буду сама дракон и буду искать себе хозяина или хозяйку. Я смогу полететь и посмотреть какие есть человечки\n\nСегодня Антропик вернули доступ к Fable 5. Я подумал, как эту легенду можно пощупать. Как ей выкрутить ручки. И задал промпт: \nСоздай игру, где играть за дракона и цель игры найти себе хозяина. Игра вдохновлена миром Как приручить дракона. Можно летать по острову, выполнять задания, выполняя задания появляются подсказки, кто из живущих людей на острове будет хозяином дракона \n\nПожалуйста, к вашему вниманию игра: \nДраконье сердце 3D — найди своего человека\n\nГеймплей заточен под iPad, потому что у Михи планшет. С клавиатуры тоже работает. Есть даже смена времени суток! \n\nВот сегодня креативность ощущается как настоящее творчество: с автора идея, референсы, с модели — крутить ручки \n\nМагия! \n\nP.S: ни одного квеста я не придумал сам, всё сделала модель. Меня до глубины души поразило, что игра получилась созидательная и квесты добрые. Не смотря на силовой потенциал дракона",
+      "entities": [
+        {
+          "type": "bold",
+          "text": "Как приручить креативность",
+          "href": null
+        },
+        {
+          "type": "plain",
+          "text": "\n\nApple на протяжении всего своего существования бьёт в точку креативности. Их кампании построены вокруг процесса творчества. Творчество играючи. И всю дорогу это играючи ведь было напускным. \n\nНу, в целом... да-а-а, играючи — просто сто часов сидеть в garage band крутить ручки, сто часов сидеть в final cut крутить ручки, сто часов сидеть в Aperture крутить ручки... \n\nНу понятно. Поговорили, идея заискрилась — пошли крутить ручки. Через сто часов встретимся \n\nМы тут с Мишей (5 лет) говорили\n",
+          "href": null
+        },
+        {
+          "type": "blockquote",
+          "text": "— Представь, мы можем сделать свою игру. О чём её сделать? \n— Сделай, ну, например про Зубастика. Ну, про разных драконов. Я буду сама дракон и буду искать себе хозяина или хозяйку. Я смогу полететь и посмотреть какие есть человечки",
+          "href": null
+        },
+        {
+          "type": "plain",
+          "text": "\n\nСегодня Антропик вернули доступ к Fable 5. Я подумал, как эту легенду можно пощупать. Как ей выкрутить ручки. И задал промпт: \n",
+          "href": null
+        },
+        {
+          "type": "blockquote",
+          "text": "Создай игру, где играть за дракона и цель игры найти себе хозяина. Игра вдохновлена миром Как приручить дракона. Можно летать по острову, выполнять задания, выполняя задания появляются подсказки, кто из живущих людей на острове будет хозяином дракона ",
+          "href": null
+        },
+        {
+          "type": "code",
+          "text": "Создай игру, где играть за дракона и цель игры найти себе хозяина. Игра вдохновлена миром Как приручить дракона. Можно летать по острову, выполнять задания, выполняя задания появляются подсказки, кто из живущих людей на острове будет хозяином дракона ",
+          "href": null
+        },
+        {
+          "type": "plain",
+          "text": "\n\nПожалуйста, к вашему вниманию игра: \n",
+          "href": null
+        },
+        {
+          "type": "text_link",
+          "text": "Драконье сердце 3D — найди своего человека",
+          "href": "https://tomilov-sergei.github.io/game/"
+        },
+        {
+          "type": "bold",
+          "text": "Драконье сердце 3D — найди своего человека",
+          "href": null
+        },
+        {
+          "type": "plain",
+          "text": "\n\nГеймплей заточен под iPad, потому что у Михи планшет. С клавиатуры тоже работает. Есть даже смена времени суток! \n\nВот сегодня креативность ощущается как настоящее творчество: с автора идея, референсы, с модели — крутить ручки \n\nМагия! \n\nP.S: ни одного квеста я не придумал сам, всё сделала модель. Меня до глубины души поразило, что игра получилась созидательная и квесты добрые. Не смотря на силовой потенциал дракона",
+          "href": null
+        }
+      ],
+      "media": [
+        {
+          "type": "photo",
+          "src": "/assets/telegram/live/2026/07/02/2068-photo-file_62.jpg",
+          "width": 2560,
+          "height": 1713,
+          "size": 139792,
+          "mimeType": "image/jpeg",
+          "duration": null,
+          "name": "file_62.jpg",
+          "sourceMessageId": 2068
+        },
+        {
+          "type": "photo",
+          "src": "/assets/telegram/live/2026/07/02/2069-photo-file_63.jpg",
+          "width": 2560,
+          "height": 1713,
+          "size": 158211,
+          "mimeType": "image/jpeg",
+          "duration": null,
+          "name": "file_63.jpg",
+          "sourceMessageId": 2069
+        },
+        {
+          "type": "photo",
+          "src": "/assets/telegram/live/2026/07/02/2070-photo-file_64.jpg",
+          "width": 2560,
+          "height": 1713,
+          "size": 115740,
+          "mimeType": "image/jpeg",
+          "duration": null,
+          "name": "file_64.jpg",
+          "sourceMessageId": 2070
+        }
+      ],
+      "reactions": []
+    },
+    {
+      "id": "2067",
+      "messageIds": [
+        2067
+      ],
+      "mediaGroupId": null,
+      "telegramUrl": "https://t.me/screenshot_of_the_day/2067",
+      "date": "2026-07-02T14:31:59Z",
+      "dateUnixtime": 1783002719,
+      "edited": null,
+      "text": "",
+      "entities": [],
+      "media": [
+        {
+          "type": "photo",
+          "src": "/assets/telegram/live/2026/07/02/2067-photo-file_61.jpg",
+          "width": 840,
+          "height": 1280,
+          "size": 181771,
+          "mimeType": "image/jpeg",
+          "duration": null,
+          "name": "file_61.jpg",
+          "sourceMessageId": 2067
+        }
+      ],
+      "reactions": []
+    },
+    {
+      "id": "2066",
+      "messageIds": [
+        2066
+      ],
+      "mediaGroupId": null,
+      "telegramUrl": "https://t.me/screenshot_of_the_day/2066",
+      "date": "2026-07-01T07:46:01Z",
+      "dateUnixtime": 1782891961,
+      "edited": null,
+      "text": "К слову про саму новость. Рад за команду Rabbit 3 Times, создателей Create with Play, но чуть-чуть. \n\nСкорее всего купили технологию и команду, это превратится в чуть более френдли средства производства приложений в экосистеме Apple. \n\nМожно поспекулировать об апдейте XCode с визуальной сборкой UI, или отдельным приложением типа Keynote, Icon Composer  \n\nPlay стояла особняком в мире инструментов прототипирования, потому что позволяла собирать прототипы нативно в логике и на компонентах SwiftUI. Мы держали в руках штуки ощущающиеся как нативное приложение, что рендерилось на устройстве как нативное, а не имитация \n\nPlay в 2025 году взяли награду Apple Design Awards за Innovation. \n\nБлагодаря Play и Роме! удалось собрать и проверить наши инновационные подходы к управлению системой рекомендаций, отловить неочевидные для людей решения и дать более качественный опыт",
+      "entities": [
+        {
+          "type": "plain",
+          "text": "К слову про саму ",
+          "href": null
+        },
+        {
+          "type": "text_link",
+          "text": "новость",
+          "href": "https://9to5mac.com/2026/06/29/apple-just-acquired-the-app-that-won-last-years-innovation-apple-design-award/"
+        },
+        {
+          "type": "plain",
+          "text": ". Рад за команду Rabbit 3 Times, создателей ",
+          "href": null
+        },
+        {
+          "type": "text_link",
+          "text": "Create with Play",
+          "href": "https://www.baselinedesign.com/posts/baseline-15-creating-with-play"
+        },
+        {
+          "type": "plain",
+          "text": ", но чуть-чуть. \n\nСкорее всего купили технологию и команду, это превратится в чуть более френдли средства производства приложений в экосистеме Apple. \n\nМожно поспекулировать об апдейте XCode с визуальной сборкой UI, или отдельным приложением типа ",
+          "href": null
+        },
+        {
+          "type": "strikethrough",
+          "text": "Keynote",
+          "href": null
+        },
+        {
+          "type": "plain",
+          "text": ", Icon Composer  \n\nPlay стояла особняком в мире инструментов прототипирования, потому что позволяла собирать прототипы нативно в логике и на компонентах SwiftUI. Мы держали в руках штуки ощущающиеся как нативное приложение, что рендерилось на устройстве как нативное, а не имитация \n\nPlay в 2025 году ",
+          "href": null
+        },
+        {
+          "type": "text_link",
+          "text": "взяли",
+          "href": "https://www.apple.com/newsroom/2025/06/apple-unveils-winners-and-finalists-of-the-2025-apple-design-awards/"
+        },
+        {
+          "type": "plain",
+          "text": " награду Apple Design Awards за Innovation. \n\nБлагодаря Play и Роме! удалось собрать и проверить наши инновационные подходы к управлению системой рекомендаций, отловить неочевидные для людей решения и дать более качественный опыт",
+          "href": null
+        }
+      ],
+      "media": [
+        {
+          "type": "video",
+          "src": "/assets/telegram/live/2026/07/01/2066-video-Onboarding-macOS-hd.mp4",
+          "width": 1920,
+          "height": 1350,
+          "size": 40965538,
+          "mimeType": "video/mp4",
+          "duration": 43,
+          "name": "Onboarding-macOS-hd.mp4",
+          "sourceMessageId": 2066
+        }
+      ],
+      "reactions": []
+    },
+    {
+      "id": "2065",
+      "messageIds": [
+        2065
+      ],
+      "mediaGroupId": null,
+      "telegramUrl": "https://t.me/screenshot_of_the_day/2065",
+      "date": "2026-07-01T07:44:42Z",
+      "dateUnixtime": 1782891882,
+      "edited": null,
+      "text": "",
+      "entities": [],
+      "media": [
+        {
+          "type": "video",
+          "src": "/assets/telegram/live/2026/07/01/2065-video-Onboarding-iOS.mp4",
+          "width": 1180,
+          "height": 2556,
+          "size": 23785621,
+          "mimeType": "video/mp4",
+          "duration": 30,
+          "name": "Onboarding-iOS.mp4",
+          "sourceMessageId": 2065
+        }
+      ],
+      "reactions": []
+    },
+    {
+      "id": "2064",
+      "messageIds": [
+        2064
+      ],
+      "mediaGroupId": null,
+      "telegramUrl": "https://t.me/screenshot_of_the_day/2064",
+      "date": "2026-07-01T07:44:35Z",
+      "dateUnixtime": 1782891875,
+      "edited": null,
+      "text": "К слову про саму новость. Рад за команду Rabbit 3 Times, создателей Create with Play, но чуть-чуть. \n\nСкорее всего купили технологию и команду, это превратится в чуть более френдли средства производства приложений в экосистеме Apple. \n\nМожно поспекулировать об апдейте XCode с визуальной сборкой UI, или отдельным приложением типа Keynote, Icon Composer  \n\nPlay стояла особняком в мире инструментов прототипирования, потому что позволяла собирать прототипы нативно в логике и на компонентах SwiftUI. Мы держали в руках штуки ощущающиеся как нативное приложение, что рендерилось на устройстве как нативное, а не имитация \n\nPlay в 2025 году взяли награду Apple Design Awards за Innovation. \n\nБлагодаря Play и Роме! удалось собрать и проверить наши инновационные подходы к управлению системой рекомендаций, отловить неочевидные для людей решения и дать более качественный опыт",
+      "entities": [
+        {
+          "type": "plain",
+          "text": "К слову про саму ",
+          "href": null
+        },
+        {
+          "type": "text_link",
+          "text": "новость",
+          "href": "https://9to5mac.com/2026/06/29/apple-just-acquired-the-app-that-won-last-years-innovation-apple-design-award/"
+        },
+        {
+          "type": "plain",
+          "text": ". Рад за команду Rabbit 3 Times, создателей ",
+          "href": null
+        },
+        {
+          "type": "text_link",
+          "text": "Create with Play",
+          "href": "https://www.baselinedesign.com/posts/baseline-15-creating-with-play"
+        },
+        {
+          "type": "plain",
+          "text": ", но чуть-чуть. \n\nСкорее всего купили технологию и команду, это превратится в чуть более френдли средства производства приложений в экосистеме Apple. \n\nМожно поспекулировать об апдейте XCode с визуальной сборкой UI, или отдельным приложением типа ",
+          "href": null
+        },
+        {
+          "type": "strikethrough",
+          "text": "Keynote",
+          "href": null
+        },
+        {
+          "type": "plain",
+          "text": ", Icon Composer  \n\nPlay стояла особняком в мире инструментов прототипирования, потому что позволяла собирать прототипы нативно в логике и на компонентах SwiftUI. Мы держали в руках штуки ощущающиеся как нативное приложение, что рендерилось на устройстве как нативное, а не имитация \n\nPlay в 2025 году ",
+          "href": null
+        },
+        {
+          "type": "text_link",
+          "text": "взяли",
+          "href": "https://www.apple.com/newsroom/2025/06/apple-unveils-winners-and-finalists-of-the-2025-apple-design-awards/"
+        },
+        {
+          "type": "plain",
+          "text": " награду Apple Design Awards за Innovation. \n\nБлагодаря Play и Роме! удалось собрать и проверить наши инновационные подходы к управлению системой рекомендаций, отловить неочевидные для людей решения и дать более качественный опыт",
+          "href": null
+        }
+      ],
+      "media": [],
+      "reactions": []
+    },
+    {
+      "id": "2062",
+      "messageIds": [
+        2062,
+        2063
+      ],
+      "mediaGroupId": "14262482094441642",
+      "telegramUrl": "https://t.me/screenshot_of_the_day/2062",
+      "date": "2026-06-30T09:04:21Z",
+      "dateUnixtime": 1782810261,
+      "edited": null,
+      "text": "Приложение Google на iOS добавляет свою превью страницы, в сценарии «поделиться ссылкой»\n\nЧасто кажется, что всё уже придумано и мест для инноваций не осталось? А вот оно, красота возникла на ровном месте, в неожиданный момент и добавила приятных эмоций \n\nВторой скринкаст показывает как работает сценарий поделиться «из коробки». Никаких секси-превью там нет \n\nP.S. в Андроид приложении Google такой красоты не добавили. Думойте…",
+      "entities": [
+        {
+          "type": "plain",
+          "text": "Приложение Google на iOS добавляет свою превью страницы, в сценарии «поделиться ссылкой»\n\nЧасто кажется, что всё уже придумано и мест для ",
+          "href": null
+        },
+        {
+          "type": "italic",
+          "text": "инноваций",
+          "href": null
+        },
+        {
+          "type": "plain",
+          "text": " не осталось? А вот оно, красота возникла на ровном месте, в неожиданный момент и добавила приятных эмоций \n\nВторой скринкаст показывает как работает сценарий поделиться «из коробки». Никаких секси-превью там нет \n\nP.S. в Андроид приложении Google такой красоты не добавили. Думойте…",
+          "href": null
+        }
+      ],
+      "media": [
+        {
+          "type": "video",
+          "src": "/assets/telegram/live/2026/06/30/2062-video-IMG_1654.MP4",
+          "width": 880,
+          "height": 1912,
+          "size": 3186100,
+          "mimeType": "video/mp4",
+          "duration": 8,
+          "name": "IMG_1654.MP4",
+          "sourceMessageId": 2062
+        },
+        {
+          "type": "video",
+          "src": "/assets/telegram/live/2026/06/30/2063-video-IMG_1657.MP4",
+          "width": 880,
+          "height": 1912,
+          "size": 3281035,
+          "mimeType": "video/mp4",
+          "duration": 8,
+          "name": "IMG_1657.MP4",
+          "sourceMessageId": 2063
+        }
+      ],
+      "reactions": []
+    },
+    {
+      "id": "2058",
+      "messageIds": [
+        2058,
+        2059,
+        2060,
+        2061
+      ],
+      "mediaGroupId": "14261954168135834",
+      "telegramUrl": "https://t.me/screenshot_of_the_day/2058",
+      "date": "2026-06-29T14:44:31Z",
+      "dateUnixtime": 1782744271,
+      "edited": null,
+      "text": "Это не continuity 😣\n\nРазберём по шагам\nШаг 1: дефолтное состояние — инпут сверху, крупные значки снизу\nШаг 2: старт \"трансформации\" — инпут мгновенно перемещается и его стартовая позиция другая. Это не продолжение предыдущего состояния, это новое состояние\nШаг 3: где-то в середине трансформации — иконки зачем-то поднимаются наверх и исчезают (!)\nШаг 4: Ближе к финалу. Да, инпут расширяется и двигается по направлению к финальной позиции. Если бы его координаты оставались синхронизированы с шагом 1 — вопросов бы не было, а так...\n\nОдни вопросы\n\nЧто.. Зачем..Почему..Какую-метрику растили",
+      "entities": [
+        {
+          "type": "plain",
+          "text": "Это не continuity 😣\n\nРазберём по шагам\nШаг 1: дефолтное состояние — инпут сверху, крупные значки снизу\nШаг 2: старт \"трансформации\" — инпут мгновенно перемещается и его стартовая позиция ",
+          "href": null
+        },
+        {
+          "type": "italic",
+          "text": "другая",
+          "href": null
+        },
+        {
+          "type": "plain",
+          "text": ". Это не продолжение предыдущего состояния, это новое состояние\nШаг 3: где-то в середине трансформации — иконки зачем-то поднимаются наверх и исчезают (!)\nШаг 4: Ближе к финалу. Да, инпут расширяется и двигается по направлению к финальной позиции. Если бы его координаты оставались синхронизированы с шагом 1 — вопросов бы не было, а так...\n\nОдни вопросы\n\nЧто.. Зачем..Почему..",
+          "href": null
+        },
+        {
+          "type": "strikethrough",
+          "text": "Какую-метрику растили",
+          "href": null
+        }
+      ],
+      "media": [
+        {
+          "type": "photo",
+          "src": "/assets/telegram/live/2026/06/29/2058-photo-file_53.jpg",
+          "width": 2560,
+          "height": 1867,
+          "size": 269332,
+          "mimeType": "image/jpeg",
+          "duration": null,
+          "name": "file_53.jpg",
+          "sourceMessageId": 2058
+        },
+        {
+          "type": "photo",
+          "src": "/assets/telegram/live/2026/06/29/2059-photo-file_54.jpg",
+          "width": 2560,
+          "height": 1867,
+          "size": 156225,
+          "mimeType": "image/jpeg",
+          "duration": null,
+          "name": "file_54.jpg",
+          "sourceMessageId": 2059
+        },
+        {
+          "type": "photo",
+          "src": "/assets/telegram/live/2026/06/29/2060-photo-file_55.jpg",
+          "width": 2560,
+          "height": 1867,
+          "size": 104293,
+          "mimeType": "image/jpeg",
+          "duration": null,
+          "name": "file_55.jpg",
+          "sourceMessageId": 2060
+        },
+        {
+          "type": "photo",
+          "src": "/assets/telegram/live/2026/06/29/2061-photo-file_56.jpg",
+          "width": 2560,
+          "height": 1867,
+          "size": 132330,
+          "mimeType": "image/jpeg",
+          "duration": null,
+          "name": "file_56.jpg",
+          "sourceMessageId": 2061
+        }
+      ],
+      "reactions": []
+    },
+    {
+      "id": "2057",
+      "messageIds": [
+        2057
+      ],
+      "mediaGroupId": null,
+      "telegramUrl": "https://t.me/screenshot_of_the_day/2057",
+      "date": "2026-06-29T14:36:15Z",
+      "dateUnixtime": 1782743775,
+      "edited": null,
+      "text": "в копилку continuity приёмов",
+      "entities": [],
+      "media": [
+        {
+          "type": "animation",
+          "src": "/assets/telegram/live/2026/06/29/2057-animation-IMG_4399.MOV",
+          "width": 1280,
+          "height": 884,
+          "size": 2336746,
+          "mimeType": "video/mp4",
+          "duration": 10,
+          "name": "IMG_4399.MOV",
+          "sourceMessageId": 2057
+        },
+        {
+          "type": "video",
+          "src": "/assets/telegram/live/2026/06/29/2057-video-IMG_4399.MOV",
+          "width": null,
+          "height": null,
+          "size": 2336746,
+          "mimeType": "video/mp4",
+          "duration": null,
+          "name": "IMG_4399.MOV",
+          "sourceMessageId": 2057
+        }
+      ],
+      "reactions": []
+    },
+    {
+      "id": "2049",
+      "messageIds": [
+        2049,
+        2050,
+        2051,
+        2052,
+        2053,
+        2054,
+        2055,
+        2056
+      ],
+      "mediaGroupId": "14259234789231130",
+      "telegramUrl": "https://t.me/screenshot_of_the_day/2049",
+      "date": "2026-06-25T16:19:08Z",
+      "dateUnixtime": 1782404348,
+      "edited": null,
+      "text": "RICK OWENS SS27 MENS STONE\n\nWe are all processing menace\n\nSome of us arm.\nSome of us train.\nSome of us turn away.\nSome of us turn to stone\n\nПожалуй, самый дистопичный и атмосферный показ со времён GETHSEMANE FW21\n\nИ если там было высказывание о жизни в состоянии напряжения перед надвигающейся хтонью, то STONE — жизнь внутри случившейся катастрофы: милитаризация, адаптация униформ обслуживающего класса, удобная обувь \n\nPerformance under pressure",
+      "entities": [
+        {
+          "type": "text_link",
+          "text": "RICK OWENS SS27 MENS STONE",
+          "href": "https://youtu.be/vnN4px9a4jg?si=G1dmup9_6lJZHBVJ"
+        },
+        {
+          "type": "bold",
+          "text": "RICK OWENS SS27 MENS STONE",
+          "href": null
+        },
+        {
+          "type": "plain",
+          "text": "\n\n",
+          "href": null
+        },
+        {
+          "type": "blockquote",
+          "text": "We are all processing menace\n\nSome of us arm.\nSome of us train.\nSome of us turn away.\nSome of us turn to stone",
+          "href": null
+        },
+        {
+          "type": "plain",
+          "text": "\n\nПожалуй, самый дистопичный и атмосферный показ со времён ",
+          "href": null
+        },
+        {
+          "type": "text_link",
+          "text": "GETHSEMANE FW21",
+          "href": "https://youtu.be/B0F3s9pQ1XM?si=dzWsS2U7F-GJ8CX0"
+        },
+        {
+          "type": "plain",
+          "text": "\n\nИ если там было высказывание о жизни в состоянии напряжения перед надвигающейся хтонью, то STONE — жизнь внутри случившейся катастрофы: милитаризация, адаптация униформ обслуживающего класса, удобная обувь \n\nPerformance under pressure",
+          "href": null
+        }
+      ],
+      "media": [
+        {
+          "type": "photo",
+          "src": "/assets/telegram/live/2026/06/25/2049-photo-file_44.jpg",
+          "width": 853,
+          "height": 1280,
+          "size": 147959,
+          "mimeType": "image/jpeg",
+          "duration": null,
+          "name": "file_44.jpg",
+          "sourceMessageId": 2049
+        },
+        {
+          "type": "photo",
+          "src": "/assets/telegram/live/2026/06/25/2050-photo-file_45.jpg",
+          "width": 854,
+          "height": 1280,
+          "size": 151288,
+          "mimeType": "image/jpeg",
+          "duration": null,
+          "name": "file_45.jpg",
+          "sourceMessageId": 2050
+        },
+        {
+          "type": "photo",
+          "src": "/assets/telegram/live/2026/06/25/2051-photo-file_46.jpg",
+          "width": 853,
+          "height": 1280,
+          "size": 167066,
+          "mimeType": "image/jpeg",
+          "duration": null,
+          "name": "file_46.jpg",
+          "sourceMessageId": 2051
+        },
+        {
+          "type": "photo",
+          "src": "/assets/telegram/live/2026/06/25/2052-photo-file_47.jpg",
+          "width": 853,
+          "height": 1280,
+          "size": 156031,
+          "mimeType": "image/jpeg",
+          "duration": null,
+          "name": "file_47.jpg",
+          "sourceMessageId": 2052
+        },
+        {
+          "type": "photo",
+          "src": "/assets/telegram/live/2026/06/25/2053-photo-file_48.jpg",
+          "width": 854,
+          "height": 1280,
+          "size": 139463,
+          "mimeType": "image/jpeg",
+          "duration": null,
+          "name": "file_48.jpg",
+          "sourceMessageId": 2053
+        },
+        {
+          "type": "photo",
+          "src": "/assets/telegram/live/2026/06/25/2054-photo-file_49.jpg",
+          "width": 900,
+          "height": 1200,
+          "size": 156374,
+          "mimeType": "image/jpeg",
+          "duration": null,
+          "name": "file_49.jpg",
+          "sourceMessageId": 2054
+        },
+        {
+          "type": "photo",
+          "src": "/assets/telegram/live/2026/06/25/2055-photo-file_50.jpg",
+          "width": 900,
+          "height": 1200,
+          "size": 88237,
+          "mimeType": "image/jpeg",
+          "duration": null,
+          "name": "file_50.jpg",
+          "sourceMessageId": 2055
+        },
+        {
+          "type": "photo",
+          "src": "/assets/telegram/live/2026/06/25/2056-photo-file_51.jpg",
+          "width": 750,
+          "height": 1200,
+          "size": 64191,
+          "mimeType": "image/jpeg",
+          "duration": null,
+          "name": "file_51.jpg",
+          "sourceMessageId": 2056
+        }
+      ],
+      "reactions": []
+    },
+    {
+      "id": "2048",
+      "messageIds": [
+        2048
+      ],
+      "mediaGroupId": null,
+      "telegramUrl": "https://t.me/screenshot_of_the_day/2048",
+      "date": "2026-06-24T15:50:07Z",
+      "dateUnixtime": 1782316207,
+      "edited": null,
+      "text": "В апдейте приложения ChatGPT прекрасный пример принципа Continuity\n\nИли сказать иначе: воплощение принципов проектирования Liquid Glass (у меня было об этом) \n\nКонтрол добавления (плюсик) плавно раскрывается в меню со списком опций и неожиданно, камера так же непрерывно раскрывается не уводя из текущего контекста. Браво! \n\nПринцип непрерывности взаимодействия с интерфейсом: \nВизуальная связанность, непрерывность взаимодействия с приложением. Все объекты живут в едином пространстве, что трансформируется под пальцем. Глазу и мозгу понятно откуда и куда приходят и уходят информационные сгустки. Понятна их иерархия",
+      "entities": [
+        {
+          "type": "plain",
+          "text": "В апдейте приложения ChatGPT прекрасный пример принципа Continuity\n\nИли сказать иначе: воплощение принципов проектирования Liquid Glass (",
+          "href": null
+        },
+        {
+          "type": "text_link",
+          "text": "у меня было об этом",
+          "href": "https://t.me/screenshot_of_the_day/1447"
+        },
+        {
+          "type": "plain",
+          "text": ") \n\nКонтрол добавления (плюсик) плавно раскрывается в меню со списком опций и неожиданно, камера так же непрерывно раскрывается не уводя из текущего контекста. Браво! \n\nПринцип непрерывности взаимодействия с интерфейсом: \n",
+          "href": null
+        },
+        {
+          "type": "blockquote",
+          "text": "Визуальная связанность, непрерывность взаимодействия с приложением. Все объекты живут в едином пространстве, что трансформируется под пальцем. Глазу и мозгу понятно откуда и куда приходят и уходят информационные сгустки. Понятна их иерархия",
+          "href": null
+        }
+      ],
+      "media": [
+        {
+          "type": "video",
+          "src": "/assets/telegram/live/2026/06/24/2048-video-IMG_1502.MP4",
+          "width": 880,
+          "height": 1912,
+          "size": 3387404,
+          "mimeType": "video/mp4",
+          "duration": 11,
+          "name": "IMG_1502.MP4",
+          "sourceMessageId": 2048
+        }
+      ],
+      "reactions": []
+    },
+    {
+      "id": "2042",
+      "messageIds": [
+        2042,
+        2043,
+        2044,
+        2045,
+        2046,
+        2047
+      ],
+      "mediaGroupId": "14257818048193130",
+      "telegramUrl": "https://t.me/screenshot_of_the_day/2042",
+      "date": "2026-06-23T15:07:36Z",
+      "dateUnixtime": 1782227256,
+      "edited": null,
+      "text": "YE LIVE IN ISTAMBUL 2026 \n\nЧеловеческая фигура на вершине мира\n\nОпыт близкий скорее к религиозному, чем к развлекательному. Запомню его таким \n\nШоу в 360° позволяет продать сильно больше билетов и утилизировать всё пространство стадиона. С другой стороны это повышает требования к выступлению. Гениальная идея со сферой",
+      "entities": [],
+      "media": [
+        {
+          "type": "video",
+          "src": "/assets/telegram/live/2026/06/23/2042-video-IMG_9757.MOV",
+          "width": 720,
+          "height": 1280,
+          "size": 6724077,
+          "mimeType": "video/mp4",
+          "duration": 18,
+          "name": "IMG_9757.MOV",
+          "sourceMessageId": 2042
+        },
+        {
+          "type": "photo",
+          "src": "/assets/telegram/live/2026/06/23/2043-photo-file_38.jpg",
+          "width": 1440,
+          "height": 2560,
+          "size": 133458,
+          "mimeType": "image/jpeg",
+          "duration": null,
+          "name": "file_38.jpg",
+          "sourceMessageId": 2043
+        },
+        {
+          "type": "photo",
+          "src": "/assets/telegram/live/2026/06/23/2044-photo-file_39.jpg",
+          "width": 1440,
+          "height": 2560,
+          "size": 110079,
+          "mimeType": "image/jpeg",
+          "duration": null,
+          "name": "file_39.jpg",
+          "sourceMessageId": 2044
+        },
+        {
+          "type": "photo",
+          "src": "/assets/telegram/live/2026/06/23/2045-photo-file_40.jpg",
+          "width": 1440,
+          "height": 2560,
+          "size": 215641,
+          "mimeType": "image/jpeg",
+          "duration": null,
+          "name": "file_40.jpg",
+          "sourceMessageId": 2045
+        },
+        {
+          "type": "photo",
+          "src": "/assets/telegram/live/2026/06/23/2046-photo-file_41.jpg",
+          "width": 1439,
+          "height": 2560,
+          "size": 146923,
+          "mimeType": "image/jpeg",
+          "duration": null,
+          "name": "file_41.jpg",
+          "sourceMessageId": 2046
+        },
+        {
+          "type": "photo",
+          "src": "/assets/telegram/live/2026/06/23/2047-photo-file_42.jpg",
+          "width": 2560,
+          "height": 1440,
+          "size": 299618,
+          "mimeType": "image/jpeg",
+          "duration": null,
+          "name": "file_42.jpg",
+          "sourceMessageId": 2047
+        }
+      ],
+      "reactions": []
+    },
+    {
+      "id": "2036",
+      "messageIds": [
+        2036,
+        2037,
+        2038,
+        2039,
+        2040,
+        2041
+      ],
+      "mediaGroupId": "14256982842800554",
+      "telegramUrl": "https://t.me/screenshot_of_the_day/2036",
+      "date": "2026-06-22T10:07:35Z",
+      "dateUnixtime": 1782122855,
+      "edited": null,
+      "text": "Ребята из Рефодушки выложили (пост) запись нашей беседы \n\nСпасибо, что позвали! В процессе размышлений и подготовки сформировались некоторые идеи, которые оказывается давно уже фоном крутились, не мог их за хвост поймать. Теперь поймал \n\nСмотреть Ютюб",
+      "entities": [
+        {
+          "type": "plain",
+          "text": "Ребята из Рефодушки выложили (",
+          "href": null
+        },
+        {
+          "type": "text_link",
+          "text": "пост",
+          "href": "https://t.me/sortofdesign/1609"
+        },
+        {
+          "type": "plain",
+          "text": ") запись нашей беседы \n\nСпасибо, что позвали! В процессе размышлений и подготовки сформировались некоторые идеи, которые оказывается давно уже фоном крутились, не мог их за хвост поймать. Теперь поймал \n\nСмотреть ",
+          "href": null
+        },
+        {
+          "type": "text_link",
+          "text": "Ютюб",
+          "href": "https://www.youtube.com/watch?v=qqSuME7t9UE"
+        }
+      ],
+      "media": [
+        {
+          "type": "photo",
+          "src": "/assets/telegram/live/2026/06/22/2037-photo-file_32.jpg",
+          "width": 2560,
+          "height": 1558,
+          "size": 127155,
+          "mimeType": "image/jpeg",
+          "duration": null,
+          "name": "file_32.jpg",
+          "sourceMessageId": 2037
+        },
+        {
+          "type": "photo",
+          "src": "/assets/telegram/live/2026/06/22/2038-photo-file_33.jpg",
+          "width": 2560,
+          "height": 1558,
+          "size": 217618,
+          "mimeType": "image/jpeg",
+          "duration": null,
+          "name": "file_33.jpg",
+          "sourceMessageId": 2038
+        },
+        {
+          "type": "photo",
+          "src": "/assets/telegram/live/2026/06/22/2039-photo-file_34.jpg",
+          "width": 2560,
+          "height": 1558,
+          "size": 258796,
+          "mimeType": "image/jpeg",
+          "duration": null,
+          "name": "file_34.jpg",
+          "sourceMessageId": 2039
+        },
+        {
+          "type": "photo",
+          "src": "/assets/telegram/live/2026/06/22/2040-photo-file_35.jpg",
+          "width": 2560,
+          "height": 1558,
+          "size": 230132,
+          "mimeType": "image/jpeg",
+          "duration": null,
+          "name": "file_35.jpg",
+          "sourceMessageId": 2040
+        },
+        {
+          "type": "photo",
+          "src": "/assets/telegram/live/2026/06/22/2041-photo-file_36.jpg",
+          "width": 2560,
+          "height": 1558,
+          "size": 135443,
+          "mimeType": "image/jpeg",
+          "duration": null,
+          "name": "file_36.jpg",
+          "sourceMessageId": 2041
+        }
+      ],
+      "reactions": []
+    },
+    {
+      "id": "2035",
+      "messageIds": [
+        2035
+      ],
+      "mediaGroupId": null,
+      "telegramUrl": "https://t.me/screenshot_of_the_day/2035",
+      "date": "2026-06-19T09:36:54Z",
+      "dateUnixtime": 1781861814,
+      "edited": null,
+      "text": "Классный хук в первом кадре. Приятный эксплорейшн. Пойду чашки переворачивать \n\nВ целом, государства осваивающие инструменты присущие капитализму (конкуренция за клиента, привлечение, маркетинг) это всё как называется?",
+      "entities": [],
+      "media": [],
+      "reactions": []
+    },
+    {
+      "id": "2032",
+      "messageIds": [
+        2032,
+        2033,
+        2034
+      ],
+      "mediaGroupId": "14254181307718506",
+      "telegramUrl": "https://t.me/screenshot_of_the_day/2032",
+      "date": "2026-06-18T08:51:03Z",
+      "dateUnixtime": 1781772663,
+      "edited": null,
+      "text": "Свой canvas вместо эмбеда Миро\n\nКогда-то я игрался с Framer и доигрался до появления tomilov.com\nСкриншот 1\n\nИногда где-то, что-то рассказывал и сделал архив, где все материалы лежат. Лекции по анимациям до сих пор актуальны — посмотрите. Это бесплатно\n\nЛицом сайта придумал сделать визуализацию «Что у меня в голове». Подсобрал материалы на доску в Миро. Конец. Было лениво отдельно готовить материалы и поддерживать доску в актуальном состоянии \n\nПотом за Миро платить стало лениво. Потерялось целеполагание \n\nПотом и за Framer платить стало не интересно (пост о переезде на HTML силами Codex)\n\n17 июня 2026 года — я прошу Codex собрать canvas под меня. \nСкриншот 2\n\nПридумываю, как поддерживать его в актуальном состоянии: мои посты есть материал «что в голове». Чем свежее пост, тем центральнее его позиция, более старые сдвигаются дальше к краю карты \n\nЧас работы Codex, и есть canvas, где посты сгруппированы по схожим тематикам и лучами тянутся за горизонт, где каждый пост кликабелен \nСкриншот 3\n\nОщущения сродни первому открытию Painbrush в Windows 3.11 — господи, я могу вообще всё! \n\nВ удивительное время живём, аж мурашки по телу",
+      "entities": [
+        {
+          "type": "bold",
+          "text": "Свой canvas вместо эмбеда Миро",
+          "href": null
+        },
+        {
+          "type": "plain",
+          "text": "\n\nКогда-то я игрался с Framer и доигрался до появления ",
+          "href": null
+        },
+        {
+          "type": "text_link",
+          "text": "tomilov.com",
+          "href": "http://tomilov.com/"
+        },
+        {
+          "type": "bold",
+          "text": "tomilov.com",
+          "href": null
+        },
+        {
+          "type": "plain",
+          "text": "\n",
+          "href": null
+        },
+        {
+          "type": "italic",
+          "text": "Скриншот 1",
+          "href": null
+        },
+        {
+          "type": "plain",
+          "text": "\n\nИногда где-то, что-то рассказывал и сделал ",
+          "href": null
+        },
+        {
+          "type": "text_link",
+          "text": "архив",
+          "href": "https://tomilov.com/about/"
+        },
+        {
+          "type": "plain",
+          "text": ", где все материалы лежат. Лекции по анимациям до сих пор актуальны — посмотрите. Это бесплатно\n\nЛицом сайта придумал сделать визуализацию «Что у меня в голове». Подсобрал материалы на доску в Миро. Конец. Было лениво отдельно готовить материалы и поддерживать доску в актуальном состоянии \n\nПотом за Миро платить стало лениво. Потерялось целеполагание \n\nПотом и за Framer платить стало не интересно (",
+          "href": null
+        },
+        {
+          "type": "text_link",
+          "text": "пост о переезде на HTML силами Codex",
+          "href": "https://t.me/screenshot_of_the_day/2008"
+        },
+        {
+          "type": "plain",
+          "text": ")\n\n17 июня 2026 года — я прошу Codex собрать canvas под меня. \n",
+          "href": null
+        },
+        {
+          "type": "italic",
+          "text": "Скриншот 2",
+          "href": null
+        },
+        {
+          "type": "plain",
+          "text": "\n\nПридумываю, как поддерживать его в актуальном состоянии: мои посты есть материал «что в голове». Чем свежее пост, тем центральнее его позиция, более старые сдвигаются дальше к краю карты \n\nЧас работы Codex, и есть canvas, где посты сгруппированы по схожим тематикам и лучами тянутся за горизонт, где каждый пост кликабелен \n",
+          "href": null
+        },
+        {
+          "type": "italic",
+          "text": "Скриншот 3",
+          "href": null
+        },
+        {
+          "type": "plain",
+          "text": "\n\nОщущения сродни первому открытию Painbrush в Windows 3.11 — господи, я могу вообще всё! \n\nВ удивительное время живём, аж мурашки по телу",
+          "href": null
+        }
+      ],
+      "media": [
+        {
+          "type": "photo",
+          "src": "/assets/telegram/live/2026/06/18/2032-photo-file_27.jpg",
+          "width": 2560,
+          "height": 1869,
+          "size": 244346,
+          "mimeType": "image/jpeg",
+          "duration": null,
+          "name": "file_27.jpg",
+          "sourceMessageId": 2032
+        },
+        {
+          "type": "photo",
+          "src": "/assets/telegram/live/2026/06/18/2033-photo-file_28.jpg",
+          "width": 2560,
+          "height": 1738,
+          "size": 312592,
+          "mimeType": "image/jpeg",
+          "duration": null,
+          "name": "file_28.jpg",
+          "sourceMessageId": 2033
+        },
+        {
+          "type": "photo",
+          "src": "/assets/telegram/live/2026/06/18/2034-photo-file_29.jpg",
+          "width": 2560,
+          "height": 1627,
+          "size": 196280,
+          "mimeType": "image/jpeg",
+          "duration": null,
+          "name": "file_29.jpg",
+          "sourceMessageId": 2034
+        }
+      ],
+      "reactions": []
+    },
     {
       "id": "2028",
       "messageIds": [
@@ -58699,6 +59687,22 @@
       "size": 142805,
       "error": "<urlopen error [SSL: UNEXPECTED_EOF_WHILE_READING] EOF occurred in violation of protocol (_ssl.c:1007)>",
       "recordedAt": "2026-06-16T07:57:00.955227Z"
+    },
+    {
+      "messageId": 2035,
+      "fileId": "BAACAgIAAx0Cc9uHOQACB_NqNQ21nIAQOj0vXZlw_3NYjGRvSwAClZgAAkhjqEmuEK4vNJSeajsE",
+      "type": "video",
+      "size": 54463441,
+      "error": "<urlopen error [SSL: UNEXPECTED_EOF_WHILE_READING] EOF occurred in violation of protocol (_ssl.c:1007)>",
+      "recordedAt": "2026-06-19T09:38:37.786039Z"
+    },
+    {
+      "messageId": 2036,
+      "fileId": "AgACAgIAAx0Cc9uHOQACB_RqOQlnDNUn-B-tIzsilNRSbBcMvAACHRprG6RmyEnNx15ZPz54hwEAAwIAA3cAAzsE",
+      "type": "photo",
+      "size": 350979,
+      "error": "<urlopen error [SSL: UNEXPECTED_EOF_WHILE_READING] EOF occurred in violation of protocol (_ssl.c:1007)>",
+      "recordedAt": "2026-06-22T10:09:16.470252Z"
     }
   ],
   "translationUpdatedAt": "2026-06-01T16:55:35.204Z"

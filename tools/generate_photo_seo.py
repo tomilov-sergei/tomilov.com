@@ -36,6 +36,8 @@ CHANNEL_TITLE = "Screenshot of the Day"
 TELEGRAM_MEDIA_BASE = "https://s3.twcstorage.ru/00df5bd5-137f-492a-8d95-c7ee2cc2d851"
 FEED_LIMIT = 50
 LANGUAGES = ("ru", "en")
+PHOTO_FILTER_VALUES = ("film", "iphone")
+PHOTO_FILTER_DIRS = {"film", "iphone"}
 TELEGRAM_EXPORT_TZ = ZoneInfo("Europe/Moscow")
 
 STRINGS = {
@@ -48,11 +50,16 @@ STRINGS = {
         "sections_aria": "Разделы",
         "blog": "Блог",
         "photos": PHOTOS_TITLE,
+        "places": "Места",
         "about_desktop": SITE_NAME,
         "about_mobile": "about",
         "photos_description": PHOTOS_DESCRIPTION,
         "photos_empty": "Фотографий пока нет.",
         "photos_footer": f'Витрина лучших снимков. Использование разрешено по лицензии <a href="{LICENSE_URL}" target="_blank" rel="license noopener">{LICENSE_NAME}</a> с указанием авторства.',
+        "photos_filter_aria": "Фильтр по технике",
+        "all_techniques": "Все",
+        "film_technique": "Плёнка",
+        "iphone_technique": "iPhone",
         "all_photos": "Все фото",
         "back_to_photos": "Вернуться в фотоленту",
         "static_index": "Static index",
@@ -63,6 +70,7 @@ STRINGS = {
         "previous_photo": "Предыдущее фото",
         "next_photo": "Следующее фото",
         "close": "Закрыть",
+        "actual": "Увеличить",
         "fit": "Вписать",
         "newer": "Новее",
         "older": "Старее",
@@ -92,11 +100,16 @@ STRINGS = {
         "sections_aria": "Sections",
         "blog": "Blog",
         "photos": PHOTOS_TITLE_EN,
+        "places": "Places",
         "about_desktop": SITE_NAME_EN,
         "about_mobile": "about",
         "photos_description": PHOTOS_DESCRIPTION_EN,
         "photos_empty": "No photos yet.",
         "photos_footer": f'A showcase of selected photographs. Licensed under <a href="{LICENSE_URL}" target="_blank" rel="license noopener">{LICENSE_NAME}</a> with attribution.',
+        "photos_filter_aria": "Filter by camera",
+        "all_techniques": "All",
+        "film_technique": "Film",
+        "iphone_technique": "iPhone",
         "all_photos": "All photos",
         "back_to_photos": "Back to photo feed",
         "static_index": "Static index",
@@ -107,6 +120,7 @@ STRINGS = {
         "previous_photo": "Previous photo",
         "next_photo": "Next photo",
         "close": "Close",
+        "actual": "Zoom",
         "fit": "Fit",
         "newer": "Newer",
         "older": "Older",
@@ -150,6 +164,10 @@ def main():
 
         photos_archive_dir.mkdir(parents=True, exist_ok=True)
         (photos_dir / "index.html").write_text(render_photos_page(photos, lang), encoding="utf-8")
+        for filter_value in PHOTO_FILTER_VALUES:
+            filter_dir = photos_dir / filter_value
+            filter_dir.mkdir(parents=True, exist_ok=True)
+            (filter_dir / "index.html").write_text(render_photos_page(photos, lang, filter_value), encoding="utf-8")
         (photos_archive_dir / "index.html").write_text(render_photos_archive(photos, lang), encoding="utf-8")
 
     SITEMAP_PATH.write_text(render_sitemap(posts, photos), encoding="utf-8")
@@ -231,15 +249,17 @@ def translated_value(item, lang, key, fallback=""):
     return clean_text(translation(item, lang).get(key)) or clean_text(item.get(key)) or fallback
 
 
-def render_photos_page(photos, lang="ru"):
-    image = photo_asset_url(photos[0].get("src")) if photos else f"{SITE_URL}/assets/og.png"
-    page_path = "/photos/"
+def render_photos_page(photos, lang="ru", active_filter="all"):
+    visible_photos = photos_by_technique(photos, active_filter)
+    image = photo_asset_url((visible_photos or photos)[0].get("src")) if (visible_photos or photos) else f"{SITE_URL}/assets/og.png"
+    page_path = photo_filter_path(active_filter)
     title = tr(lang, "photos")
+    page_title = title if active_filter == "all" else f"{title} · {photo_filter_label(active_filter, lang)}"
     description = tr(lang, "photos_description")
     json_ld = {
         "@context": "https://schema.org",
         "@type": "CollectionPage",
-        "name": title,
+        "name": page_title,
         "description": description,
         "url": localized_url(page_path, lang),
         "isPartOf": {"@type": "WebSite", "name": tr(lang, "site_name"), "url": SITE_URL},
@@ -247,7 +267,7 @@ def render_photos_page(photos, lang="ru"):
         "license": LICENSE_URL,
     }
 
-    feed = "\n        ".join(render_photo_card(photo, index, lang) for index, photo in enumerate(photos))
+    feed = "\n        ".join(render_photo_card(photo, index, lang) for index, photo in enumerate(visible_photos))
     if not feed:
         feed = f'<p class="feed-status" data-photo-status>{tr(lang, "photos_empty")}</p>'
 
@@ -256,18 +276,18 @@ def render_photos_page(photos, lang="ru"):
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width">
-    <title>{title} — {tr(lang, 'site_name')}</title>
+    <title>{page_title} — {tr(lang, 'site_name')}</title>
     <meta name="description" content="{escape_attr(description)}">
     <link rel="canonical" href="{localized_url(page_path, lang)}">
 {alternate_links(page_path, lang)}
     <link rel="alternate" type="application/rss+xml" title="{escape_attr(title)}" href="{localized_url('/photos/feed.xml', lang)}">
     <meta property="og:type" content="website">
-    <meta property="og:title" content="{title}">
+    <meta property="og:title" content="{page_title}">
     <meta property="og:description" content="{escape_attr(description)}">
     <meta property="og:image" content="{escape_attr(image)}">
     <meta property="og:url" content="{localized_url(page_path, lang)}">
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="{title}">
+    <meta name="twitter:title" content="{page_title}">
     <meta name="twitter:description" content="{escape_attr(description)}">
     <meta name="twitter:image" content="{escape_attr(image)}">
     <link rel="icon" href="/assets/favicon.png">
@@ -283,6 +303,8 @@ def render_photos_page(photos, lang="ru"):
       <section class="photos-intro" aria-labelledby="photos-title">
         <h1 id="photos-title">{title}</h1>
       </section>
+
+      {render_photo_filters(photos, lang, active_filter)}
 
       <section class="photo-feed" data-photo-feed data-static-photo-feed aria-live="polite">
         {feed}
@@ -423,16 +445,35 @@ def render_photo_page(photo, newer, older, lang="ru"):
 """
 
 
+def render_photo_filters(photos, lang="ru", active_filter="all"):
+    if not photos:
+        return ""
+
+    links = []
+    for option in photo_technique_options(photos, lang):
+        current = ' aria-current="page"' if option["value"] == active_filter else ""
+        links.append(
+            f'<a href="{localized_path(photo_filter_path(option["value"]), lang)}" data-photo-filter-value="{escape_attr(option["value"])}"{current}>'
+            f'<span>{escape_html(option["label"])}</span>'
+            f'<span class="photo-filter-count">{option["count"]}</span>'
+            '</a>'
+        )
+
+    return f'''<nav class="photo-filter" data-photo-filter aria-label="{tr(lang, "photos_filter_aria")}">
+        {"".join(links)}
+      </nav>'''
+
+
 def render_photo_card(photo, index, lang="ru"):
     aspect = f' style="aspect-ratio: {int(photo["width"])} / {int(photo["height"])}"' if photo.get("width") and photo.get("height") else ""
     loading = "eager" if index < 4 else "lazy"
     hdr = '<span class="photo-hdr-badge">HDR</span>' if photo.get("hdr") else ""
+    hdr_line = f"\n            {hdr}" if hdr else ""
     title = photo_title(photo, 100, lang)
 
-    return f"""<article class="photo-entry">
+    return f"""<article class="photo-entry" data-photo-technique="{escape_attr(photo_technique_key(photo))}">
           <a class="photo-card" href="{localized_path("/photos/" + str(photo['id']) + "/", lang)}"{aspect} aria-label="{escape_attr(title)}">
-            <img src="{escape_attr(photo.get('src'))}" loading="{loading}" decoding="async" alt="{escape_attr(photo_alt(photo, lang))}">
-            {hdr}
+            <img src="{escape_attr(photo.get('src'))}" loading="{loading}" decoding="async" alt="{escape_attr(photo_alt(photo, lang))}">{hdr_line}
           </a>
           {render_photo_info(photo, lang)}
         </article>"""
@@ -442,9 +483,10 @@ def render_photo_info(photo, lang="ru"):
     technical = photo.get("technical") or {}
     location = photo_location(photo, lang)
     settings = [item for item in technical.get("settings", []) if item.get("value")]
+    location_html = f"\n              <p class=\"photo-location\">{escape_html(location)}</p>" if location else ""
     settings_html = ""
     if settings:
-        settings_html = f"""<div class="photo-settings">
+        settings_html = f"""\n            <div class="photo-settings">
               {"".join(f'<span>{escape_html(setting_value(item))}</span>' for item in settings)}
             </div>"""
 
@@ -454,10 +496,8 @@ def render_photo_info(photo, lang="ru"):
             </div>
             <div class="photo-info-body">
               <p>{escape_html(technical.get("lensLine") or tr(lang, "film_photo"))}</p>
-              <p>{escape_html(technical.get("summary") or compact_text([format_dimensions(photo), format_file_size(photo.get("size"))]))}</p>
-              {f'<p class="photo-location">{escape_html(location)}</p>' if location else ''}
-            </div>
-            {settings_html}
+              <p>{escape_html(technical.get("summary") or compact_text([format_dimensions(photo), format_file_size(photo.get("size"))]))}</p>{location_html}
+            </div>{settings_html}
           </div>"""
 
 
@@ -535,6 +575,9 @@ def render_sitemap(posts, photos):
             {"loc": localized_url("/about/", lang)},
             {"loc": localized_url("/screenshots/", lang)},
             {"loc": localized_url("/photos/", lang), "lastmod": latest_photo},
+            {"loc": localized_url("/places/", lang)},
+            {"loc": localized_url("/photos/film/", lang), "lastmod": latest_photo},
+            {"loc": localized_url("/photos/iphone/", lang), "lastmod": latest_photo},
             {"loc": localized_url("/photos/archive/", lang), "lastmod": latest_photo},
             {"loc": localized_url("/screenshots/posts/", lang), "lastmod": latest_post},
         ])
@@ -676,7 +719,7 @@ def photo_feed_item(photo, lang="ru"):
 
 def remove_stale_photo_dirs(photo_ids, photos_dir=PHOTOS_DIR):
     for entry in photos_dir.iterdir():
-        if not entry.is_dir() or entry.name == "archive" or entry.name in photo_ids:
+        if not entry.is_dir() or entry.name == "archive" or entry.name in PHOTO_FILTER_DIRS or entry.name in photo_ids:
             continue
         shutil.rmtree(entry)
 
@@ -684,12 +727,14 @@ def remove_stale_photo_dirs(photo_ids, photos_dir=PHOTOS_DIR):
 def render_header(current_path, lang="ru"):
     is_screenshots = current_path.startswith("/screenshots/")
     is_photos = current_path.startswith("/photos/")
+    is_places = current_path.startswith("/places/")
     is_about = current_path.startswith("/about/")
     return f"""<header class="site-header" aria-label="{tr(lang, 'nav_aria')}">
         <a class="brand" href="{localized_path("/", lang)}">SS/84</a>
         <nav class="path" aria-label="{tr(lang, 'sections_aria')}">
           <a href="{localized_path("/screenshots/", lang)}"{' aria-current="page"' if is_screenshots else ''}>{tr(lang, 'blog')}</a>
           <a href="{localized_path("/photos/", lang)}"{' aria-current="page"' if is_photos else ''}>{tr(lang, 'photos')}</a>
+          <a href="{localized_path("/places/", lang)}"{' aria-current="page"' if is_places else ''}>{tr(lang, 'places')}</a>
           <a href="{localized_path("/about/", lang)}"{' aria-current="page"' if is_about else ''}><span class="desktop-name">{tr(lang, 'about_desktop')}</span><span class="mobile-name">{tr(lang, 'about_mobile')}</span></a>
         </nav>
         {render_language_switcher(current_path, lang)}
@@ -706,7 +751,7 @@ def render_photo_dialog(lang="ru"):
     return f"""<dialog class="photo-viewer" data-photo-dialog aria-label="{tr(lang, 'viewer')}">
       <div class="photo-viewer-bar">
         <button type="button" data-photo-prev aria-label="{tr(lang, 'previous_photo')}">‹</button>
-        <button type="button" data-photo-actual>100%</button>
+        <button type="button" data-photo-actual>{tr(lang, 'actual')}</button>
         <button type="button" data-photo-next aria-label="{tr(lang, 'next_photo')}">›</button>
         <button type="button" data-photo-close>{tr(lang, 'close')}</button>
       </div>
@@ -840,6 +885,58 @@ def photo_asset_url(src):
 
 def photo_sort_key(photo):
     return photo.get("uploadedAt") or photo.get("id") or photo.get("date") or ""
+
+
+def photo_technique_options(photos, lang="ru"):
+    return [
+        {"value": "all", "label": tr(lang, "all_techniques"), "count": len(photos)},
+        {"value": "film", "label": tr(lang, "film_technique"), "count": len(photos_by_technique(photos, "film"))},
+        {"value": "iphone", "label": tr(lang, "iphone_technique"), "count": len(photos_by_technique(photos, "iphone"))},
+    ]
+
+
+def photos_by_technique(photos, value):
+    if value == "all":
+        return photos
+    return [photo for photo in photos if photo_technique_key(photo) == value]
+
+
+def photo_filter_path(value):
+    if value == "film":
+        return "/photos/film/"
+    if value == "iphone":
+        return "/photos/iphone/"
+    return "/photos/"
+
+
+def photo_filter_label(value, lang="ru"):
+    if value == "film":
+        return tr(lang, "film_technique")
+    if value == "iphone":
+        return tr(lang, "iphone_technique")
+    return tr(lang, "all_techniques")
+
+
+def photo_technique_key(photo):
+    if is_film_photo(photo):
+        return "film"
+    if is_iphone_photo(photo):
+        return "iphone"
+    return "other"
+
+
+def photo_camera_line(photo):
+    technical = photo.get("technical") or {}
+    return clean_text(technical.get("cameraLine") or technical.get("camera")) or "Camera"
+
+
+def is_film_photo(photo):
+    technical = photo.get("technical") or {}
+    return technical.get("hasExif") is False
+
+
+def is_iphone_photo(photo):
+    return bool(re.search(r"iphone", photo_camera_line(photo), re.IGNORECASE))
 
 
 def image_dimensions_attrs(photo):

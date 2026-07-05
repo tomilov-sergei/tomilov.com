@@ -324,6 +324,7 @@ def render_sitemap(posts, photos):
             {"loc": shared.localized_url("/about/", lang)},
             {"loc": shared.localized_url("/screenshots/", lang)},
             {"loc": shared.localized_url("/photos/", lang), "lastmod": latest_photo},
+            {"loc": shared.localized_url("/places/", lang)},
             {"loc": shared.localized_url("/photos/archive/", lang), "lastmod": latest_photo},
             {"loc": shared.localized_url("/screenshots/posts/", lang), "lastmod": latest_post},
         ])

@@ -4,12 +4,14 @@ This file is the project map for future Codex chats.
 
 ## Current Product
 
-`tomilov.com` is a personal static site with five public sections:
+`tomilov.com` is a personal static site with several public sections:
 
 - `/` - home canvas with thematic rays, post/photo cards, pan/zoom, draggable cards, and in-place post overlay.
 - `/about/` - talks, videos, and personal profile material.
 - `/screenshots/` - archive of the Telegram channel "Screenshot of the Day".
 - `/photos/` - personal photo feed.
+- `/photos/film/` and `/photos/iphone/` - thematic photo feed slices.
+- `/places/` - places index for personal routes and photo contexts.
 - `/barcelona-guide/` - curated Barcelona places and routes.
 - `/en/**` - English mirrors of the public pages, posts, photo pages, feeds, and indexes.
 
@@ -28,10 +30,12 @@ Product direction for `/screenshots/`: a public collection of observations about
 - `about/index.html` - about page.
 - `screenshots/index.html` - Telegram archive page.
 - `photos/index.html` - public photo feed.
+- `photos/film/index.html`, `photos/iphone/index.html` - curated photo subsets.
+- `places/index.html` - places index.
 - `barcelona-guide/index.html` - curated Barcelona guide.
 - `assets/barcelona-guide/**` - local working mirror of guide images; ignored by Git and stored in production shared storage.
 - `styles.css` - shared styles.
-- `script.js` - YouTube activation, Telegram feed rendering, photo feed rendering, and photo viewer.
+- `script.js` - home canvas, YouTube activation, Telegram feed rendering, photo feed rendering, places rendering, overlays, and photo viewer.
 - `assets/telegram/posts.json` - imported Telegram post database.
 - `assets/photos/photos.json` - uploaded photo manifest.
 - `feed.xml`, `screenshots/feed.xml`, `photos/feed.xml` - RSS feeds generated from the same manifests as SEO pages.
@@ -65,7 +69,7 @@ Apple Photos share sheet -> Apple Shortcut -> `/photos/upload` -> Python service
 
 Photo originals are intentionally stored without canvas processing, resizing, or transcoding so HDR/Ultra HDR metadata and gain maps can survive. The Shortcut must not use image transform actions. The upload service validates the token and file signature, then stores the original bytes. The browser is responsible for actual HDR display support.
 
-Static SEO pages, sitemap, and RSS are generated from `assets/telegram/posts.json` and `assets/photos/photos.json`. The full deploy path uses `tools/generate-seo-pages.mjs`. The production Telegram webhook path uses `tools/generate_telegram_seo.py` so new posts update `/screenshots/<id>/`, `/screenshots/feed.xml`, `/feed.xml`, and `sitemap.xml` immediately. The production photo upload path uses `tools/generate_photo_seo.py` so new photos update `/photos/feed.xml` and `/feed.xml` immediately. Both production refresh generators are Python-only, so they do not require Node.js on the VPS.
+Static SEO pages, sitemap, and RSS are generated from `assets/telegram/posts.json` and `assets/photos/photos.json`. The full deploy path uses `tools/generate-seo-pages.mjs`. The production Telegram webhook path uses `tools/generate_telegram_seo.py` so new posts update `/screenshots/<id>/`, `/screenshots/feed.xml`, `/feed.xml`, and `sitemap.xml` immediately. The production photo upload path uses `tools/generate_photo_seo.py` so new photos update `/photos/**`, `/photos/feed.xml`, `/feed.xml`, and `sitemap.xml` immediately. Both production refresh generators are Python-only, so they do not require Node.js on the VPS.
 
 English content lives beside source records in `translations.en`. Generators write `/en/**` pages from those translations and fall back to the source Russian text while a translation is missing. The header language switcher links to real static counterpart URLs and `script.js` swaps pages through `fetch` and `history.pushState` when JavaScript is available.
 
