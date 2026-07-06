@@ -23,6 +23,7 @@ REMOTE_PHOTOS_DIR="$REMOTE_STORAGE_ROOT/shared/assets/photos"
 LOCAL_BARCELONA_DIR="$ROOT_DIR/assets/barcelona-guide"
 REMOTE_BARCELONA_DIR="$REMOTE_STORAGE_ROOT/shared/assets/barcelona-guide"
 PHOTOS_ONLY="${PHOTOS_ONLY:-0}"
+REMOTE_WRITE_RSYNC_OPTIONS=(--no-perms --no-owner --no-group --omit-dir-times)
 
 cd "$ROOT_DIR"
 
@@ -101,6 +102,7 @@ fi
 if [[ "$PHOTOS_ONLY" == "1" ]]; then
   if [[ "${PUSH_LOCAL_PHOTOS:-0}" == "1" && -f "$LOCAL_PHOTOS_DIR/photos.json" ]]; then
     rsync -a --partial --progress --stats \
+      "${REMOTE_WRITE_RSYNC_OPTIONS[@]}" \
       --exclude ".DS_Store" \
       --exclude "._*" \
       -e "ssh -i \"$KEY\" -o IdentitiesOnly=yes" \
@@ -118,7 +120,8 @@ python3 tools/generate_photo_seo.py
 if [ \"\$(id -u)\" -eq 0 ]; then
   chown -R www-data:www-data photos en feed.xml sitemap.xml '$REMOTE_STORAGE_ROOT/shared/assets/photos'
 else
-  chmod -R g+rwX photos en feed.xml sitemap.xml '$REMOTE_STORAGE_ROOT/shared/assets/photos'
+  chmod -R g+rwX photos en feed.xml sitemap.xml
+  find '$REMOTE_STORAGE_ROOT/shared/assets/photos' -user \"\$(id -un)\" -exec chmod g+rwX {} +
 fi
 printf 'Refreshed photo pages in current release\n'
 find photos -maxdepth 2 -type f | sort"
@@ -135,6 +138,7 @@ fi
 
 if [[ "${PUSH_LOCAL_PHOTOS:-0}" == "1" && -f "$LOCAL_PHOTOS_DIR/photos.json" ]]; then
   rsync -a --partial --progress --stats \
+    "${REMOTE_WRITE_RSYNC_OPTIONS[@]}" \
     --exclude ".DS_Store" \
     --exclude "._*" \
     -e "ssh -i \"$KEY\" -o IdentitiesOnly=yes" \
@@ -144,6 +148,7 @@ fi
 
 if [[ -d "$LOCAL_BARCELONA_DIR" && "${SKIP_BARCELONA_SYNC:-0}" != "1" ]]; then
   rsync -a --partial --progress --stats \
+    "${REMOTE_WRITE_RSYNC_OPTIONS[@]}" \
     --exclude ".DS_Store" \
     --exclude "._*" \
     -e "ssh -i \"$KEY\" -o IdentitiesOnly=yes" \
@@ -155,6 +160,7 @@ fi
 
 if [[ "${SKIP_MEDIA_SYNC:-0}" != "1" ]]; then
   rsync -a --partial --progress --stats \
+    "${REMOTE_WRITE_RSYNC_OPTIONS[@]}" \
     --exclude "posts.json" \
     --exclude ".DS_Store" \
     --exclude "._*" \
@@ -222,7 +228,8 @@ if [ \"\$(id -u)\" -eq 0 ]; then
   chown -R www-data:www-data '$REMOTE_STORAGE_ROOT/releases/'\$stamp '$REMOTE_STORAGE_ROOT/shared'
   chown -h www-data:www-data '$REMOTE_ROOT/current'
 else
-  chmod -R g+rwX '$REMOTE_STORAGE_ROOT/releases/'\$stamp '$REMOTE_STORAGE_ROOT/shared'
+  chmod -R g+rwX '$REMOTE_STORAGE_ROOT/releases/'\$stamp
+  find '$REMOTE_STORAGE_ROOT/shared' -user \"\$(id -un)\" -exec chmod g+rwX {} +
 fi
 \$SUDO nginx -t
 \$SUDO systemctl reload nginx
