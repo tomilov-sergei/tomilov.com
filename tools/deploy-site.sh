@@ -210,7 +210,7 @@ telegram_shared='$REMOTE_STORAGE_ROOT/shared/assets/telegram'
 ln -sfn \"\$telegram_shared\" '$REMOTE_STORAGE_ROOT/releases/'\$stamp'/assets/telegram'
 ln -sfn '$REMOTE_STORAGE_ROOT/shared/assets/photos' '$REMOTE_STORAGE_ROOT/releases/'\$stamp'/assets/photos'
 ln -sfn '$REMOTE_STORAGE_ROOT/shared/assets/barcelona-guide' '$REMOTE_STORAGE_ROOT/releases/'\$stamp'/assets/barcelona-guide'
-if [ -f /etc/tomilov-telegram-live.env ]; then
+if [ -r /etc/tomilov-telegram-live.env ]; then
   release_telegram_dir=\$(readlink -f '$REMOTE_STORAGE_ROOT/releases/'\$stamp'/assets/telegram')
   live_posts_path=\$(awk -F= '\$1 == \"POSTS_JSON_PATH\" { print \$2 }' /etc/tomilov-telegram-live.env | tail -n 1)
 
@@ -222,6 +222,8 @@ if [ -f /etc/tomilov-telegram-live.env ]; then
       exit 1
     fi
   fi
+elif [ -f /etc/tomilov-telegram-live.env ]; then
+  printf 'Skipping live importer path check because /etc/tomilov-telegram-live.env is not readable by deploy user\n' >&2
 fi
 ln -sfn '$REMOTE_STORAGE_ROOT/releases/'\$stamp '$REMOTE_ROOT/current'
 if [ \"\$(id -u)\" -eq 0 ]; then
