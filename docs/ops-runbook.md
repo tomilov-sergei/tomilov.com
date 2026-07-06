@@ -1,27 +1,38 @@
 # Operations Runbook
 
-Last updated: 2026-06-12.
+Last updated: 2026-07-06.
 
 This runbook covers production checks for `tomilov.com` on the Timeweb VPS.
 
-## Production Paths
+## Production Config
 
-- Site symlink: `/var/www/tomilov.com/current`
-- Release storage: `/mnt/tomilov-data/tomilov.com/releases`
-- Shared Telegram data: `/mnt/tomilov-data/tomilov.com/shared/assets/telegram`
-- Shared photo data: `/mnt/tomilov-data/tomilov.com/shared/assets/photos`
-- Shared Barcelona Guide images: `/mnt/tomilov-data/tomilov.com/shared/assets/barcelona-guide`
-- Telegram env: `/etc/tomilov-telegram-live.env`
-- Photo upload env: `/etc/tomilov-photo-upload.env`
+- Local deploy config: `.deploy/deploy.env` (ignored by Git)
+- Deploy user: `tomilov-deploy` or another least-privilege SSH user from `SERVER`
+- Site symlink: `$REMOTE_ROOT/current`
+- Release storage: `$REMOTE_STORAGE_ROOT/releases`
+- Shared Telegram data: `$REMOTE_STORAGE_ROOT/shared/assets/telegram`
+- Shared photo data: `$REMOTE_STORAGE_ROOT/shared/assets/photos`
+- Shared Barcelona Guide images: `$REMOTE_STORAGE_ROOT/shared/assets/barcelona-guide`
+- Telegram env: production env file based on `ops/telegram-live-importer.env.example`
+- Photo upload env: production env file based on `ops/photo-upload.env.example`
 - Telegram service: `tomilov-telegram-live.service`
 - Photo service: `tomilov-photo-upload.service`
 
 ## After Deploy
 
+Load local deploy config before running SSH snippets:
+
+```sh
+set -a
+source .deploy/deploy.env
+set +a
+```
+
 Before deploy, check static integrity and confirm that source changes are committed and pushed:
 
 ```sh
 python3 tools/check-site.py
+python3 tools/check-secrets.py
 git status --short --branch
 git ls-remote origin refs/heads/main
 ```
@@ -42,7 +53,7 @@ Expected result: `200 text/xml` for each feed and sitemap.
 Check service state:
 
 ```sh
-ssh -i .deploy/timeweb_tomilov_site -o IdentitiesOnly=yes root@216.57.109.15 \
+ssh -i "$DEPLOY_KEY" -o IdentitiesOnly=yes "$SERVER" \
   "systemctl is-active tomilov-telegram-live.service tomilov-photo-upload.service"
 ```
 
@@ -62,22 +73,22 @@ Telegram channel update -> `/telegram/webhook` -> `tomilov-telegram-live.service
 Check the service:
 
 ```sh
-ssh -i .deploy/timeweb_tomilov_site -o IdentitiesOnly=yes root@216.57.109.15 \
+ssh -i "$DEPLOY_KEY" -o IdentitiesOnly=yes "$SERVER" \
   "systemctl status tomilov-telegram-live.service --no-pager -l"
 ```
 
 Check recent logs:
 
 ```sh
-ssh -i .deploy/timeweb_tomilov_site -o IdentitiesOnly=yes root@216.57.109.15 \
+ssh -i "$DEPLOY_KEY" -o IdentitiesOnly=yes "$SERVER" \
   "journalctl -u tomilov-telegram-live.service -n 80 --no-pager"
 ```
 
 Check that the production generator works with the server Python and `www-data` permissions:
 
 ```sh
-ssh -i .deploy/timeweb_tomilov_site -o IdentitiesOnly=yes root@216.57.109.15 \
-  "cd /var/www/tomilov.com/current && python3 -m py_compile tools/generate_telegram_seo.py tools/telegram_live_importer.py && runuser -u www-data -- python3 tools/generate_telegram_seo.py"
+ssh -i "$DEPLOY_KEY" -o IdentitiesOnly=yes "$SERVER" \
+  "cd '$REMOTE_ROOT/current' && python3 -m py_compile tools/generate_telegram_seo.py tools/telegram_live_importer.py && python3 tools/generate_telegram_seo.py"
 ```
 
 If a new Telegram post appears in `/screenshots/` but its permanent page is missing:
@@ -88,8 +99,8 @@ If a new Telegram post appears in `/screenshots/` but its permanent page is miss
 4. Restart the service if the importer is stale:
 
 ```sh
-ssh -i .deploy/timeweb_tomilov_site -o IdentitiesOnly=yes root@216.57.109.15 \
-  "systemctl restart tomilov-telegram-live.service && systemctl is-active tomilov-telegram-live.service"
+ssh -i "$DEPLOY_KEY" -o IdentitiesOnly=yes "$SERVER" \
+  "sudo -n systemctl restart tomilov-telegram-live.service && systemctl is-active tomilov-telegram-live.service"
 ```
 
 ## Photo Upload
@@ -101,14 +112,14 @@ Apple Shortcut -> `/photos/upload` -> `tomilov-photo-upload.service` -> shared `
 Check the service:
 
 ```sh
-ssh -i .deploy/timeweb_tomilov_site -o IdentitiesOnly=yes root@216.57.109.15 \
+ssh -i "$DEPLOY_KEY" -o IdentitiesOnly=yes "$SERVER" \
   "systemctl status tomilov-photo-upload.service --no-pager -l"
 ```
 
 Check recent logs:
 
 ```sh
-ssh -i .deploy/timeweb_tomilov_site -o IdentitiesOnly=yes root@216.57.109.15 \
+ssh -i "$DEPLOY_KEY" -o IdentitiesOnly=yes "$SERVER" \
   "journalctl -u tomilov-photo-upload.service -n 80 --no-pager"
 ```
 
@@ -141,7 +152,7 @@ SYNC_MEDIA_FROM_REMOTE=1 ./tools/deploy-site.sh
 Push an intentional local Telegram import to production:
 
 ```sh
-PULL_REMOTE_POSTS=0 PUSH_LOCAL_TELEGRAM=1 REMOTE_STORAGE_ROOT=/mnt/tomilov-data/tomilov.com ./tools/deploy-site.sh
+PULL_REMOTE_POSTS=0 PUSH_LOCAL_TELEGRAM=1 ./tools/deploy-site.sh
 ```
 
 ## XML Validation

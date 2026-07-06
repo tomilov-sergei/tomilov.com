@@ -8,8 +8,8 @@ Type=simple
 User=www-data
 Group=www-data
 EnvironmentFile=/etc/tomilov-telegram-live.env
-WorkingDirectory=/var/www/tomilov.com/current
-ExecStart=/usr/bin/python3 /var/www/tomilov.com/current/tools/telegram_live_importer.py
+WorkingDirectory=/srv/tomilov.com/current
+ExecStart=/usr/bin/python3 /srv/tomilov.com/current/tools/telegram_live_importer.py
 Restart=always
 RestartSec=5
 

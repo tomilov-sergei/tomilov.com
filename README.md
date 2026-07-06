@@ -46,10 +46,13 @@ python3 -m http.server 4173
 Перед коммитом и деплоем:
 
 ```sh
+python3 tools/check-secrets.py
 python3 tools/check-site.py
 node tools/generate-seo-pages.mjs
 git diff --exit-code
 ```
+
+`tools/check-secrets.py` проверяет, что в Git не попали приватные ключи, env-файлы, медиа-хранилища или токены известных форматов. Для ручной проверки истории используйте `python3 tools/check-secrets.py --history`.
 
 `tools/check-site.py` проверяет внутренние ссылки, JSON-манифесты, XML, sitemap и наличие русских и английских страниц для каждого поста и фото. GitHub Actions повторяет эти проверки, проверяет синтаксис Python, JavaScript и shell-скриптов и подтверждает, что генерация не оставляет diff.
 
@@ -61,22 +64,24 @@ git diff --exit-code
 ./tools/deploy-site.sh
 ```
 
-Скрипт упаковывает только чистый сайт из корня проекта, отправляет архив на сервер и переключает `/var/www/tomilov.com/current` на новый release.
-Production-хранилище по умолчанию лежит на втором диске: `/mnt/tomilov-data/tomilov.com`.
-Telegram-архив живёт отдельно в `/mnt/tomilov-data/tomilov.com/shared/assets/telegram/`, чтобы не упаковывать 10+ GB медиа в каждый release.
-Фото живут в `/mnt/tomilov-data/tomilov.com/shared/assets/photos/`, по той же модели shared storage.
-Изображения Barcelona Guide живут в `/mnt/tomilov-data/tomilov.com/shared/assets/barcelona-guide/` и подключаются в release через symlink.
-Публичные пути остаются прежними через symlink: `/var/www/tomilov.com/current/assets/telegram`, `/var/www/tomilov.com/current/assets/photos` и `/var/www/tomilov.com/current/assets/barcelona-guide`.
+Скрипт читает настройки из ignored-файла `.deploy/deploy.env`; пример лежит в `ops/deploy.env.example`. В репозитории не должны храниться реальные `SERVER`, `DEPLOY_KEY`, `REMOTE_ROOT` и `REMOTE_STORAGE_ROOT`.
 
-По умолчанию production shared storage считается источником правды для `posts.json` и `photos.json`: перед SEO-генерацией деплой скачивает свежие JSON из `/mnt/tomilov-data/tomilov.com/shared/assets/**`, создаёт страницы, RSS и `sitemap.xml`, а затем выкладывает новый release. Это нужно, чтобы live-посты из Telegram и новые фото с телефона не терялись при обычном деплое.
+Скрипт упаковывает только чистый сайт из корня проекта, отправляет архив на сервер и переключает `$REMOTE_ROOT/current` на новый release.
+Production-хранилище лежит отдельно в `$REMOTE_STORAGE_ROOT`.
+Telegram-архив живёт отдельно в `$REMOTE_STORAGE_ROOT/shared/assets/telegram/`, чтобы не упаковывать 10+ GB медиа в каждый release.
+Фото живут в `$REMOTE_STORAGE_ROOT/shared/assets/photos/`, по той же модели shared storage.
+Изображения Barcelona Guide живут в `$REMOTE_STORAGE_ROOT/shared/assets/barcelona-guide/` и подключаются в release через symlink.
+Публичные пути остаются прежними через symlink: `$REMOTE_ROOT/current/assets/telegram`, `$REMOTE_ROOT/current/assets/photos` и `$REMOTE_ROOT/current/assets/barcelona-guide`.
+
+По умолчанию production shared storage считается источником правды для `posts.json` и `photos.json`: перед SEO-генерацией деплой скачивает свежие JSON из `$REMOTE_STORAGE_ROOT/shared/assets/**`, создаёт страницы, RSS и `sitemap.xml`, а затем выкладывает новый release. Это нужно, чтобы live-посты из Telegram и новые фото с телефона не терялись при обычном деплое.
 
 Медиа синхронизируются в сторону сервера аддитивно, без `--delete`, и без перезаписи `posts.json`. Это защищает live-медиа, которые появились на сервере после Telegram webhook.
 Изображения Barcelona Guide также синхронизируются аддитивно и не входят в Git или release-архив.
 
-Если нужен другой storage root, передайте его явно:
+Если нужен другой storage root, передайте его явно или положите в `.deploy/deploy.env`:
 
 ```sh
-REMOTE_STORAGE_ROOT=/path/to/tomilov.com ./tools/deploy-site.sh
+REMOTE_STORAGE_ROOT=/srv/example-data ./tools/deploy-site.sh
 ```
 
 Если нужно переключить только код сайта без повторной синхронизации медиа:
@@ -102,7 +107,7 @@ SYNC_MEDIA_FROM_REMOTE=1 ./tools/deploy-site.sh
 Если после ручного локального импорта Telegram нужно сделать локальный `posts.json` источником правды и отправить его на сервер:
 
 ```sh
-PULL_REMOTE_POSTS=0 PUSH_LOCAL_TELEGRAM=1 REMOTE_STORAGE_ROOT=/mnt/tomilov-data/tomilov.com ./tools/deploy-site.sh
+PULL_REMOTE_POSTS=0 PUSH_LOCAL_TELEGRAM=1 ./tools/deploy-site.sh
 ```
 
 Можно также загрузить корень репозитория на Cloudflare Pages, GitHub Pages, Netlify, Vercel static или любой Nginx.
@@ -117,7 +122,7 @@ PULL_REMOTE_POSTS=0 PUSH_LOCAL_TELEGRAM=1 REMOTE_STORAGE_ROOT=/mnt/tomilov-data/
 
 Публикация работает через Apple Shortcut, а не через публичную форму на сайте. Shortcut отправляет оригинальный файл на `POST /photos/upload`, а маленький Python-сервис сохраняет файл и обновляет `photos.json`.
 
-1. Создать `/etc/tomilov-photo-upload.env` по примеру `ops/photo-upload.env.example`.
+1. Создать production env-файл по примеру `ops/photo-upload.env.example`.
 2. Подключить nginx location из `ops/nginx-photo-upload.conf.example`.
 3. Установить systemd unit по примеру `ops/photo-upload.service.example`.
 4. Создать Apple Shortcut:
@@ -175,7 +180,7 @@ node tools/translate-content.mjs --dry-run --limit 20
 Для будущих постов используется Telegram Bot API webhook:
 
 1. Создать бота через BotFather и добавить его админом в канал.
-2. На VPS создать `/etc/tomilov-telegram-live.env` по примеру `ops/telegram-live-importer.env.example`.
+2. На VPS создать production env-файл по примеру `ops/telegram-live-importer.env.example`.
 3. Подключить nginx location из `ops/nginx-telegram-webhook.conf.example`.
 4. Установить systemd unit `/etc/systemd/system/tomilov-telegram-live.service` по примеру `ops/telegram-live-importer.service.example`.
 5. Привязать webhook:
@@ -188,7 +193,7 @@ TELEGRAM_WEBHOOK_URL=https://tomilov.com/telegram/webhook \
 ```
 
 Сервис обновляет тот же `assets/telegram/posts.json`, новые медиа кладёт в S3 под `assets/telegram/live/...`, а затем запускает production SEO-генератор `tools/generate_telegram_seo.py`. Новые посты получают постоянные страницы `/screenshots/<id>/`, попадают в `/screenshots/posts/`, `/screenshots/feed.xml`, `/feed.xml` и `sitemap.xml` без ожидания следующего полного деплоя.
-Путь `POSTS_JSON_PATH` в `/etc/tomilov-telegram-live.env` должен совпадать с shared storage, на который указывает публичный `/var/www/tomilov.com/current/assets/telegram`.
+Путь `POSTS_JSON_PATH` в production env должен совпадать с shared storage, на который указывает публичный `$REMOTE_ROOT/current/assets/telegram`.
 Для live-медиа nginx проксирует `/assets/telegram/live/...` в Timeweb S3; пример location лежит в `ops/nginx-telegram-webhook.conf.example`.
 
 ## Framer snapshot

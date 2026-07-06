@@ -3,10 +3,18 @@ set -euo pipefail
 
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 ARCHIVE="/tmp/tomilov-site-deploy.tar.gz"
-SERVER="${SERVER:-root@216.57.109.15}"
-KEY="$ROOT_DIR/.deploy/timeweb_tomilov_site"
-REMOTE_ROOT="${REMOTE_ROOT:-/var/www/tomilov.com}"
-REMOTE_STORAGE_ROOT="${REMOTE_STORAGE_ROOT:-/mnt/tomilov-data/tomilov.com}"
+DEPLOY_ENV_FILE="${DEPLOY_ENV_FILE:-$ROOT_DIR/.deploy/deploy.env}"
+if [[ -f "$DEPLOY_ENV_FILE" ]]; then
+  set -a
+  # shellcheck source=/dev/null
+  source "$DEPLOY_ENV_FILE"
+  set +a
+fi
+
+SERVER="${SERVER:-}"
+KEY="${DEPLOY_KEY:-${KEY:-}}"
+REMOTE_ROOT="${REMOTE_ROOT:-}"
+REMOTE_STORAGE_ROOT="${REMOTE_STORAGE_ROOT:-}"
 REMOTE_ARCHIVE="$REMOTE_STORAGE_ROOT/tmp/tomilov-site-deploy.tar.gz"
 LOCAL_TELEGRAM_DIR="$ROOT_DIR/assets/telegram"
 REMOTE_TELEGRAM_DIR="$REMOTE_STORAGE_ROOT/shared/assets/telegram"
@@ -17,6 +25,21 @@ REMOTE_BARCELONA_DIR="$REMOTE_STORAGE_ROOT/shared/assets/barcelona-guide"
 PHOTOS_ONLY="${PHOTOS_ONLY:-0}"
 
 cd "$ROOT_DIR"
+
+missing_config=()
+[[ -n "$SERVER" ]] || missing_config+=("SERVER")
+[[ -n "$KEY" ]] || missing_config+=("DEPLOY_KEY")
+[[ -n "$REMOTE_ROOT" ]] || missing_config+=("REMOTE_ROOT")
+[[ -n "$REMOTE_STORAGE_ROOT" ]] || missing_config+=("REMOTE_STORAGE_ROOT")
+if (( ${#missing_config[@]} > 0 )); then
+  printf 'Missing deploy config: %s\n' "${missing_config[*]}" >&2
+  printf 'Set them in %s or the environment. See ops/deploy.env.example.\n' "$DEPLOY_ENV_FILE" >&2
+  exit 1
+fi
+
+if [[ "$KEY" != /* ]]; then
+  KEY="$ROOT_DIR/$KEY"
+fi
 
 if [[ ! -f "$KEY" ]]; then
   echo "Missing SSH key: $KEY" >&2
@@ -92,7 +115,11 @@ if [ ! -d '$REMOTE_ROOT/current' ]; then
 fi
 cd '$REMOTE_ROOT/current'
 python3 tools/generate_photo_seo.py
-chown -R www-data:www-data photos en feed.xml sitemap.xml '$REMOTE_STORAGE_ROOT/shared/assets/photos'
+if [ \"\$(id -u)\" -eq 0 ]; then
+  chown -R www-data:www-data photos en feed.xml sitemap.xml '$REMOTE_STORAGE_ROOT/shared/assets/photos'
+else
+  chmod -R g+rwX photos en feed.xml sitemap.xml '$REMOTE_STORAGE_ROOT/shared/assets/photos'
+fi
 printf 'Refreshed photo pages in current release\n'
 find photos -maxdepth 2 -type f | sort"
   exit 0
@@ -161,6 +188,11 @@ ssh -i "$KEY" -o IdentitiesOnly=yes "$SERVER" "mkdir -p '$(dirname "$REMOTE_ARCH
 scp -i "$KEY" -o IdentitiesOnly=yes "$ARCHIVE" "$SERVER:$REMOTE_ARCHIVE"
 
 ssh -i "$KEY" -o IdentitiesOnly=yes "$SERVER" "set -euo pipefail
+if [ \"\$(id -u)\" -eq 0 ]; then
+  SUDO=''
+else
+  SUDO='sudo -n'
+fi
 stamp=\$(date +%Y%m%d-%H%M%S)
 mkdir -p '$REMOTE_STORAGE_ROOT/releases/'\$stamp '$REMOTE_STORAGE_ROOT/backups' '$REMOTE_ROOT'
 if [ -e $REMOTE_ROOT/current ]; then
@@ -186,16 +218,20 @@ if [ -f /etc/tomilov-telegram-live.env ]; then
   fi
 fi
 ln -sfn '$REMOTE_STORAGE_ROOT/releases/'\$stamp '$REMOTE_ROOT/current'
-chown -R www-data:www-data '$REMOTE_STORAGE_ROOT/releases/'\$stamp '$REMOTE_STORAGE_ROOT/shared'
-chown -h www-data:www-data '$REMOTE_ROOT/current'
-nginx -t
-systemctl reload nginx
+if [ \"\$(id -u)\" -eq 0 ]; then
+  chown -R www-data:www-data '$REMOTE_STORAGE_ROOT/releases/'\$stamp '$REMOTE_STORAGE_ROOT/shared'
+  chown -h www-data:www-data '$REMOTE_ROOT/current'
+else
+  chmod -R g+rwX '$REMOTE_STORAGE_ROOT/releases/'\$stamp '$REMOTE_STORAGE_ROOT/shared'
+fi
+\$SUDO nginx -t
+\$SUDO systemctl reload nginx
 if systemctl list-unit-files tomilov-photo-upload.service --no-legend 2>/dev/null | grep -q tomilov-photo-upload.service; then
-  systemctl restart tomilov-photo-upload.service
+  \$SUDO systemctl restart tomilov-photo-upload.service
 fi
 for service in tomilov-telegram-live.service tomilov-telegram-live-importer.service; do
   if systemctl list-unit-files "\$service" --no-legend 2>/dev/null | grep -q "\$service"; then
-    systemctl restart "\$service"
+    \$SUDO systemctl restart "\$service"
   fi
 done
 printf 'Deployed release %s\n' \"\$stamp\"

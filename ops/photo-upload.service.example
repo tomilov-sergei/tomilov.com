@@ -8,8 +8,8 @@ Type=simple
 User=www-data
 Group=www-data
 EnvironmentFile=/etc/tomilov-photo-upload.env
-WorkingDirectory=/var/www/tomilov.com/current
-ExecStart=/usr/bin/python3 /var/www/tomilov.com/current/tools/photo_upload_server.py
+WorkingDirectory=/srv/tomilov.com/current
+ExecStart=/usr/bin/python3 /srv/tomilov.com/current/tools/photo_upload_server.py
 Restart=always
 RestartSec=5
 

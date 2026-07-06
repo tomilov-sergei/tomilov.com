@@ -47,6 +47,7 @@ Product direction for `/screenshots/`: a public collection of observations about
 - `tools/translate-content.mjs` - OpenAI-backed translation backfill for `translations.en`.
 - `tools/deploy-site.sh` - production deployment script.
 - `tools/check-site.py` - static integrity check for links, manifests, generated pages, feeds, and sitemap.
+- `tools/check-secrets.py` - committed-secret guard for tracked files and optional history scanning.
 - `ops/` - nginx/systemd/env examples for live Telegram import and photo upload.
 - `.github/workflows/validate.yml` - GitHub Actions validation for syntax, integrity, and deterministic generation.
 
@@ -61,7 +62,7 @@ Telegram content currently flows into the site in two ways:
    Telegram Bot API webhook -> nginx `/telegram/webhook` -> Python service on `127.0.0.1:8787` -> `posts.json`, media upload, and `tools/generate_telegram_seo.py`.
 
 Production serves live Telegram media through nginx `/assets/telegram/live/...` proxying to Timeweb S3.
-The live importer's `POSTS_JSON_PATH` must point to the same shared `assets/telegram/posts.json` that nginx exposes through `/var/www/tomilov.com/current/assets/telegram`.
+The live importer's `POSTS_JSON_PATH` must point to the same shared `assets/telegram/posts.json` that nginx exposes through `$REMOTE_ROOT/current/assets/telegram`.
 
 Photo content flows through a token-protected Apple Shortcut endpoint:
 
@@ -77,8 +78,8 @@ English content lives beside source records in `translations.en`. Generators wri
 
 Production shared storage is the source of truth for live Telegram content:
 
-- Production shared storage root is `/mnt/tomilov-data/tomilov.com` on the second disk.
-- Public site paths stay under `/var/www/tomilov.com/current` through release and asset symlinks.
+- Production shared storage root is set by `REMOTE_STORAGE_ROOT` in ignored deploy config.
+- Public site paths stay under `$REMOTE_ROOT/current` through release and asset symlinks.
 - `shared/assets/telegram/posts.json` is pulled from production before SEO page generation during deploy.
 - Local `assets/telegram/` is a working mirror, not the default authority.
 - Media deploys are additive by default and do not use `--delete`, so server-side live media is not removed by an older local copy.
@@ -98,7 +99,7 @@ Production shared storage is also the source of truth for photos:
 
 ## Deployment
 
-Normal deploy packages the static site, uploads it to the VPS, creates a timestamped release, and switches `/var/www/tomilov.com/current` to the new release.
+Normal deploy packages the static site, uploads it to the VPS, creates a timestamped release, and switches `$REMOTE_ROOT/current` to the new release.
 
 Telegram media is synced separately into shared storage so large media files are not packed into every release.
 
