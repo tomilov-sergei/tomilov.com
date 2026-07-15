@@ -120,7 +120,7 @@ The current implementation is deliberately DOM-based:
 - `styles.css` owns the grid, card styling, toolbar, post overlay and responsive rules;
 - generated post/photo pages also carry the same asset version so overlay-opened articles get the same CSS and JS cache state.
 
-Current viewport behavior:
+Canvas v1 viewport behavior (superseded by Canvas 2.0 below):
 
 - desktop default scale is `0.6`;
 - narrow mobile viewports below `560px` start at `0.25`;
@@ -130,12 +130,30 @@ Current viewport behavior:
 - `meta`/`ctrl` + wheel zooms around the pointer;
 - the toolbar label shows `Math.round(scale * 100)%`.
 
-Smooth zoom animation added after the baseline:
+Canvas v1 toolbar animation added after the baseline:
 
 - toolbar `+` and `-` animate the same centered zoom target over `280ms`;
 - animation interpolates only `x`, `y` and `scale` on `.home-canvas-surface`;
 - wheel zoom, wheel pan, pointer pan, card drag and resize cancel an in-flight animation;
 - `prefers-reduced-motion: reduce` skips the interpolation and applies the final view immediately.
+
+## Canvas 2.0 interaction model
+
+Canvas 2.0 keeps the existing DOM content model and replaces the viewport controls with a Figma-like interaction layer:
+
+- trackpad and mouse-wheel pan remain native-feeling and are batched into one visual update per animation frame;
+- pinch gestures and `Control` / `Command` + wheel use continuous exponential zoom instead of fixed 10% jumps;
+- every zoom keeps the world point under the cursor or gesture center stationary;
+- the usable zoom range is `12%` to `250%`;
+- two-pointer pinch-to-zoom works on touch devices, while one-finger dragging pans even when it starts over a card;
+- middle-mouse drag and `Space` + drag pan from any point, including over a card;
+- `+`, `-`, and `0` provide keyboard zoom and recentering when the canvas has focus;
+- toolbar zoom and reset use a short ease-out animation and respect `prefers-reduced-motion`;
+- resizing the viewport preserves the same world point at the center instead of resetting the canvas;
+- card dragging changes compositor transforms rather than layout coordinates;
+- a pan or pinch suppresses the following accidental card click.
+
+The surface is still one GPU-composited DOM layer. Viewport movement writes one `transform` per rendered frame, and the large surface uses CSS containment to keep layout and paint work isolated from the rest of the page.
 
 Current visual style:
 

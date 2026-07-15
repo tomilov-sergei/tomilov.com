@@ -63,7 +63,13 @@ const homeCanvasSize = {
   centerX: 3500,
   centerY: 3300,
 };
-const homeCanvasZoomAnimationMs = 280;
+const homeCanvasZoomAnimationMs = 240;
+const homeCanvasView = {
+  minScale: 0.12,
+  maxScale: 2.5,
+  toolbarZoomStep: 1.2,
+  wheelZoomSensitivity: 0.006,
+};
 
 const homeCanvasThemes = [
   {
@@ -603,18 +609,51 @@ function initHomeCanvasInteractions(root, viewport, surface, toolbar, lang) {
     scale: homeCanvasDefaultScale(viewport),
   };
   const postOverlay = createHomeCanvasPostOverlay(root, lang);
+  const resetButton = toolbar?.querySelector('[data-canvas-action="reset"]');
+  const zoomInButton = toolbar?.querySelector('[data-canvas-action="zoom-in"]');
+  const zoomOutButton = toolbar?.querySelector('[data-canvas-action="zoom-out"]');
+  const activePointers = new Map();
   let pan = null;
+  let pinch = null;
   let nodeDrag = null;
+  let renderFrame = 0;
   let viewAnimationFrame = 0;
+  let spacePanning = false;
+  let suppressClickUntil = 0;
+  let renderedZoomLabel = "";
+  let viewportSize = {
+    width: viewport.clientWidth,
+    height: viewport.clientHeight,
+  };
   const reduceMotion = window.matchMedia?.("(prefers-reduced-motion: reduce)");
 
   function applyView() {
-    surface.style.setProperty("--canvas-x", `${state.x}px`);
-    surface.style.setProperty("--canvas-y", `${state.y}px`);
-    surface.style.setProperty("--canvas-scale", state.scale.toFixed(3));
+    renderFrame = 0;
+    const scale = state.scale.toFixed(4);
+    surface.style.transform = `translate3d(${state.x.toFixed(2)}px, ${state.y.toFixed(2)}px, 0) scale(${scale})`;
 
-    const reset = toolbar?.querySelector('[data-canvas-action="reset"]');
-    if (reset) reset.textContent = `${Math.round(state.scale * 100)}%`;
+    const zoomLabel = `${Math.round(state.scale * 100)}%`;
+    if (resetButton && renderedZoomLabel !== zoomLabel) {
+      resetButton.textContent = zoomLabel;
+      resetButton.setAttribute(
+        "aria-label",
+        lang === "en" ? `Zoom ${zoomLabel}. Return to center` : `Масштаб ${zoomLabel}. Вернуться к центру`,
+      );
+      renderedZoomLabel = zoomLabel;
+    }
+
+    if (zoomInButton) zoomInButton.disabled = state.scale >= homeCanvasView.maxScale - 0.0001;
+    if (zoomOutButton) zoomOutButton.disabled = state.scale <= homeCanvasView.minScale + 0.0001;
+  }
+
+  function scheduleView() {
+    if (!renderFrame) renderFrame = requestAnimationFrame(applyView);
+  }
+
+  function cancelScheduledView() {
+    if (!renderFrame) return;
+    cancelAnimationFrame(renderFrame);
+    renderFrame = 0;
   }
 
   function cancelViewAnimation() {
@@ -627,14 +666,18 @@ function initHomeCanvasInteractions(root, viewport, surface, toolbar, lang) {
     state.x = nextState.x;
     state.y = nextState.y;
     state.scale = nextState.scale;
-    applyView();
+    scheduleView();
   }
 
   function animateViewTo(nextState) {
     cancelViewAnimation();
+    cancelScheduledView();
 
     if (reduceMotion?.matches) {
-      setView(nextState);
+      state.x = nextState.x;
+      state.y = nextState.y;
+      state.scale = nextState.scale;
+      applyView();
       return;
     }
 
@@ -646,15 +689,23 @@ function initHomeCanvasInteractions(root, viewport, surface, toolbar, lang) {
     let startTime = null;
 
     function step(timestamp) {
+      if (!root.isConnected) {
+        viewAnimationFrame = 0;
+        return;
+      }
+
       if (startTime === null) startTime = timestamp;
       const progress = clamp((timestamp - startTime) / homeCanvasZoomAnimationMs, 0, 1);
-      const eased = progress < 0.5
-        ? 4 * progress * progress * progress
-        : 1 - Math.pow(-2 * progress + 2, 3) / 2;
+      const eased = 1 - Math.pow(1 - progress, 4);
 
-      state.x = start.x + (nextState.x - start.x) * eased;
-      state.y = start.y + (nextState.y - start.y) * eased;
-      state.scale = start.scale + (nextState.scale - start.scale) * eased;
+      state.scale = start.scale * Math.pow(nextState.scale / start.scale, eased);
+      if (Number.isFinite(nextState.anchorX) && Number.isFinite(nextState.anchorY)) {
+        state.x = nextState.anchorX - nextState.contentX * state.scale;
+        state.y = nextState.anchorY - nextState.contentY * state.scale;
+      } else {
+        state.x = start.x + (nextState.x - start.x) * eased;
+        state.y = start.y + (nextState.y - start.y) * eased;
+      }
       applyView();
 
       if (progress < 1) {
@@ -668,14 +719,24 @@ function initHomeCanvasInteractions(root, viewport, surface, toolbar, lang) {
     viewAnimationFrame = requestAnimationFrame(step);
   }
 
-  function resetView() {
-    cancelViewAnimation();
+  function getResetState() {
     const scale = homeCanvasDefaultScale(viewport);
-    setView({
+
+    return {
       scale,
       x: viewport.clientWidth / 2 - homeCanvasSize.centerX * scale,
       y: viewport.clientHeight / 2 - homeCanvasSize.centerY * scale,
-    });
+    };
+  }
+
+  function resetView(options = {}) {
+    cancelViewAnimation();
+
+    if (options.animated) {
+      animateViewTo(getResetState());
+    } else {
+      setView(getResetState());
+    }
   }
 
   function getZoomState(clientX, clientY, nextScale) {
@@ -684,12 +745,16 @@ function initHomeCanvasInteractions(root, viewport, surface, toolbar, lang) {
     const y = clientY - rect.top;
     const contentX = (x - state.x) / state.scale;
     const contentY = (y - state.y) / state.scale;
-    const scale = clamp(nextScale, 0.22, 1.35);
+    const scale = clamp(nextScale, homeCanvasView.minScale, homeCanvasView.maxScale);
 
     return {
       scale,
       x: x - contentX * scale,
       y: y - contentY * scale,
+      anchorX: x,
+      anchorY: y,
+      contentX,
+      contentY,
     };
   }
 
@@ -705,59 +770,158 @@ function initHomeCanvasInteractions(root, viewport, surface, toolbar, lang) {
   }
 
   resetView();
+  cancelScheduledView();
+  applyView();
+
+  function normalizeWheelDelta(event) {
+    if (event.deltaMode === WheelEvent.DOM_DELTA_LINE) return event.deltaY * 16;
+    if (event.deltaMode === WheelEvent.DOM_DELTA_PAGE) return event.deltaY * viewport.clientHeight;
+    return event.deltaY;
+  }
 
   viewport.addEventListener("wheel", (event) => {
     event.preventDefault();
     cancelViewAnimation();
 
     if (event.metaKey || event.ctrlKey) {
-      zoomAt(event.clientX, event.clientY, state.scale * (event.deltaY < 0 ? 1.1 : 0.9));
+      const delta = normalizeWheelDelta(event);
+      const factor = clamp(
+        Math.exp(-delta * homeCanvasView.wheelZoomSensitivity),
+        0.8,
+        1.25,
+      );
+      zoomAt(event.clientX, event.clientY, state.scale * factor);
     } else {
-      state.x -= event.deltaX;
-      state.y -= event.deltaY;
-      applyView();
+      const useShiftAxis = event.shiftKey && Math.abs(event.deltaX) < Math.abs(event.deltaY);
+      state.x -= useShiftAxis ? normalizeWheelDelta(event) : event.deltaX;
+      state.y -= useShiftAxis ? 0 : normalizeWheelDelta(event);
+      scheduleView();
     }
   }, { passive: false });
 
   viewport.addEventListener("pointerdown", (event) => {
-    if (event.button !== 0 || event.target.closest("[data-home-node]") || event.target.closest("[data-canvas-toolbar]")) {
+    const isTouch = event.pointerType === "touch";
+    const isPanButton = event.button === 1 || (event.button === 0 && (spacePanning || !event.target.closest("[data-home-node]")));
+
+    if ((!isTouch && !isPanButton) || event.target.closest("[data-canvas-toolbar]")) {
       return;
     }
 
     event.preventDefault();
     cancelViewAnimation();
+    viewport.focus({ preventScroll: true });
     viewport.setPointerCapture(event.pointerId);
     viewport.classList.add("is-panning");
+
+    activePointers.set(event.pointerId, {
+      x: event.clientX,
+      y: event.clientY,
+    });
+
+    if (activePointers.size >= 2) {
+      const [first, second] = [...activePointers.values()];
+      const rect = viewport.getBoundingClientRect();
+      const centerX = (first.x + second.x) / 2 - rect.left;
+      const centerY = (first.y + second.y) / 2 - rect.top;
+      pinch = {
+        distance: Math.hypot(second.x - first.x, second.y - first.y) || 1,
+        scale: state.scale,
+        contentX: (centerX - state.x) / state.scale,
+        contentY: (centerY - state.y) / state.scale,
+      };
+      pan = null;
+      suppressClickUntil = performance.now() + 400;
+      return;
+    }
+
     pan = {
       id: event.pointerId,
       startX: event.clientX,
       startY: event.clientY,
       x: state.x,
       y: state.y,
+      moved: false,
+      tapNode: isTouch ? event.target.closest("[data-home-node]") : null,
     };
   });
 
   viewport.addEventListener("pointermove", (event) => {
+    if (activePointers.has(event.pointerId)) {
+      activePointers.set(event.pointerId, {
+        x: event.clientX,
+        y: event.clientY,
+      });
+    }
+
+    if (pinch && activePointers.size >= 2) {
+      const [first, second] = [...activePointers.values()];
+      const rect = viewport.getBoundingClientRect();
+      const centerX = (first.x + second.x) / 2 - rect.left;
+      const centerY = (first.y + second.y) / 2 - rect.top;
+      const distance = Math.hypot(second.x - first.x, second.y - first.y) || 1;
+      const scale = clamp(
+        pinch.scale * (distance / pinch.distance),
+        homeCanvasView.minScale,
+        homeCanvasView.maxScale,
+      );
+
+      state.scale = scale;
+      state.x = centerX - pinch.contentX * scale;
+      state.y = centerY - pinch.contentY * scale;
+      scheduleView();
+      suppressClickUntil = performance.now() + 400;
+      return;
+    }
+
     if (!pan || pan.id !== event.pointerId) return;
-    state.x = pan.x + event.clientX - pan.startX;
-    state.y = pan.y + event.clientY - pan.startY;
-    applyView();
+    const deltaX = event.clientX - pan.startX;
+    const deltaY = event.clientY - pan.startY;
+    pan.moved = pan.moved || Math.hypot(deltaX, deltaY) > 3;
+    state.x = pan.x + deltaX;
+    state.y = pan.y + deltaY;
+    scheduleView();
+
+    if (pan.moved) suppressClickUntil = performance.now() + 250;
   });
 
-  viewport.addEventListener("pointerup", (event) => {
-    if (!pan || pan.id !== event.pointerId) return;
-    viewport.classList.remove("is-panning");
-    pan = null;
-  });
+  function finishPointer(event) {
+    activePointers.delete(event.pointerId);
 
-  viewport.addEventListener("pointercancel", () => {
-    viewport.classList.remove("is-panning");
-    pan = null;
-  });
+    if (pinch && activePointers.size === 1) {
+      const [remainingId, remaining] = activePointers.entries().next().value;
+      pinch = null;
+      pan = {
+        id: remainingId,
+        startX: remaining.x,
+        startY: remaining.y,
+        x: state.x,
+        y: state.y,
+        moved: true,
+      };
+      return;
+    }
+
+    if (pan?.id === event.pointerId) {
+      const tappedNode = event.type === "pointerup" && !pan.moved ? pan.tapNode : null;
+      pan = null;
+
+      if (tappedNode) {
+        suppressClickUntil = performance.now() + 250;
+        postOverlay.open(tappedNode.href, tappedNode);
+      }
+    }
+    if (!activePointers.size) {
+      pinch = null;
+      viewport.classList.remove("is-panning");
+    }
+  }
+
+  viewport.addEventListener("pointerup", finishPointer);
+  viewport.addEventListener("pointercancel", finishPointer);
 
   for (const node of surface.querySelectorAll("[data-home-node]")) {
     node.addEventListener("pointerdown", (event) => {
-      if (event.button !== 0) return;
+      if (event.button !== 0 || event.pointerType === "touch" || spacePanning) return;
 
       event.stopPropagation();
       cancelViewAnimation();
@@ -768,8 +932,8 @@ function initHomeCanvasInteractions(root, viewport, surface, toolbar, lang) {
         node,
         startX: event.clientX,
         startY: event.clientY,
-        left: parseFloat(node.style.left || "0"),
-        top: parseFloat(node.style.top || "0"),
+        offsetX: parseFloat(node.style.getPropertyValue("--drag-x") || "0"),
+        offsetY: parseFloat(node.style.getPropertyValue("--drag-y") || "0"),
         moved: false,
       };
     });
@@ -780,8 +944,8 @@ function initHomeCanvasInteractions(root, viewport, surface, toolbar, lang) {
       const deltaX = (event.clientX - nodeDrag.startX) / state.scale;
       const deltaY = (event.clientY - nodeDrag.startY) / state.scale;
       nodeDrag.moved = nodeDrag.moved || Math.abs(deltaX) + Math.abs(deltaY) > 4;
-      node.style.left = `${nodeDrag.left + deltaX}px`;
-      node.style.top = `${nodeDrag.top + deltaY}px`;
+      node.style.setProperty("--drag-x", `${nodeDrag.offsetX + deltaX}px`);
+      node.style.setProperty("--drag-y", `${nodeDrag.offsetY + deltaY}px`);
       node.style.setProperty("--z", "7000");
     });
 
@@ -799,7 +963,7 @@ function initHomeCanvasInteractions(root, viewport, surface, toolbar, lang) {
     });
 
     node.addEventListener("click", (event) => {
-      if (node.dataset.dragMoved === "true") {
+      if (node.dataset.dragMoved === "true" || performance.now() < suppressClickUntil) {
         event.preventDefault();
         delete node.dataset.dragMoved;
         return;
@@ -821,20 +985,73 @@ function initHomeCanvasInteractions(root, viewport, surface, toolbar, lang) {
     const centerY = rect.top + rect.height / 2;
 
     if (button.dataset.canvasAction === "zoom-in") {
-      zoomAt(centerX, centerY, state.scale * 1.14, { animated: true });
+      zoomAt(centerX, centerY, state.scale * homeCanvasView.toolbarZoomStep, { animated: true });
     } else if (button.dataset.canvasAction === "zoom-out") {
-      zoomAt(centerX, centerY, state.scale * 0.86, { animated: true });
+      zoomAt(centerX, centerY, state.scale / homeCanvasView.toolbarZoomStep, { animated: true });
     } else {
-      resetView();
+      resetView({ animated: true });
     }
+  });
+
+  root.addEventListener("keydown", (event) => {
+    if (root.classList.contains("has-post-overlay") || event.target.closest("button, input, textarea, select")) {
+      return;
+    }
+
+    if (event.code === "Space") {
+      event.preventDefault();
+      if (!event.repeat) {
+        spacePanning = true;
+        root.classList.add("is-space-panning");
+      }
+      return;
+    }
+
+    if (event.metaKey || event.ctrlKey || event.altKey) return;
+    const rect = viewport.getBoundingClientRect();
+    const centerX = rect.left + rect.width / 2;
+    const centerY = rect.top + rect.height / 2;
+
+    if (event.key === "+" || event.key === "=") {
+      event.preventDefault();
+      zoomAt(centerX, centerY, state.scale * homeCanvasView.toolbarZoomStep, { animated: true });
+    } else if (event.key === "-" || event.key === "_") {
+      event.preventDefault();
+      zoomAt(centerX, centerY, state.scale / homeCanvasView.toolbarZoomStep, { animated: true });
+    } else if (event.key === "0") {
+      event.preventDefault();
+      resetView({ animated: true });
+    }
+  });
+
+  root.addEventListener("keyup", (event) => {
+    if (event.code !== "Space") return;
+    spacePanning = false;
+    root.classList.remove("is-space-panning");
+  });
+
+  root.addEventListener("focusout", (event) => {
+    if (root.contains(event.relatedTarget)) return;
+    spacePanning = false;
+    root.classList.remove("is-space-panning");
   });
 
   const resizeObserver = new ResizeObserver(() => {
     if (!root.isConnected) {
       resizeObserver.disconnect();
+      cancelScheduledView();
+      cancelViewAnimation();
       return;
     }
-    resetView();
+
+    const nextSize = {
+      width: viewport.clientWidth,
+      height: viewport.clientHeight,
+    };
+    state.x += (nextSize.width - viewportSize.width) / 2;
+    state.y += (nextSize.height - viewportSize.height) / 2;
+    viewportSize = nextSize;
+    scheduleView();
   });
 
   resizeObserver.observe(viewport);
