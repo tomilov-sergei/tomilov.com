@@ -7,6 +7,8 @@ import re
 from pathlib import Path
 from urllib.parse import urlsplit
 
+import generate_photo_previews
+
 
 ROOT_DIR = Path(__file__).resolve().parent.parent
 POSTS_JSON_PATH = ROOT_DIR / "assets/telegram/posts.json"
@@ -311,8 +313,10 @@ def render_card(item, lang):
 
 def render_card_content(item, lang, title):
     if item["kind"] == "photo":
+        original_src = photo_asset_url(item["record"].get("src"))
         media = [{
-            "src": photo_asset_url(item["record"].get("src")),
+            "src": generate_photo_previews.preview_public_url(item["record"]),
+            "fallbackSrc": original_src,
             "width": item["record"].get("width"),
             "height": item["record"].get("height"),
         }]
@@ -366,9 +370,12 @@ def render_lazy_image(media, alt):
     dimensions = ""
     if media.get("width") and media.get("height"):
         dimensions = f' width="{escape_attr(media["width"])}" height="{escape_attr(media["height"])}"'
+    fallback = ""
+    if media.get("fallbackSrc"):
+        fallback = f' data-fallback-src="{escape_attr(media["fallbackSrc"])}"'
     return (
         f'<img data-src="{escape_attr(media.get("src", ""))}" alt="{escape_attr(alt)}" '
-        f'draggable="false" loading="lazy" decoding="async" fetchpriority="low"{dimensions}>'
+        f'draggable="false" loading="lazy" decoding="async" fetchpriority="low"{fallback}{dimensions}>'
     )
 
 

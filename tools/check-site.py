@@ -151,11 +151,13 @@ def check_manifests(errors):
     }
 
 
-def check_home_canvas(errors, expected_cards):
+def check_home_canvas(errors, expected_cards, expected_photos):
     counts = []
     for path in (ROOT / "index.html", ROOT / "en/index.html"):
         source = path.read_text(encoding="utf-8")
         count = source.count('data-home-node="true"')
+        preview_count = source.count('data-src="/assets/photos/canvas/')
+        fallback_count = source.count('data-fallback-src="https://tomilov.com/assets/photos/')
         counts.append(count)
         if count != expected_cards:
             errors.append(
@@ -164,6 +166,11 @@ def check_home_canvas(errors, expected_cards):
             )
         if "<!-- home-canvas-generated:start -->" not in source or "<!-- home-canvas-generated:end -->" not in source:
             errors.append(f"Missing home canvas generation markers in {path.relative_to(ROOT)}")
+        if preview_count != expected_photos or fallback_count != expected_photos:
+            errors.append(
+                f"Home canvas photo preview mismatch in {path.relative_to(ROOT)}: "
+                f"expected {expected_photos}, previews={preview_count}, fallbacks={fallback_count}"
+            )
 
     if len(set(counts)) > 1:
         errors.append(f"Localized home canvas counts differ: {counts}")
@@ -212,6 +219,15 @@ def check_xml(errors):
     if len(locations) != len(set(locations)):
         errors.append("sitemap.xml contains duplicate URLs")
 
+    required_photo_indexes = {
+        "https://tomilov.com/photos/film/",
+        "https://tomilov.com/photos/iphone/",
+        "https://tomilov.com/en/photos/film/",
+        "https://tomilov.com/en/photos/iphone/",
+    }
+    for location in sorted(required_photo_indexes - set(locations)):
+        errors.append(f"Sitemap is missing photo index: {location}")
+
     for location in locations:
         target = local_target(location, ROOT / "sitemap.xml")
         if target is not None and not target.exists():
@@ -226,7 +242,11 @@ def main():
     try:
         html_count, reference_count = check_html(errors)
         manifest_summary = check_manifests(errors)
-        canvas_count = check_home_canvas(errors, manifest_summary["posts"] + manifest_summary["photos"])
+        canvas_count = check_home_canvas(
+            errors,
+            manifest_summary["posts"] + manifest_summary["photos"],
+            manifest_summary["photos"],
+        )
         sitemap_count = check_xml(errors)
     except (json.JSONDecodeError, OSError, ValueError) as error:
         errors.append(str(error))

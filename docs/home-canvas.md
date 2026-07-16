@@ -119,6 +119,14 @@ Published and verified on 2026-07-16:
 - the home page makes no runtime request for `assets/telegram/posts.json` or `assets/photos/photos.json`;
 - production `index.html`, `en/index.html`, `script.js`, and `styles.css` match the locally verified artifacts byte for byte.
 
+Performance follow-up:
+
+- the initial viewport hydrates at most 16 cards and starts at most 8 card-image requests;
+- viewport overscan is limited to 30% of the current world-space viewport;
+- multi-image stacks load one image initially and fill the remaining layers on hover or keyboard focus;
+- personal photos use generated 960 px canvas previews with an original-file fallback;
+- preview generation runs during full deploys, photo-only refreshes and new photo uploads without modifying the originals.
+
 ## Historical implementation snapshot
 
 Baseline before smooth zoom animation work:

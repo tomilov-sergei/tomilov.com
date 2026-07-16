@@ -9,4 +9,5 @@ __pycache__/
 assets/telegram/*
 !assets/telegram/posts.json
 assets/photos/originals/
+assets/photos/canvas/
 assets/barcelona-guide/

@@ -69,6 +69,12 @@ const homeCanvasView = {
   toolbarZoomStep: 1.2,
   wheelZoomSensitivity: 0.006,
 };
+const homeCanvasHydration = {
+  cardsPerView: 16,
+  mediaPerView: 8,
+  overscanRatio: 0.3,
+  delayMs: 48,
+};
 
 const homeCanvasThemes = [
   {
@@ -226,6 +232,7 @@ function initHomeCanvasVisibility(viewport, surface) {
   let hydrationTimer = 0;
   let viewKey = "";
   let hydratedForView = 0;
+  let mediaForView = 0;
 
   function hydrateVisible() {
     hydrationTimer = 0;
@@ -236,7 +243,7 @@ function initHomeCanvasVisibility(viewport, surface) {
     const worldTop = -y / scale;
     const worldWidth = viewport.clientWidth / scale;
     const worldHeight = viewport.clientHeight / scale;
-    const overscan = Math.max(worldWidth, worldHeight) * 0.65;
+    const overscan = Math.max(worldWidth, worldHeight) * homeCanvasHydration.overscanRatio;
     const centerX = worldLeft + worldWidth / 2;
     const centerY = worldTop + worldHeight / 2;
     const nextViewKey = [
@@ -247,12 +254,12 @@ function initHomeCanvasVisibility(viewport, surface) {
     if (nextViewKey !== viewKey) {
       viewKey = nextViewKey;
       hydratedForView = 0;
+      mediaForView = 0;
     }
-    const remainingBudget = Math.max(0, 48 - hydratedForView);
-    if (!remainingBudget) return;
-    const visible = nodes
+    const remainingBudget = Math.max(0, homeCanvasHydration.cardsPerView - hydratedForView);
+    const nearby = nodes
       .filter((item) => {
-        if (item.node.classList.contains("is-hydrated") || item.width * scale < 48) return false;
+        if (item.width * scale < 48) return false;
         return (
           item.x + item.width / 2 >= worldLeft - overscan
           && item.x - item.width / 2 <= worldLeft + worldWidth + overscan
@@ -263,34 +270,45 @@ function initHomeCanvasVisibility(viewport, surface) {
       .sort((first, second) => (
         Math.hypot(first.x - centerX, first.y - centerY)
         - Math.hypot(second.x - centerX, second.y - centerY)
-      ))
+      ));
+    const visible = nearby
+      .filter((item) => !item.node.classList.contains("is-hydrated"))
       .slice(0, remainingBudget);
 
     for (const item of visible) {
       hydrateHomeCanvasNode(item.node);
     }
     hydratedForView += visible.length;
+
+    for (const item of nearby) {
+      if (mediaForView >= homeCanvasHydration.mediaPerView) break;
+      if (!item.node.classList.contains("is-hydrated")) continue;
+      mediaForView += loadHomeCanvasNodeMedia(item.node, 1);
+    }
   }
 
   function update(state) {
     latestState = { ...state };
     if (hydrationTimer) clearTimeout(hydrationTimer);
-    hydrationTimer = window.setTimeout(hydrateVisible, 90);
+    hydrationTimer = window.setTimeout(hydrateVisible, homeCanvasHydration.delayMs);
   }
 
   return { update };
 }
 
-function hydrateHomeCanvasNode(node) {
+function hydrateHomeCanvasNode(node, mediaLimit = 0) {
   const template = node.querySelector("[data-canvas-card-template]");
-  if (!template) return;
+  if (!template) return { loadedMedia: 0 };
 
   const content = template.content.cloneNode(true);
   for (const image of content.querySelectorAll("img[data-src]")) {
-    const src = image.dataset.src;
-    delete image.dataset.src;
-    if (src) image.src = src;
     image.addEventListener("error", () => {
+      const fallbackSrc = image.dataset.fallbackSrc;
+      if (fallbackSrc) {
+        delete image.dataset.fallbackSrc;
+        image.src = fallbackSrc;
+        return;
+      }
       image.hidden = true;
       node.classList.add("has-missing-media");
     });
@@ -301,6 +319,29 @@ function hydrateHomeCanvasNode(node) {
   template.remove();
   node.classList.remove("is-placeholder");
   node.classList.add("is-hydrated");
+  const loadedMedia = loadHomeCanvasNodeMedia(node, mediaLimit);
+
+  if (node.querySelector("img[data-src]")) {
+    const loadRemainingMedia = () => loadHomeCanvasNodeMedia(node, Infinity);
+    node.addEventListener("pointerenter", loadRemainingMedia, { once: true, passive: true });
+    node.addEventListener("focus", loadRemainingMedia, { once: true });
+  }
+
+  return { loadedMedia };
+}
+
+function loadHomeCanvasNodeMedia(node, limit = Infinity) {
+  let loaded = 0;
+  for (const image of node.querySelectorAll("img[data-src]")) {
+    if (loaded >= limit) break;
+    const src = image.dataset.src;
+    delete image.dataset.src;
+    if (src) {
+      image.src = src;
+      loaded += 1;
+    }
+  }
+  return loaded;
 }
 
 function createHomeCanvasThemeLayer(lang, canvasSize) {

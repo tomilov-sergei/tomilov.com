@@ -10,6 +10,7 @@ from urllib.parse import quote
 from zoneinfo import ZoneInfo
 
 import generate_home_canvas
+import generate_photo_previews
 
 
 ROOT_DIR = Path(__file__).resolve().parent.parent
@@ -178,6 +179,7 @@ def main():
     EN_FEED_PATH.write_text(render_main_feed(posts, photos, "en"), encoding="utf-8")
     PHOTOS_FEED_PATH.write_text(render_photos_feed(photos, "ru"), encoding="utf-8")
     EN_PHOTOS_FEED_PATH.write_text(render_photos_feed(photos, "en"), encoding="utf-8")
+    preview_summary = generate_photo_previews.generate(photos)
     generate_home_canvas.generate(posts, photos)
 
     print(f"Generated {len(photos)} photo pages")
@@ -188,6 +190,11 @@ def main():
     print(EN_FEED_PATH.relative_to(ROOT_DIR))
     print(PHOTOS_FEED_PATH.relative_to(ROOT_DIR))
     print(EN_PHOTOS_FEED_PATH.relative_to(ROOT_DIR))
+    print(
+        "photo_previews "
+        f"generated={preview_summary['generated']} cached={preview_summary['cached']} "
+        f"missing={preview_summary['missing']} failed={preview_summary['failed']}"
+    )
     print(ROOT_DIR.joinpath("index.html").relative_to(ROOT_DIR))
     print(ROOT_DIR.joinpath("en/index.html").relative_to(ROOT_DIR))
 

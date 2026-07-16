@@ -45,6 +45,7 @@ Product direction for `/screenshots/`: a public collection of observations about
 - `tools/photo_upload_server.py` - token-protected Apple Shortcut upload endpoint.
 - `tools/generate_telegram_seo.py` - production refresh for blog pages, RSS, and sitemap after Telegram webhook updates.
 - `tools/generate_home_canvas.py` - deterministic static generation of every home-canvas card into `index.html` and `en/index.html`.
+- `tools/generate_photo_previews.py` - lightweight 960 px JPEG derivatives for home-canvas photo cards; originals remain untouched.
 - `tools/translate-content.mjs` - OpenAI-backed translation backfill for `translations.en`.
 - `tools/deploy-site.sh` - production deployment script.
 - `tools/check-site.py` - static integrity check for links, manifests, generated pages, feeds, and sitemap.
@@ -74,6 +75,8 @@ Photo originals are intentionally stored without canvas processing, resizing, or
 Static SEO pages, sitemap, and RSS are generated from `assets/telegram/posts.json` and `assets/photos/photos.json`. The full deploy path uses `tools/generate-seo-pages.mjs`. The production Telegram webhook path uses `tools/generate_telegram_seo.py` so new posts update `/screenshots/<id>/`, `/screenshots/feed.xml`, `/feed.xml`, and `sitemap.xml` immediately. The production photo upload path uses `tools/generate_photo_seo.py` so new photos update `/photos/**`, `/photos/feed.xml`, `/feed.xml`, and `sitemap.xml` immediately. Both production refresh generators are Python-only, so they do not require Node.js on the VPS.
 
 Both production refresh generators also call `tools/generate_home_canvas.py`. The home page therefore contains static lightweight links for every post and photo and does not download either full manifest at runtime. Card templates and media are hydrated by `script.js` only near the visible canvas viewport.
+
+Personal photo cards use generated files under `assets/photos/canvas/`. The photo generator creates missing previews with ffmpeg before refreshing the home canvas, while permanent photo pages continue to use the original HDR-capable files.
 
 English content lives beside source records in `translations.en`. Generators write `/en/**` pages from those translations and fall back to the source Russian text while a translation is missing. The header language switcher links to real static counterpart URLs and `script.js` swaps pages through `fetch` and `history.pushState` when JavaScript is available.
 

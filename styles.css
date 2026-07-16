@@ -440,6 +440,14 @@ a {
   object-fit: cover;
 }
 
+.home-canvas-media-frame img[data-src],
+.home-canvas-media-stack img[data-src] {
+  color: transparent;
+  background:
+    linear-gradient(135deg, transparent 0 48%, color-mix(in srgb, var(--theme-color) 22%, transparent) 48% 52%, transparent 52%),
+    color-mix(in srgb, var(--canvas-bg) 84%, var(--theme-color) 16%);
+}
+
 .home-canvas-node.has-missing-media .home-canvas-media-frame {
   min-height: 120px;
 }
