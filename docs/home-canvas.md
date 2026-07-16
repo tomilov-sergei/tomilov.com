@@ -119,7 +119,15 @@ Published and verified on 2026-07-16:
 - the home page makes no runtime request for `assets/telegram/posts.json` or `assets/photos/photos.json`;
 - production `index.html`, `en/index.html`, `script.js`, and `styles.css` match the locally verified artifacts byte for byte.
 
-Performance follow-up:
+Performance follow-up published and verified on 2026-07-16:
+
+- production release: `20260716-120054`;
+- production asset version: `20260716-canvas-performance-1`;
+- first contentful paint measured at 0.43 s, with document load complete at 0.86 s;
+- the initial eight card images total 1.30 MB, compared with 35.5 MB for seven photo originals alone before preview generation;
+- production contains all 48 photo previews (3.5 MB total), and the first tested preview is 87 KB instead of its 6.98 MB original;
+
+Implementation:
 
 - the initial viewport hydrates at most 16 cards and starts at most 8 card-image requests;
 - viewport overscan is limited to 30% of the current world-space viewport;
