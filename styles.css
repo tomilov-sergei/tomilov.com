@@ -355,6 +355,32 @@ a {
   user-select: none;
 }
 
+.home-canvas-node.is-placeholder {
+  contain: layout paint style;
+}
+
+.home-canvas-card-placeholder {
+  display: block;
+  width: 100%;
+  min-height: 248px;
+  border-radius: 6px;
+  background:
+    linear-gradient(135deg, transparent 0 48%, color-mix(in srgb, var(--theme-color) 24%, transparent) 48% 52%, transparent 52%),
+    color-mix(in srgb, var(--canvas-bg) 88%, var(--theme-color) 12%);
+  box-shadow: var(--canvas-shadow);
+  opacity: 0.72;
+}
+
+.home-canvas-node.is-small .home-canvas-card-placeholder {
+  min-height: 220px;
+}
+
+.home-canvas-node.is-large .home-canvas-card-placeholder,
+.home-canvas-node.is-wide .home-canvas-card-placeholder,
+.home-canvas-node.is-tall .home-canvas-card-placeholder {
+  min-height: 320px;
+}
+
 .home-canvas-shell.is-dragging-node .home-canvas-node {
   transition: none;
 }

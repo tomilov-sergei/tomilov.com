@@ -35,7 +35,7 @@ Product direction for `/screenshots/`: a public collection of observations about
 - `barcelona-guide/index.html` - curated Barcelona guide.
 - `assets/barcelona-guide/**` - local working mirror of guide images; ignored by Git and stored in production shared storage.
 - `styles.css` - shared styles.
-- `script.js` - home canvas, YouTube activation, Telegram feed rendering, photo feed rendering, places rendering, overlays, and photo viewer.
+- `script.js` - home canvas interaction and viewport hydration, YouTube activation, Telegram feed rendering, photo feed rendering, places rendering, overlays, and photo viewer.
 - `assets/telegram/posts.json` - imported Telegram post database.
 - `assets/photos/photos.json` - uploaded photo manifest.
 - `feed.xml`, `screenshots/feed.xml`, `photos/feed.xml` - RSS feeds generated from the same manifests as SEO pages.
@@ -44,6 +44,7 @@ Product direction for `/screenshots/`: a public collection of observations about
 - `tools/telegram_live_importer.py` - Telegram Bot API webhook importer for new posts.
 - `tools/photo_upload_server.py` - token-protected Apple Shortcut upload endpoint.
 - `tools/generate_telegram_seo.py` - production refresh for blog pages, RSS, and sitemap after Telegram webhook updates.
+- `tools/generate_home_canvas.py` - deterministic static generation of every home-canvas card into `index.html` and `en/index.html`.
 - `tools/translate-content.mjs` - OpenAI-backed translation backfill for `translations.en`.
 - `tools/deploy-site.sh` - production deployment script.
 - `tools/check-site.py` - static integrity check for links, manifests, generated pages, feeds, and sitemap.
@@ -71,6 +72,8 @@ Apple Photos share sheet -> Apple Shortcut -> `/photos/upload` -> Python service
 Photo originals are intentionally stored without canvas processing, resizing, or transcoding so HDR/Ultra HDR metadata and gain maps can survive. The Shortcut must not use image transform actions. The upload service validates the token and file signature, then stores the original bytes. The browser is responsible for actual HDR display support.
 
 Static SEO pages, sitemap, and RSS are generated from `assets/telegram/posts.json` and `assets/photos/photos.json`. The full deploy path uses `tools/generate-seo-pages.mjs`. The production Telegram webhook path uses `tools/generate_telegram_seo.py` so new posts update `/screenshots/<id>/`, `/screenshots/feed.xml`, `/feed.xml`, and `sitemap.xml` immediately. The production photo upload path uses `tools/generate_photo_seo.py` so new photos update `/photos/**`, `/photos/feed.xml`, `/feed.xml`, and `sitemap.xml` immediately. Both production refresh generators are Python-only, so they do not require Node.js on the VPS.
+
+Both production refresh generators also call `tools/generate_home_canvas.py`. The home page therefore contains static lightweight links for every post and photo and does not download either full manifest at runtime. Card templates and media are hydrated by `script.js` only near the visible canvas viewport.
 
 English content lives beside source records in `translations.en`. Generators write `/en/**` pages from those translations and fall back to the source Russian text while a translation is missing. The header language switcher links to real static counterpart URLs and `script.js` swaps pages through `fetch` and `history.pushState` when JavaScript is available.
 

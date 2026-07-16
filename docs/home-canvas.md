@@ -8,10 +8,12 @@
 
 ## Content model
 
-Источник данных v1:
+Внутренние источники генерации:
 
 - `assets/telegram/posts.json` для постов Screenshot of the Day;
 - `assets/photos/photos.json` для личной фотоленты.
+
+Полные манифесты используются только генераторами. Домашняя страница не загружает их в браузер: `tools/generate_home_canvas.py` записывает в `index.html` и `en/index.html` статические ссылки-оболочки для каждого поста и фото.
 
 Каждая карточка должна вести на постоянную HTML-страницу:
 
@@ -36,9 +38,9 @@
 
 ## Layout rules
 
-Canvas v1 не бесконечный физически, но должен ощущаться большим:
+Canvas не бесконечный физически, но его размер вычисляется из количества материалов и должен ощущаться большим:
 
-- внутренняя плоскость примерно 7000 x 6600 px на desktop;
+- внутренняя плоскость расширяется вместе с самым длинным тематическим лучом;
 - центр находится в середине плоскости;
 - у каждой темы есть угол, цвет и мягкая кривая от центра;
 - карточки расходятся от центра по тематическим лучам, а не собираются в плотные острова;
@@ -46,6 +48,9 @@ Canvas v1 не бесконечный физически, но должен ощ
 - широкий детерминированный lane-сдвиг дает воздуху между соседними карточками без механической сетки;
 - карточки могут немного накладываться друг на друга, но не должны превращаться в плотные стопки;
 - дальние карточки могут уходить далеко за первый видимый экран canvas;
+- каждый материал присутствует на полотне лёгкой HTML-оболочкой, без тематических лимитов;
+- содержимое оболочки и изображения активируются только рядом с текущим viewport;
+- на далёком масштабе карточки остаются placeholders, чтобы обзор всего полотна не запускал загрузку всех изображений;
 - часть текстов показывается без явной карточки, прямо на фоне;
 - изображения могут собираться в небольшие стопки.
 
@@ -103,7 +108,18 @@ V1 остается в существующем стеке проекта:
 
 DOM-элементы предпочтительнее настоящего `<canvas>`, потому что карточки остаются ссылками, изображения лениво грузятся, текст индексируем и проще поддерживать адаптив.
 
-## Implementation snapshot
+## Current production rollout
+
+Published and verified on 2026-07-16:
+
+- production release: `20260716-093342`;
+- production asset version: `20260716-home-canvas-static-1`;
+- generated canvas: 711 permanent card shells from 663 Telegram posts and 48 photos on both `/` and `/en/`;
+- initial production viewport: 48 hydrated cards and 69 requested card images;
+- the home page makes no runtime request for `assets/telegram/posts.json` or `assets/photos/photos.json`;
+- production `index.html`, `en/index.html`, `script.js`, and `styles.css` match the locally verified artifacts byte for byte.
+
+## Historical implementation snapshot
 
 Baseline before smooth zoom animation work:
 
@@ -113,12 +129,15 @@ Baseline before smooth zoom animation work:
 - GitHub stable tag: `canvas-zoom60-v8-stable`;
 - deploy release verified before backup: `20260618-112940`.
 
-The current implementation is deliberately DOM-based:
+The current implementation is deliberately static and DOM-based:
 
-- `index.html` and `en/index.html` contain `.home-canvas-shell`, `.home-canvas-viewport`, `.home-canvas-surface`, fallback text and the toolbar;
-- `script.js` builds paths, theme labels, avatar and cards from `assets/telegram/posts.json` plus `assets/photos/photos.json`;
+- `tools/generate_home_canvas.py` reads `assets/telegram/posts.json` plus `assets/photos/photos.json`, classifies every item, computes deterministic coordinates and rewrites the generated sections of `index.html` and `en/index.html`;
+- `index.html` and `en/index.html` contain `.home-canvas-shell`, `.home-canvas-viewport`, `.home-canvas-surface`, all permanent card links and the toolbar;
+- `script.js` initializes paths and controls, then hydrates card templates and assigns image `src` only near the visible world rectangle;
 - `styles.css` owns the grid, card styling, toolbar, post overlay and responsive rules;
 - generated post/photo pages also carry the same asset version so overlay-opened articles get the same CSS and JS cache state.
+
+The generator is called by both `tools/generate_telegram_seo.py` and `tools/generate_photo_seo.py`. Therefore a Telegram webhook, a personal photo upload and a full deployment all refresh the static home canvas. New items enter the inner ring of their theme; older items retain monotonically non-decreasing distance from the avatar.
 
 Canvas v1 viewport behavior (superseded by Canvas 2.0 below):
 
@@ -153,7 +172,7 @@ Canvas 2.0 keeps the existing DOM content model and replaces the viewport contro
 - card dragging changes compositor transforms rather than layout coordinates;
 - a pan or pinch suppresses the following accidental card click.
 
-The surface is still one GPU-composited DOM layer. Viewport movement writes one `transform` per rendered frame, and the large surface uses CSS containment to keep layout and paint work isolated from the rest of the page.
+The surface is still one GPU-composited DOM layer. Viewport movement writes one `transform` per rendered frame, the large surface uses CSS containment, and placeholders outside the detail threshold do not instantiate their card content or request media.
 
 Current visual style:
 

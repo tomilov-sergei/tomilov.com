@@ -151,6 +151,25 @@ def check_manifests(errors):
     }
 
 
+def check_home_canvas(errors, expected_cards):
+    counts = []
+    for path in (ROOT / "index.html", ROOT / "en/index.html"):
+        source = path.read_text(encoding="utf-8")
+        count = source.count('data-home-node="true"')
+        counts.append(count)
+        if count != expected_cards:
+            errors.append(
+                f"Home canvas card count mismatch in {path.relative_to(ROOT)}: "
+                f"expected {expected_cards}, found {count}"
+            )
+        if "<!-- home-canvas-generated:start -->" not in source or "<!-- home-canvas-generated:end -->" not in source:
+            errors.append(f"Missing home canvas generation markers in {path.relative_to(ROOT)}")
+
+    if len(set(counts)) > 1:
+        errors.append(f"Localized home canvas counts differ: {counts}")
+    return counts[0] if counts else 0
+
+
 def check_unique_ids(items, label, errors):
     seen = set()
     for item in items:
@@ -207,10 +226,11 @@ def main():
     try:
         html_count, reference_count = check_html(errors)
         manifest_summary = check_manifests(errors)
+        canvas_count = check_home_canvas(errors, manifest_summary["posts"] + manifest_summary["photos"])
         sitemap_count = check_xml(errors)
     except (json.JSONDecodeError, OSError, ValueError) as error:
         errors.append(str(error))
-        html_count = reference_count = sitemap_count = 0
+        html_count = reference_count = sitemap_count = canvas_count = 0
         manifest_summary = {}
 
     if errors:
@@ -223,6 +243,7 @@ def main():
         "site_check_ok "
         f"html={html_count} references={reference_count} sitemap_urls={sitemap_count} "
         f"posts={manifest_summary['posts']} photos={manifest_summary['photos']} "
+        f"canvas_cards={canvas_count} "
         f"post_translations={manifest_summary['translated_posts']}/{manifest_summary['text_posts']} "
         f"photo_translations={manifest_summary['translated_photos']}/{manifest_summary['photos']} "
         f"missing_media={manifest_summary['missing_media']}"

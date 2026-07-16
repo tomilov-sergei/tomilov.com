@@ -118,9 +118,9 @@ fi
 cd '$REMOTE_ROOT/current'
 python3 tools/generate_photo_seo.py
 if [ \"\$(id -u)\" -eq 0 ]; then
-  chown -R www-data:www-data photos en feed.xml sitemap.xml '$REMOTE_STORAGE_ROOT/shared/assets/photos'
+  chown -R www-data:www-data index.html photos en feed.xml sitemap.xml '$REMOTE_STORAGE_ROOT/shared/assets/photos'
 else
-  chmod -R g+rwX photos en feed.xml sitemap.xml
+  chmod -R g+rwX index.html photos en feed.xml sitemap.xml
   find '$REMOTE_STORAGE_ROOT/shared/assets/photos' -user \"\$(id -un)\" -exec chmod g+rwX {} +
 fi
 printf 'Refreshed photo pages in current release\n'

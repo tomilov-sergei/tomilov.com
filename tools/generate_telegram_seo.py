@@ -7,6 +7,7 @@ from pathlib import Path
 from zoneinfo import ZoneInfo
 
 import generate_photo_seo as shared
+import generate_home_canvas
 
 
 ROOT_DIR = Path(__file__).resolve().parent.parent
@@ -60,6 +61,7 @@ def main():
     SCREENSHOTS_FEED_PATH.write_text(render_screenshots_feed(posts, "ru"), encoding="utf-8")
     EN_SCREENSHOTS_FEED_PATH.parent.mkdir(parents=True, exist_ok=True)
     EN_SCREENSHOTS_FEED_PATH.write_text(render_screenshots_feed(posts, "en"), encoding="utf-8")
+    generate_home_canvas.generate(posts, photos)
 
     print(f"Generated {len(posts)} post pages")
     print(POSTS_INDEX_DIR.relative_to(ROOT_DIR))
@@ -69,6 +71,8 @@ def main():
     print(EN_FEED_PATH.relative_to(ROOT_DIR))
     print(SCREENSHOTS_FEED_PATH.relative_to(ROOT_DIR))
     print(EN_SCREENSHOTS_FEED_PATH.relative_to(ROOT_DIR))
+    print(ROOT_DIR.joinpath("index.html").relative_to(ROOT_DIR))
+    print(ROOT_DIR.joinpath("en/index.html").relative_to(ROOT_DIR))
 
 
 def screenshots_dir_for_lang(lang):

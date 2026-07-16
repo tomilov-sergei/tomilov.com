@@ -52,7 +52,6 @@ const ui = {
 
 let photoViewerState = null;
 let photoViewerScrollLockState = null;
-let homeCanvasDataPromise = null;
 
 const photoViewerSwipeCloseThreshold = 72;
 const photoViewerSwipeDirectionRatio = 1.25;
@@ -77,49 +76,42 @@ const homeCanvasThemes = [
     angle: -1.62,
     color: "#7b65d8",
     label: { ru: "AI", en: "AI" },
-    patterns: [/(^|\s)(ai|ии)(\s|$)/i, /gpt|openai|нейро|llm|chatgpt|midjourney|claude|генератив|agent|агент|codex/i],
   },
   {
     id: "photos",
     angle: -0.82,
     color: "#2fae91",
     label: { ru: "Фото", en: "Photos" },
-    patterns: [/фото|камера|снимок|снимки|leica|iphone|hdr|объектив|пл[её]нк|фотограф|съ[её]мк/i],
   },
   {
     id: "products",
     angle: -0.08,
     color: "#2f8ad8",
     label: { ru: "Продукты", en: "Products" },
-    patterns: [/продукт|стартап|сервис|прилож|пользователь|фича|запуск|подписк|монетиз|платформ|рекомендац/i],
   },
   {
     id: "design",
     angle: 0.58,
     color: "#df5c4f",
     label: { ru: "Дизайн", en: "Design" },
-    patterns: [/дизайн|интерфейс|\bui\b|\bux\b|figma|шрифт|визуал|лендинг|экран|кнопк|цвет|типограф|анимац|микро/i],
   },
   {
     id: "myphotos",
     angle: 1.2,
     color: "#c7922f",
     label: { ru: "Мои фото", en: "My photos" },
-    patterns: [],
   },
   {
     id: "games",
     angle: 2.42,
     color: "#6171d4",
     label: { ru: "Игры", en: "Games" },
-    patterns: [/игр|\bgame\b|gaming|doom|silent hill|nintendo|playstation|xbox|steam|sekiro|dead space|гейм|mixtape|wicked/i],
   },
   {
     id: "brands",
     angle: -2.62,
     color: "#8b8780",
     label: { ru: "Бренды", en: "Brands" },
-    patterns: [/бренд|\bbrand\b|nike|apple|google|teenage engineering|dyson|sony|tesla|ikea|leica|nothing|airbnb|ferrari|anthropic/i],
   },
 ];
 
@@ -195,261 +187,150 @@ function initPage() {
   }
 }
 
-async function initHomeCanvas(root) {
+function initHomeCanvas(root) {
   const lang = currentLanguage();
   const viewport = root.querySelector("[data-canvas-viewport]");
   const surface = root.querySelector("[data-canvas-surface]");
   const toolbar = root.querySelector("[data-canvas-toolbar]");
-  const fallback = root.querySelector("[data-canvas-fallback]");
+  const nodes = surface?.querySelector("[data-canvas-nodes]");
 
-  if (!viewport || !surface) return;
+  if (!viewport || !surface || !nodes) return;
 
-  try {
-    const data = await loadHomeCanvasData();
-    if (!root.isConnected) return;
+  const canvasSize = readHomeCanvasSize(surface);
+  surface.prepend(createHomeCanvasThemeLayer(lang, canvasSize));
+  root.classList.add("is-ready");
+  if (toolbar) toolbar.hidden = false;
 
-    const items = layoutHomeCanvasItems(buildHomeCanvasItems(data, lang));
-    const layers = document.createDocumentFragment();
-    const nodes = document.createElement("div");
-
-    surface.style.width = `${homeCanvasSize.width}px`;
-    surface.style.height = `${homeCanvasSize.height}px`;
-    surface.replaceChildren();
-
-    nodes.className = "home-canvas-nodes";
-    nodes.append(createHomeCanvasAvatar(lang));
-
-    for (const [index, item] of items.entries()) {
-      nodes.append(createHomeCanvasCard(item, index, lang));
-    }
-
-    layers.append(createHomeCanvasThemeLayer(lang), nodes);
-    surface.append(layers);
-    root.classList.add("is-ready");
-    if (toolbar) toolbar.hidden = false;
-    initHomeCanvasInteractions(root, viewport, surface, toolbar, lang);
-  } catch (error) {
-    root.classList.add("has-error");
-    if (fallback) {
-      fallback.querySelector("p").textContent =
-        lang === "en" ? "Could not load the canvas yet." : "Пока не получилось загрузить карту.";
-    }
-    console.error(error);
-  }
+  const visibility = initHomeCanvasVisibility(viewport, surface);
+  initHomeCanvasInteractions(root, viewport, surface, toolbar, lang, canvasSize, visibility.update);
 }
 
-async function loadHomeCanvasData() {
-  if (!homeCanvasDataPromise) {
-    homeCanvasDataPromise = Promise.all([
-      fetchJson("/assets/telegram/posts.json"),
-      fetchJson("/assets/photos/photos.json").catch(() => ({ photos: [] })),
-    ]).then(([postsData, photosData]) => ({
-      posts: postsData.posts || [],
-      photos: photosData.photos || [],
-    }));
-  }
-
-  return homeCanvasDataPromise;
-}
-
-async function fetchJson(url) {
-  const response = await fetch(url);
-  if (!response.ok) throw new Error(`${url}: HTTP ${response.status}`);
-  return response.json();
-}
-
-function buildHomeCanvasItems(data, lang) {
-  const postsByTheme = new Map(homeCanvasThemes.map((theme) => [theme.id, []]));
-  const items = [];
-  const themeLimits = {
-    design: 10,
-    products: 10,
-    brands: 8,
-    games: 8,
-    ai: 8,
-    photos: 7,
+function readHomeCanvasSize(surface) {
+  return {
+    width: Number(surface.dataset.canvasWidth) || homeCanvasSize.width,
+    height: Number(surface.dataset.canvasHeight) || homeCanvasSize.height,
+    centerX: Number(surface.dataset.canvasCenterX) || homeCanvasSize.centerX,
+    centerY: Number(surface.dataset.canvasCenterY) || homeCanvasSize.centerY,
   };
+}
 
-  for (const post of data.posts || []) {
-    if (!getPostText(post, lang) && !post.media?.length) continue;
-    postsByTheme.get(classifyHomeCanvasPost(post, lang))?.push(post);
-  }
+function initHomeCanvasVisibility(viewport, surface) {
+  const nodes = [...surface.querySelectorAll("[data-home-node]")].map((node) => ({
+    node,
+    x: Number(node.dataset.canvasX),
+    y: Number(node.dataset.canvasY),
+    width: Number(node.dataset.canvasWidth) || 224,
+    height: Number(node.dataset.canvasHeight) || 320,
+  }));
+  let latestState = null;
+  let hydrationTimer = 0;
+  let viewKey = "";
+  let hydratedForView = 0;
 
-  for (const theme of homeCanvasThemes) {
-    if (theme.id === "myphotos") continue;
+  function hydrateVisible() {
+    hydrationTimer = 0;
+    if (!surface.isConnected || !latestState || latestState.scale < 0.22) return;
 
-    const selected = selectSpread(postsByTheme.get(theme.id) || [], themeLimits[theme.id] || 9);
-    for (const post of selected) {
-      const text = getPostText(post, lang);
-      const media = getHomePostMedia(post);
-      const linkEntity = getHomePostLink(post, lang);
-
-      items.push({
-        id: `post-${post.id}`,
-        kind: "post",
-        themeId: theme.id,
-        href: `${lang === "en" ? "/en" : ""}/screenshots/${post.id}/`,
-        sourceUrl: post.telegramUrl,
-        date: post.date,
-        time: new Date(post.date).getTime(),
-        title: homeCanvasTitle(text),
-        text,
-        media,
-        linkEntity,
-        variant: homeCanvasPostVariant(media, linkEntity, text),
-      });
+    const { x, y, scale } = latestState;
+    const worldLeft = -x / scale;
+    const worldTop = -y / scale;
+    const worldWidth = viewport.clientWidth / scale;
+    const worldHeight = viewport.clientHeight / scale;
+    const overscan = Math.max(worldWidth, worldHeight) * 0.65;
+    const centerX = worldLeft + worldWidth / 2;
+    const centerY = worldTop + worldHeight / 2;
+    const nextViewKey = [
+      Math.round(centerX / Math.max(400, worldWidth * 0.25)),
+      Math.round(centerY / Math.max(400, worldHeight * 0.25)),
+      Math.round(scale * 10),
+    ].join(":");
+    if (nextViewKey !== viewKey) {
+      viewKey = nextViewKey;
+      hydratedForView = 0;
     }
+    const remainingBudget = Math.max(0, 48 - hydratedForView);
+    if (!remainingBudget) return;
+    const visible = nodes
+      .filter((item) => {
+        if (item.node.classList.contains("is-hydrated") || item.width * scale < 48) return false;
+        return (
+          item.x + item.width / 2 >= worldLeft - overscan
+          && item.x - item.width / 2 <= worldLeft + worldWidth + overscan
+          && item.y + item.height / 2 >= worldTop - overscan
+          && item.y - item.height / 2 <= worldTop + worldHeight + overscan
+        );
+      })
+      .sort((first, second) => (
+        Math.hypot(first.x - centerX, first.y - centerY)
+        - Math.hypot(second.x - centerX, second.y - centerY)
+      ))
+      .slice(0, remainingBudget);
+
+    for (const item of visible) {
+      hydrateHomeCanvasNode(item.node);
+    }
+    hydratedForView += visible.length;
   }
 
-  for (const photo of selectSpread(getPhotosByUploadOrder(data.photos || []), 9)) {
-    const title = photoCaption(photo, lang) || makePhotoCaption(photo, lang);
-    items.push({
-      id: `photo-${photo.id}`,
-      kind: "photo",
-      themeId: "myphotos",
-      href: `${lang === "en" ? "/en" : ""}/photos/${photo.id}/`,
-      date: photo.uploadedAt || photo.date,
-      time: new Date(photo.uploadedAt || photo.date).getTime(),
-      title,
-      text: title,
-      media: [
-        {
-          src: getHomePhotoAssetUrl(photo.src),
-          width: photo.width,
-          height: photo.height,
-        },
-      ],
-      variant: "photo",
+  function update(state) {
+    latestState = { ...state };
+    if (hydrationTimer) clearTimeout(hydrationTimer);
+    hydrationTimer = window.setTimeout(hydrateVisible, 90);
+  }
+
+  return { update };
+}
+
+function hydrateHomeCanvasNode(node) {
+  const template = node.querySelector("[data-canvas-card-template]");
+  if (!template) return;
+
+  const content = template.content.cloneNode(true);
+  for (const image of content.querySelectorAll("img[data-src]")) {
+    const src = image.dataset.src;
+    delete image.dataset.src;
+    if (src) image.src = src;
+    image.addEventListener("error", () => {
+      image.hidden = true;
+      node.classList.add("has-missing-media");
     });
   }
 
-  return items;
+  node.querySelector(".home-canvas-card-placeholder")?.remove();
+  node.insertBefore(content, template);
+  template.remove();
+  node.classList.remove("is-placeholder");
+  node.classList.add("is-hydrated");
 }
 
-function classifyHomeCanvasPost(post, lang) {
-  const text = `${post.text || ""} ${post.translations?.en?.text || ""} ${getPostText(post, lang)}`.toLowerCase();
-  let bestTheme = "products";
-  let bestScore = 0;
-
-  for (const theme of homeCanvasThemes) {
-    if (theme.id === "myphotos") continue;
-
-    const score = theme.patterns.reduce((sum, pattern) => sum + (pattern.test(text) ? 1 : 0), 0);
-    if (score > bestScore) {
-      bestTheme = theme.id;
-      bestScore = score;
-    }
-  }
-
-  return bestTheme;
-}
-
-function selectSpread(items, limit) {
-  if (items.length <= limit) return items;
-
-  const selected = new Map();
-  const recentCount = Math.min(4, limit);
-
-  for (const item of items.slice(0, recentCount)) {
-    selected.set(item.id, item);
-  }
-
-  const rest = items.slice(recentCount);
-  const spreadCount = limit - selected.size;
-
-  for (let index = 0; index < spreadCount; index++) {
-    const restIndex = spreadCount <= 1 ? 0 : Math.round((index * (rest.length - 1)) / (spreadCount - 1));
-    const item = rest[restIndex];
-    if (item) selected.set(item.id, item);
-  }
-
-  return [...selected.values()].slice(0, limit);
-}
-
-function layoutHomeCanvasItems(items) {
-  const times = items.map((item) => item.time).filter((time) => Number.isFinite(time));
-  const oldest = Math.min(...times);
-  const newest = Math.max(...times);
-  const range = newest - oldest || 1;
-  const grouped = new Map();
-
-  for (const item of items) {
-    if (!grouped.has(item.themeId)) grouped.set(item.themeId, []);
-    grouped.get(item.themeId).push(item);
-  }
-
-  for (const group of grouped.values()) {
-    group.sort((first, second) => second.time - first.time);
-  }
-
-  const lanePattern = [0, -0.86, 0.88, -1.52, 1.46, -0.34, 0.36, -1.1, 1.08];
-
-  return items.map((item) => {
-    const theme = homeCanvasThemes.find((candidate) => candidate.id === item.themeId) || homeCanvasThemes[0];
-    const group = grouped.get(item.themeId) || [];
-    const themeIndex = Math.max(0, group.indexOf(item));
-    const groupProgress = group.length > 1 ? themeIndex / (group.length - 1) : 0;
-    const normalizedTime = Number.isFinite(item.time) ? (item.time - oldest) / range : 0.65;
-    const ageProgress = clamp(1 - normalizedTime, 0, 1);
-    const rayProgress = clamp(groupProgress * 0.86 + ageProgress * 0.14, 0, 1);
-    const radialJitter = (homeCanvasNoise(item.id, "radial") - 0.5) * 120;
-    const laneWidth = item.variant === "stack" ? 360 : item.variant === "photo" ? 310 : 260;
-    const tangentJitter =
-      lanePattern[themeIndex % lanePattern.length] * laneWidth + (homeCanvasNoise(item.id, "tangent") - 0.5) * 48;
-    const angle = theme.angle + (homeCanvasNoise(item.id, "angle") - 0.5) * 0.045;
-    const distance = clamp(680 + rayProgress * 3180 + radialJitter, 620, 3980);
-    const normal = angle + Math.PI / 2;
-    const x = homeCanvasSize.centerX + Math.cos(angle) * distance + Math.cos(normal) * tangentJitter;
-    const y = homeCanvasSize.centerY + Math.sin(angle) * distance + Math.sin(normal) * tangentJitter;
-
-    return {
-      ...item,
-      theme,
-      x: clamp(x, 260, homeCanvasSize.width - 260),
-      y: clamp(y, 240, homeCanvasSize.height - 240),
-      rotation: (homeCanvasNoise(item.id, "rotation") - 0.5) * (item.variant === "note" ? 3 : 5),
-      z: Math.round(6400 - distance) + themeIndex,
-      size: homeCanvasNodeSize(item, themeIndex),
-    };
-  });
-}
-
-function homeCanvasNodeSize(item, index) {
-  if (item.variant === "stack") return index % 2 ? "is-large" : "is-wide";
-  if (item.variant === "photo") return index % 3 === 0 ? "is-tall" : "is-small";
-  if (item.variant === "note") return index % 4 === 0 ? "is-large" : "is-small";
-  if (item.variant === "link") return "is-small";
-  return index % 5 === 0 ? "is-large" : "is-medium";
-}
-
-function createHomeCanvasThemeLayer(lang) {
+function createHomeCanvasThemeLayer(lang, canvasSize) {
   const fragment = document.createDocumentFragment();
   const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
   const labels = document.createElement("div");
 
   svg.classList.add("home-canvas-paths");
-  svg.setAttribute("viewBox", `0 0 ${homeCanvasSize.width} ${homeCanvasSize.height}`);
+  svg.setAttribute("viewBox", `0 0 ${canvasSize.width} ${canvasSize.height}`);
   svg.setAttribute("aria-hidden", "true");
   labels.className = "home-canvas-theme-labels";
 
   for (const theme of homeCanvasThemes) {
     const endDistance = theme.id === "myphotos" ? 1720 : 1560;
-    const endX = homeCanvasSize.centerX + Math.cos(theme.angle) * endDistance;
-    const endY = homeCanvasSize.centerY + Math.sin(theme.angle) * endDistance;
+    const endX = canvasSize.centerX + Math.cos(theme.angle) * endDistance;
+    const endY = canvasSize.centerY + Math.sin(theme.angle) * endDistance;
     const normal = theme.angle + Math.PI / 2;
     const curve = theme.id === "products" ? -160 : (homeCanvasNoise(theme.id, "curve") - 0.5) * 320;
-    const controlOneX = homeCanvasSize.centerX + Math.cos(theme.angle) * 430 + Math.cos(normal) * curve;
-    const controlOneY = homeCanvasSize.centerY + Math.sin(theme.angle) * 430 + Math.sin(normal) * curve;
+    const controlOneX = canvasSize.centerX + Math.cos(theme.angle) * 430 + Math.cos(normal) * curve;
+    const controlOneY = canvasSize.centerY + Math.sin(theme.angle) * 430 + Math.sin(normal) * curve;
     const controlTwoX =
-      homeCanvasSize.centerX + Math.cos(theme.angle) * (endDistance * 0.82) - Math.cos(normal) * curve * 0.55;
+      canvasSize.centerX + Math.cos(theme.angle) * (endDistance * 0.82) - Math.cos(normal) * curve * 0.55;
     const controlTwoY =
-      homeCanvasSize.centerY + Math.sin(theme.angle) * (endDistance * 0.82) - Math.sin(normal) * curve * 0.55;
+      canvasSize.centerY + Math.sin(theme.angle) * (endDistance * 0.82) - Math.sin(normal) * curve * 0.55;
     const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
     const label = document.createElement("div");
 
     path.setAttribute(
       "d",
-      `M ${homeCanvasSize.centerX} ${homeCanvasSize.centerY} C ${controlOneX} ${controlOneY}, ${controlTwoX} ${controlTwoY}, ${endX} ${endY}`,
+      `M ${canvasSize.centerX} ${canvasSize.centerY} C ${controlOneX} ${controlOneY}, ${controlTwoX} ${controlTwoY}, ${endX} ${endY}`,
     );
     path.style.setProperty("--theme-color", theme.color);
     svg.append(path);
@@ -466,143 +347,7 @@ function createHomeCanvasThemeLayer(lang) {
   return fragment;
 }
 
-function createHomeCanvasAvatar(lang) {
-  const avatar = document.createElement("a");
-  const image = document.createElement("img");
-  const caption = document.createElement("span");
-
-  avatar.className = "home-canvas-avatar";
-  avatar.href = lang === "en" ? "/en/about/" : "/about/";
-  avatar.style.left = `${homeCanvasSize.centerX}px`;
-  avatar.style.top = `${homeCanvasSize.centerY}px`;
-  avatar.setAttribute("aria-label", lang === "en" ? "About Seryozha Tomilov" : "О Серёже Томилове");
-
-  image.src = "/assets/og.png";
-  image.alt = "";
-  image.loading = "eager";
-  image.decoding = "async";
-
-  caption.textContent = "SS/84";
-  avatar.append(image, caption);
-  return avatar;
-}
-
-function createHomeCanvasCard(item, index, lang) {
-  const link = document.createElement("a");
-
-  link.className = `home-canvas-node is-${item.variant} ${item.size}`;
-  link.href = item.href;
-  link.draggable = false;
-  link.dataset.homeNode = "true";
-  link.style.left = `${item.x}px`;
-  link.style.top = `${item.y}px`;
-  link.style.setProperty("--rotation", `${item.rotation.toFixed(2)}deg`);
-  link.style.setProperty("--z", String(item.z));
-  link.style.setProperty("--theme-color", item.theme.color);
-  link.setAttribute("aria-label", item.title || item.theme.label[lang] || item.theme.label.ru);
-
-  if (item.variant === "stack") {
-    link.append(createHomeMediaStack(item, index), createHomeCardText(item, lang, 120));
-  } else if (item.variant === "media" || item.variant === "photo") {
-    link.append(createHomeMediaFrame(item, index), createHomeCardText(item, lang, item.variant === "photo" ? 80 : 130));
-  } else if (item.variant === "link") {
-    link.append(createHomeLinkPreview(item, lang));
-  } else {
-    link.append(createHomeNote(item, lang));
-  }
-
-  return link;
-}
-
-function createHomeMediaStack(item, index) {
-  const stack = document.createElement("div");
-  stack.className = "home-canvas-media-stack";
-
-  for (const [mediaIndex, media] of item.media.slice(0, 3).entries()) {
-    stack.append(createHomeImage(media, item.title, index + mediaIndex));
-  }
-
-  return stack;
-}
-
-function createHomeMediaFrame(item, index) {
-  const frame = document.createElement("div");
-  frame.className = "home-canvas-media-frame";
-  frame.append(createHomeImage(item.media[0], item.title, index));
-  return frame;
-}
-
-function createHomeImage(media, alt, index) {
-  const image = document.createElement("img");
-
-  image.src = media.src;
-  image.alt = alt || "";
-  image.draggable = false;
-  image.loading = index < 10 ? "eager" : "lazy";
-  image.decoding = "async";
-
-  if (media.width && media.height) {
-    image.style.aspectRatio = `${media.width} / ${media.height}`;
-  }
-
-  image.addEventListener("error", () => {
-    image.hidden = true;
-    image.closest(".home-canvas-node")?.classList.add("has-missing-media");
-  });
-
-  return image;
-}
-
-function createHomeCardText(item, lang, maxLength) {
-  const copy = document.createElement("div");
-  const title = document.createElement("strong");
-  const meta = document.createElement("time");
-
-  copy.className = "home-canvas-card-copy";
-  title.textContent = truncate(item.title || item.text || item.theme.label[lang], maxLength);
-  meta.className = "home-canvas-date";
-  meta.dateTime = item.date || "";
-  meta.textContent = item.date ? formatDate(item.date, lang) : item.theme.label[lang] || item.theme.label.ru;
-  copy.append(title, meta);
-
-  return copy;
-}
-
-function createHomeLinkPreview(item, lang) {
-  const preview = document.createElement("div");
-  const domain = document.createElement("span");
-  const title = document.createElement("strong");
-  const excerpt = document.createElement("p");
-  const meta = document.createElement("time");
-
-  preview.className = "home-canvas-link-preview";
-  domain.textContent = homeCanvasDomain(item.linkEntity?.href) || item.theme.label[lang] || item.theme.label.ru;
-  title.textContent = truncate(item.linkEntity?.text || item.title, 78);
-  excerpt.textContent = truncate(item.text, 170);
-  meta.className = "home-canvas-date";
-  meta.dateTime = item.date || "";
-  meta.textContent = item.date ? formatDate(item.date, lang) : "";
-  preview.append(domain, title, excerpt, meta);
-
-  return preview;
-}
-
-function createHomeNote(item, lang) {
-  const note = document.createElement("div");
-  const text = document.createElement("p");
-  const meta = document.createElement("time");
-
-  note.className = "home-canvas-note";
-  text.textContent = truncate(item.text || item.title || item.theme.label[lang], item.size === "is-large" ? 260 : 190);
-  meta.className = "home-canvas-date";
-  meta.dateTime = item.date || "";
-  meta.textContent = item.date ? formatDate(item.date, lang) : "";
-  note.append(text, meta);
-
-  return note;
-}
-
-function initHomeCanvasInteractions(root, viewport, surface, toolbar, lang) {
+function initHomeCanvasInteractions(root, viewport, surface, toolbar, lang, canvasSize, updateVisibility) {
   const state = {
     x: 0,
     y: 0,
@@ -644,6 +389,7 @@ function initHomeCanvasInteractions(root, viewport, surface, toolbar, lang) {
 
     if (zoomInButton) zoomInButton.disabled = state.scale >= homeCanvasView.maxScale - 0.0001;
     if (zoomOutButton) zoomOutButton.disabled = state.scale <= homeCanvasView.minScale + 0.0001;
+    updateVisibility(state);
   }
 
   function scheduleView() {
@@ -724,8 +470,8 @@ function initHomeCanvasInteractions(root, viewport, surface, toolbar, lang) {
 
     return {
       scale,
-      x: viewport.clientWidth / 2 - homeCanvasSize.centerX * scale,
-      y: viewport.clientHeight / 2 - homeCanvasSize.centerY * scale,
+      x: viewport.clientWidth / 2 - canvasSize.centerX * scale,
+      y: viewport.clientHeight / 2 - canvasSize.centerY * scale,
     };
   }
 
@@ -1176,53 +922,6 @@ function createHomeCanvasPostStatus(text) {
 function homeCanvasDefaultScale(viewport) {
   if (viewport.clientWidth < 560) return 0.25;
   return 0.6;
-}
-
-function getHomePostMedia(post) {
-  return (post.media || [])
-    .map((media) => {
-      const src = media.type === "video" || media.type === "animation" ? media.poster : media.src;
-      if (!src) return null;
-
-      return {
-        src: getTelegramAssetUrl(src),
-        width: media.width,
-        height: media.height,
-      };
-    })
-    .filter(Boolean);
-}
-
-function getHomePhotoAssetUrl(src) {
-  if (!src) return "";
-  if (location.hostname === "localhost" || location.hostname === "127.0.0.1") {
-    return `https://tomilov.com${src}`;
-  }
-  return src;
-}
-
-function getHomePostLink(post, lang) {
-  return getPostEntities(post, lang).find((entity) => entity.href);
-}
-
-function homeCanvasPostVariant(media, linkEntity, text) {
-  if (media.length > 1) return "stack";
-  if (media.length === 1) return "media";
-  if (linkEntity?.href) return "link";
-  return text.length > 170 ? "note" : "link";
-}
-
-function homeCanvasTitle(text) {
-  const [firstLine] = normalizeText(text).split(/\n+/);
-  return firstLine || normalizeText(text);
-}
-
-function homeCanvasDomain(value) {
-  try {
-    return new URL(value).hostname.replace(/^www\./, "");
-  } catch {
-    return "";
-  }
 }
 
 function homeCanvasNoise(value, salt) {
