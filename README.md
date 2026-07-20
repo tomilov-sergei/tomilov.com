@@ -14,9 +14,10 @@
 Главные файлы:
 
 - `index.html`, `about/index.html`, `photos/index.html`, `photos/film/index.html`, `photos/iphone/index.html`, `places/index.html`, `barcelona-guide/index.html` — структура страниц.
-- `screenshots/index.html` — страница архива Telegram-канала.
+- `screenshots/index.html` — коллекция наблюдений с поиском и тематическими фильтрами.
 - `styles.css` — общий дизайн, сетки, адаптив и темы.
-- `script.js` — home canvas, включение YouTube-видео по клику, лента Telegram-архива, фотолента, places и overlays.
+- `script.js` — маленький загрузчик; полный native-web runtime находится в `assets/js/features.js` и подключается только на интерактивных страницах.
+- `assets/canvas/{ru,en}-*.json` — тематические чанки карточек главного холста.
 - `assets/` — favicon, OG-картинка и превью видео.
 - `assets/barcelona-guide/**` — локальная рабочая копия изображений гида; игнорируется git и живёт в production shared storage.
 - `assets/photos/photos.json` — манифест личных фото; оригиналы лежат в `assets/photos/originals/**`, игнорируются git и живут в shared storage.
@@ -46,9 +47,9 @@ python3 -m http.server 4173
 Перед коммитом и деплоем:
 
 ```sh
-python3 tools/check-secrets.py
-python3 tools/check-site.py
-node tools/generate-seo-pages.mjs
+pnpm install --frozen-lockfile
+pnpm run check
+pnpm run generate
 git diff --exit-code
 ```
 
@@ -135,7 +136,7 @@ PULL_REMOTE_POSTS=0 PUSH_LOCAL_TELEGRAM=1 ./tools/deploy-site.sh
    - File — исходный Shortcut Input или Repeat Item;
    - опционально заголовок `X-Photo-Caption` — подпись.
 
-HDR/Ultra HDR поддерживается сохранением исходного файла без canvas, ресайза и перекодирования. Shortcut должен отправлять оригинальный HEIC/JPEG как файл. Лента показывает тот же оригинал лениво, а режим просмотра крупного снимка использует CSS `dynamic-range-limit: no-limit` там, где браузер и дисплей это поддерживают.
+HDR/Ultra HDR поддерживается сохранением исходного файла без canvas, ресайза и перекодирования. Shortcut должен отправлять оригинальный HEIC/JPEG как файл. HDR-снимок показывается прямо в ленте из оригинала с `dynamic-range-limit: no-limit`; для SDR-снимков генератор создаёт варианты 480/960/1440 px в WebP с JPEG fallback. Полноэкранный просмотр всегда использует оригинал.
 
 После каждой успешной загрузки сервис запускает production SEO-генератор `tools/generate_photo_seo.py`. Новые фото получают страницы `/photos/<id>/`, попадают в `/photos/archive/`, тематические срезы `/photos/film/` и `/photos/iphone/`, `/photos/feed.xml`, `/feed.xml` и в `sitemap.xml`. Фотографии опубликованы по лицензии CC BY 4.0: использовать можно с указанием авторства и ссылки на страницу фото.
 

@@ -1,0 +1,51 @@
+{
+  "name": "tomilov.com",
+  "private": true,
+  "type": "module",
+  "packageManager": "pnpm@11.9.0",
+  "engines": {
+    "node": ">=24 <25"
+  },
+  "scripts": {
+    "generate": "node tools/generate-seo-pages.mjs",
+    "check:site": "python3 tools/check-site.py",
+    "check:secrets": "python3 tools/check-secrets.py",
+    "lint:css": "stylelint styles.css",
+    "check:css": "postcss styles.css --no-map --output /tmp/tomilov-postcss.css",
+    "check:size": "size-limit",
+    "check": "pnpm run check:secrets && pnpm run lint:css && pnpm run check:css && pnpm run check:size && pnpm run check:site"
+  },
+  "size-limit": [
+    {
+      "name": "CSS",
+      "path": "styles.css",
+      "limit": "16 KB"
+    },
+    {
+      "name": "JavaScript bootstrap",
+      "path": "script.js",
+      "limit": "2 KB"
+    },
+    {
+      "name": "Feature runtime",
+      "path": "assets/js/features.js",
+      "limit": "20 KB"
+    },
+    {
+      "name": "Home HTML",
+      "path": "index.html",
+      "limit": "80 KB"
+    }
+  ],
+  "devDependencies": {
+    "@size-limit/file": "12.1.0",
+    "autoprefixer": "10.5.4",
+    "browserslist": "4.28.6",
+    "convert-to-oklch": "1.2.9",
+    "postcss": "8.5.20",
+    "postcss-cli": "11.0.1",
+    "size-limit": "12.1.0",
+    "stylelint": "17.14.1",
+    "stylelint-no-unsupported-browser-features": "8.1.1"
+  }
+}

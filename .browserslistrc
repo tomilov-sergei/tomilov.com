@@ -1,0 +1,6 @@
+# Native modules, OKLCH, color-mix(), dialog and container queries are baseline requirements.
+last 2 Chrome versions
+last 2 Edge versions
+last 2 Firefox versions
+Safari >= 18
+iOS >= 18

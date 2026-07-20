@@ -478,14 +478,36 @@ def render_photo_filters(photos, lang="ru", active_filter="all"):
 
 def render_photo_card(photo, index, lang="ru"):
     aspect = f' style="aspect-ratio: {int(photo["width"])} / {int(photo["height"])}"' if photo.get("width") and photo.get("height") else ""
-    loading = "eager" if index < 4 else "lazy"
+    loading = "eager" if index == 0 else "lazy"
+    fetch_priority = ' fetchpriority="high"' if index == 0 else ' fetchpriority="low"'
     hdr = '<span class="photo-hdr-badge">HDR</span>' if photo.get("hdr") else ""
     hdr_line = f"\n            {hdr}" if hdr else ""
     title = photo_title(photo, 100, lang)
+    original = escape_attr(photo.get("src"))
+    preview_widths = generate_photo_previews.feed_preview_widths(photo)
+    if photo.get("hdr") or not preview_widths:
+        image_markup = (
+            f'<img src="{original}" loading="{loading}"{fetch_priority} '
+            f'decoding="async" alt="{escape_attr(photo_alt(photo, lang))}">'
+        )
+    else:
+        default_width = max((width for width in preview_widths if width <= 960), default=preview_widths[0])
+        preview = escape_attr(generate_photo_previews.feed_preview_public_url(photo, default_width))
+        jpeg_srcset = escape_attr(generate_photo_previews.feed_preview_srcset(photo))
+        webp_srcset = escape_attr(generate_photo_previews.feed_preview_srcset(photo, "webp"))
+        sizes = "(max-width: 719px) calc(100vw - 24px), (max-width: 1199px) 45vw, 360px"
+        image_markup = (
+            '<picture>'
+            f'<source type="image/webp" srcset="{webp_srcset}" sizes="{sizes}">'
+            f'<img src="{preview}" srcset="{jpeg_srcset}" sizes="{sizes}" '
+            f'data-fallback-src="{original}" loading="{loading}"{fetch_priority} '
+            f'decoding="async" alt="{escape_attr(photo_alt(photo, lang))}">'
+            '</picture>'
+        )
 
     return f"""<article class="photo-entry" data-photo-technique="{escape_attr(photo_technique_key(photo))}">
           <a class="photo-card" href="{localized_path("/photos/" + str(photo['id']) + "/", lang)}"{aspect} aria-label="{escape_attr(title)}">
-            <img src="{escape_attr(photo.get('src'))}" loading="{loading}" decoding="async" alt="{escape_attr(photo_alt(photo, lang))}">{hdr_line}
+            {image_markup}{hdr_line}
           </a>
           {render_photo_info(photo, lang)}
         </article>"""

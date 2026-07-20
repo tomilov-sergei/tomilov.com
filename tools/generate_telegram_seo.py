@@ -53,6 +53,7 @@ def main():
 
         posts_index_dir.mkdir(parents=True, exist_ok=True)
         (posts_index_dir / "index.html").write_text(render_posts_index(posts, lang), encoding="utf-8")
+        (screenshots_dir / "index.html").write_text(render_screenshots_page(posts, lang), encoding="utf-8")
 
     SITEMAP_PATH.write_text(render_sitemap(posts, photos), encoding="utf-8")
     FEED_PATH.write_text(render_main_feed(posts, photos, "ru"), encoding="utf-8")
@@ -103,6 +104,117 @@ def post_nav_label(lang):
 
 def file_label(lang):
     return "File" if lang == "en" else "Файл"
+
+
+def collection_description(lang):
+    if lang == "en":
+        return "A personal observatory of digital products and visual culture: notes on interfaces, technology, brands, and beautiful things."
+    return "Личная обсерватория цифровых продуктов и визуальной культуры: наблюдения об интерфейсах, технологиях, брендах и красивых вещах."
+
+
+def render_screenshots_page(posts, lang="ru"):
+    page_path = "/screenshots/"
+    description = collection_description(lang)
+    intro = (
+        "What is worth noticing in digital products right now—and what becomes visible when these observations accumulate over the years."
+        if lang == "en"
+        else "Что сейчас стоит замечать в цифровых продуктах — и какие паттерны становятся видны, когда наблюдения копятся годами."
+    )
+    search_label = "Search the collection" if lang == "en" else "Поиск по коллекции"
+    search_placeholder = "interface, brand, AI…" if lang == "en" else "интерфейс, бренд, AI…"
+    telegram_label = "Telegram channel" if lang == "en" else "Канал в Телеграме"
+    feed = "\n        ".join(render_feed_post(post, lang) for post in posts[:12])
+
+    return f"""<!doctype html>
+<html lang="{shared.tr(lang, 'html_lang')}">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width">
+    <title>{shared.CHANNEL_TITLE} — {shared.tr(lang, 'site_name')}</title>
+    <meta name="description" content="{shared.escape_attr(description)}">
+    <link rel="canonical" href="{shared.localized_url(page_path, lang)}">
+{shared.alternate_links(page_path, lang)}
+    <link rel="alternate" type="application/rss+xml" title="{shared.CHANNEL_TITLE}" href="{shared.localized_url('/screenshots/feed.xml', lang)}">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="{shared.CHANNEL_TITLE}">
+    <meta property="og:description" content="{shared.escape_attr(description)}">
+    <meta property="og:image" content="{shared.SITE_URL}/assets/og.png">
+    <meta property="og:url" content="{shared.localized_url(page_path, lang)}">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="{shared.CHANNEL_TITLE}">
+    <meta name="twitter:description" content="{shared.escape_attr(description)}">
+    <meta name="twitter:image" content="{shared.SITE_URL}/assets/og.png">
+    <link rel="icon" href="/assets/favicon.png">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500;700&family=Lora:wght@600&family=Manrope:wght@800&display=swap">
+    <link rel="stylesheet" href="/styles.css?v={shared.asset_version()}">
+  </head>
+  <body>
+    <main class="page screenshots-page" data-page-lang="{lang}">
+      {shared.render_header(page_path, lang)}
+
+      <section class="screenshots-intro" aria-labelledby="screenshots-title">
+        <p class="eyebrow">{shared.CHANNEL_TITLE}</p>
+        <h1 id="screenshots-title">{shared.tr(lang, 'blog')}</h1>
+        <p class="collection-intro">{intro}</p>
+        <div class="intro-links">
+          <a href="{shared.localized_path('/screenshots/posts/', lang)}">{all_posts_label(lang)}</a>
+          <a href="https://t.me/screenshot_of_the_day" target="_blank" rel="noopener">{telegram_label}</a>
+        </div>
+      </section>
+
+      <section class="collection-tools" aria-label="{shared.escape_attr(search_label)}">
+        <label class="collection-search">
+          <span>{search_label}</span>
+          <input type="search" data-post-search placeholder="{shared.escape_attr(search_placeholder)}" autocomplete="off">
+        </label>
+        {render_topic_filters(lang)}
+        <p class="collection-result" data-post-result aria-live="polite"></p>
+      </section>
+
+      <section class="screenshot-feed" data-telegram-feed data-static-post-feed aria-live="polite">
+        {feed}
+      </section>
+
+      <div class="feed-actions">
+        <button class="button load-more" type="button" data-load-more hidden>{'Load more' if lang == 'en' else 'Показать ещё'}</button>
+      </div>
+    </main>
+    <script src="/script.js?v={shared.asset_version()}"></script>
+  </body>
+</html>
+"""
+
+
+def render_topic_filters(lang):
+    labels = {
+        "ru": (("all", "Все"), ("ai", "AI"), ("photos", "Фото"), ("products", "Продукты"), ("design", "Дизайн"), ("brands", "Бренды"), ("games", "Игры")),
+        "en": (("all", "All"), ("ai", "AI"), ("photos", "Photos"), ("products", "Products"), ("design", "Design"), ("brands", "Brands"), ("games", "Games")),
+    }
+    buttons = "".join(
+        f'<button type="button" data-post-topic="{value}" aria-pressed="{"true" if value == "all" else "false"}">{label}</button>'
+        for value, label in labels[lang]
+    )
+    aria = "Topics" if lang == "en" else "Темы"
+    return f'<div class="collection-topics" aria-label="{aria}">{buttons}</div>'
+
+
+def render_feed_post(post, lang="ru"):
+    media = f"        {render_media(post.get('media') or [], post, lang, eager_first=False)}\n" if post.get("media") else ""
+    text_value = shared.post_text(post, lang)
+    title = post_title(post, 140, lang)
+    text = f'          <div class="screenshot-text">{render_rich_text(post, lang)}</div>\n' if text_value else ""
+    reactions = f"\n            {render_reactions(post.get('reactions') or [])}" if post.get("reactions") else ""
+    topic = generate_home_canvas.classify_post(post)
+
+    return f"""<article class="screenshot-post" id="post-{shared.escape_attr(post.get('id'))}" data-post-topic="{topic}">
+{media}        <div class="screenshot-body">
+          <h2 class="post-title"><a href="{shared.localized_path('/screenshots/' + str(post['id']) + '/', lang)}">{shared.escape_html(title)}</a></h2>
+{text}          <div class="screenshot-meta">
+            <a class="screenshot-date" href="{shared.escape_attr(post.get('telegramUrl'))}" target="_blank" rel="noopener"><time datetime="{shared.escape_attr(shared.iso_date(post.get('date')))}">{shared.escape_html(format_post_date(post, lang))}</time></a>{reactions}
+          </div>
+        </div>
+      </article>"""
 
 
 def render_post_page(post, newer, older, lang="ru"):
@@ -252,22 +364,22 @@ def render_static_post(post, lang="ru"):
       </article>"""
 
 
-def render_media(items, post, lang="ru"):
+def render_media(items, post, lang="ru", eager_first=True):
     class_name = f"screenshot-media{' is-grid' if len(items) > 1 else ' is-single'}"
-    body = "\n          ".join(render_media_item(item, post, index, lang) for index, item in enumerate(items))
+    body = "\n          ".join(render_media_item(item, post, index, lang, eager_first) for index, item in enumerate(items))
     return f"""<div class="{class_name}">
           {body}
         </div>"""
 
 
-def render_media_item(media, post, index, lang="ru"):
+def render_media_item(media, post, index, lang="ru", eager_first=True):
     aspect = f' style="aspect-ratio: {int(media["width"])} / {int(media["height"])}"' if media.get("width") and media.get("height") else ""
     alt = shared.escape_attr(media_alt(post, index, lang))
     src = shared.escape_attr(shared.telegram_asset_url(media.get("src")))
 
     if media.get("type") in {"photo", "sticker"}:
         return f"""<div class="screenshot-media-item is-image"{aspect}>
-            <img src="{src}" loading="{'eager' if index == 0 else 'lazy'}" decoding="async" alt="{alt}">
+            <img src="{src}" loading="{'eager' if eager_first and index == 0 else 'lazy'}" decoding="async" alt="{alt}">
           </div>"""
 
     if media.get("type") in {"video", "animation"}:

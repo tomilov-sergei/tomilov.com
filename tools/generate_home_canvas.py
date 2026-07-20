@@ -17,6 +17,7 @@ HOME_PATHS = {
     "ru": ROOT_DIR / "index.html",
     "en": ROOT_DIR / "en/index.html",
 }
+CANVAS_DATA_DIR = ROOT_DIR / "assets/canvas"
 TELEGRAM_MEDIA_BASE = "https://s3.twcstorage.ru/00df5bd5-137f-492a-8d95-c7ee2cc2d851"
 SITE_URL = "https://tomilov.com"
 START_MARKER = "<!-- home-canvas-generated:start -->"
@@ -31,7 +32,7 @@ THEMES = [
     {
         "id": "ai",
         "angle": -1.62,
-        "color": "#7b65d8",
+        "color": "oklch(58.5% 0.17 289)",
         "label": {"ru": "AI", "en": "AI"},
         "patterns": [
             re.compile(r"(^|\s)(ai|ии)(\s|$)", re.IGNORECASE),
@@ -41,7 +42,7 @@ THEMES = [
     {
         "id": "photos",
         "angle": -0.82,
-        "color": "#2fae91",
+        "color": "oklch(67.6% 0.12 174)",
         "label": {"ru": "Фото", "en": "Photos"},
         "patterns": [
             re.compile(r"фото|камера|снимок|снимки|leica|iphone|hdr|объектив|пл[её]нк|фотограф|съ[её]мк", re.IGNORECASE),
@@ -50,7 +51,7 @@ THEMES = [
     {
         "id": "products",
         "angle": -0.08,
-        "color": "#2f8ad8",
+        "color": "oklch(61.8% 0.14 249)",
         "label": {"ru": "Продукты", "en": "Products"},
         "patterns": [
             re.compile(r"продукт|стартап|сервис|прилож|пользователь|фича|запуск|подписк|монетиз|платформ|рекомендац", re.IGNORECASE),
@@ -59,7 +60,7 @@ THEMES = [
     {
         "id": "design",
         "angle": 0.58,
-        "color": "#df5c4f",
+        "color": "oklch(64% 0.17 28.3)",
         "label": {"ru": "Дизайн", "en": "Design"},
         "patterns": [
             re.compile(r"дизайн|интерфейс|\bui\b|\bux\b|figma|шрифт|визуал|лендинг|экран|кнопк|цвет|типограф|анимац|микро", re.IGNORECASE),
@@ -68,14 +69,14 @@ THEMES = [
     {
         "id": "myphotos",
         "angle": 1.2,
-        "color": "#c7922f",
+        "color": "oklch(69.4% 0.13 78.8)",
         "label": {"ru": "Мои фото", "en": "My photos"},
         "patterns": [],
     },
     {
         "id": "games",
         "angle": 2.42,
-        "color": "#6171d4",
+        "color": "oklch(58.4% 0.15 274)",
         "label": {"ru": "Игры", "en": "Games"},
         "patterns": [
             re.compile(r"игр|\bgame\b|gaming|doom|silent hill|nintendo|playstation|xbox|steam|sekiro|dead space|гейм|mixtape|wicked", re.IGNORECASE),
@@ -84,7 +85,7 @@ THEMES = [
     {
         "id": "brands",
         "angle": -2.62,
-        "color": "#8b8780",
+        "color": "oklch(62.5% 0.01 81.8)",
         "label": {"ru": "Бренды", "en": "Brands"},
         "patterns": [
             re.compile(r"бренд|\bbrand\b|nike|apple|google|teenage engineering|dyson|sony|tesla|ikea|leica|nothing|airbnb|ferrari|anthropic", re.IGNORECASE),
@@ -113,6 +114,7 @@ def main():
     geometry, items = build_layout(posts, photos)
 
     for lang, path in HOME_PATHS.items():
+        write_content_chunks(items, lang)
         update_home_page(path, geometry, items, lang)
 
     print(f"Generated home canvas with {len(posts)} posts and {len(photos)} photos")
@@ -123,6 +125,7 @@ def main():
 def generate(posts, photos):
     geometry, items = build_layout(posts, photos)
     for lang, path in HOME_PATHS.items():
+        write_content_chunks(items, lang)
         update_home_page(path, geometry, items, lang)
     return geometry, items
 
@@ -297,18 +300,47 @@ def render_card(item, lang):
     theme = item["theme"]
     title = item_title(item, lang)
     href = item_href(item, lang)
-    width, height = CARD_BOUNDS[item["size"]]
-    content = render_card_content(item, lang, title)
+    content_key = item_content_key(item)
+    theme_id = theme["id"]
+    content_chunk = item_chunk_id(item)
     style = (
         f'left: {format_number(item["x"])}px; top: {format_number(item["y"])}px; '
-        f'--rotation: {item["rotation"]:.2f}deg; --z: {item["z"]}; --theme-color: {theme["color"]}'
+        f'--rotation: {item["rotation"]:.2f}deg; --z: {item["z"]}'
     )
-    return f'''  <a class="home-canvas-node is-{item["variant"]} {item["size"]} is-placeholder" href="{escape_attr(href)}" draggable="false" data-home-node="true" data-canvas-x="{format_number(item["x"])}" data-canvas-y="{format_number(item["y"])}" data-canvas-width="{width}" data-canvas-height="{height}" style="{style}" aria-label="{escape_attr(title)}">
+    return f'''  <a class="home-canvas-node theme-{theme_id} is-{item["variant"]} {item["size"]} is-placeholder" href="{escape_attr(href)}" draggable="false" data-canvas-card="{escape_attr(content_chunk)}|{escape_attr(content_key)}" style="{style}">
     <span class="home-canvas-card-placeholder" aria-hidden="true"></span>
-    <template data-canvas-card-template>
-{indent_lines(content, 6)}
-    </template>
+    <span class="visually-hidden">{escape_text(title)}</span>
   </a>'''
+
+
+def write_content_chunks(items, lang):
+    CANVAS_DATA_DIR.mkdir(parents=True, exist_ok=True)
+    chunks = {}
+
+    for stale_path in CANVAS_DATA_DIR.glob(f"{lang}-*.json"):
+        stale_path.unlink()
+
+    for item in items:
+        chunks.setdefault(item_chunk_id(item), {})[item_content_key(item)] = render_card_content(
+            item,
+            lang,
+            item_title(item, lang),
+        )
+
+    for chunk_id, content in chunks.items():
+        path = CANVAS_DATA_DIR / f"{lang}-{chunk_id}.json"
+        path.write_text(
+            json.dumps(content, ensure_ascii=False, separators=(",", ":")),
+            encoding="utf-8",
+        )
+
+
+def item_content_key(item):
+    return f'{item["kind"]}:{item["record"].get("id", "")}'
+
+
+def item_chunk_id(item):
+    return f'{item["theme"]["id"]}-{int(item.get("ring", 0)) // 4}'
 
 
 def render_card_content(item, lang, title):

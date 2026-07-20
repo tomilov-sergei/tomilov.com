@@ -1,8 +1,168 @@
 {
   "source": "Screenshot of the Day",
   "channelUsername": "screenshot_of_the_day",
-  "importedAt": "2026-07-13T18:05:18.060806Z",
+  "importedAt": "2026-07-19T08:37:35.205894Z",
   "posts": [
+    {
+      "id": "2087",
+      "messageIds": [
+        2087
+      ],
+      "mediaGroupId": null,
+      "telegramUrl": "https://t.me/screenshot_of_the_day/2087",
+      "date": "2026-07-19T08:37:34Z",
+      "dateUnixtime": 1784450254,
+      "edited": null,
+      "text": "Представим, что академическая музыка и электронная находятся на разных полюсах воображаемой системы координат: мелодия vs ритм \n\nТеперь заменим музыку на литературу \n\n«Трилогия» Фоссе — это электронная музыка в мире литературы",
+      "entities": [
+        {
+          "type": "plain",
+          "text": "Представим, что академическая музыка и электронная находятся на разных полюсах воображаемой системы координат: мелодия vs ритм \n\nТеперь заменим музыку на литературу \n\n«",
+          "href": null
+        },
+        {
+          "type": "text_link",
+          "text": "Трилогия» Фоссе",
+          "href": "https://books.yandex.ru/books/bO1QVtco?utm_campaign=users_referral&utm_medium=referral&utm_source=direct_link"
+        },
+        {
+          "type": "plain",
+          "text": " — это электронная музыка в мире литературы",
+          "href": null
+        }
+      ],
+      "media": [
+        {
+          "type": "photo",
+          "src": "/assets/telegram/live/2026/07/19/2087-photo-file_81.jpg",
+          "width": 1922,
+          "height": 2560,
+          "size": 332924,
+          "mimeType": "image/jpeg",
+          "duration": null,
+          "name": "file_81.jpg",
+          "sourceMessageId": 2087
+        }
+      ],
+      "reactions": []
+    },
+    {
+      "id": "2086",
+      "messageIds": [
+        2086
+      ],
+      "mediaGroupId": null,
+      "telegramUrl": "https://t.me/screenshot_of_the_day/2086",
+      "date": "2026-07-18T16:06:32Z",
+      "dateUnixtime": 1784390792,
+      "edited": null,
+      "text": "Нравится фотка для Lookzine",
+      "entities": [
+        {
+          "type": "plain",
+          "text": "Нравится фотка для ",
+          "href": null
+        },
+        {
+          "type": "text_link",
+          "text": "Lookzine",
+          "href": "https://t.me/lookziner/492"
+        }
+      ],
+      "media": [
+        {
+          "type": "photo",
+          "src": "/assets/telegram/live/2026/07/18/2086-photo-file_80.jpg",
+          "width": 1178,
+          "height": 2560,
+          "size": 153738,
+          "mimeType": "image/jpeg",
+          "duration": null,
+          "name": "file_80.jpg",
+          "sourceMessageId": 2086
+        }
+      ],
+      "reactions": []
+    },
+    {
+      "id": "2082",
+      "messageIds": [
+        2082,
+        2083,
+        2084,
+        2085
+      ],
+      "mediaGroupId": "14273553432531682",
+      "telegramUrl": "https://t.me/screenshot_of_the_day/2082",
+      "date": "2026-07-16T09:29:39Z",
+      "dateUnixtime": 1784194179,
+      "edited": null,
+      "text": "Йован, смотри, есть Jamboree\n\nИнстаграм с играми, как ты непросил\n\nМожно сделать свою. \n\nКстати, редактор-генератор игр на голову веселее пустого поля ввода в «серьёзных» llm обвязках",
+      "entities": [
+        {
+          "type": "plain",
+          "text": "Йован, смотри, есть ",
+          "href": null
+        },
+        {
+          "type": "text_link",
+          "text": "Jamboree",
+          "href": "https://apps.apple.com/app/id6747311034"
+        },
+        {
+          "type": "plain",
+          "text": "\n\nИнстаграм с играми, как ты непросил\n\nМожно сделать свою. \n\nКстати, редактор-генератор игр на голову веселее пустого поля ввода в «серьёзных» llm обвязках",
+          "href": null
+        }
+      ],
+      "media": [
+        {
+          "type": "video",
+          "src": "/assets/telegram/live/2026/07/16/2082-video-IMG_2059.MP4",
+          "width": 576,
+          "height": 1280,
+          "size": 4336382,
+          "mimeType": "video/mp4",
+          "duration": 29,
+          "name": "IMG_2059.MP4",
+          "sourceMessageId": 2082
+        },
+        {
+          "type": "photo",
+          "src": "/assets/telegram/live/2026/07/16/2083-photo-file_77.jpg",
+          "width": 1178,
+          "height": 2560,
+          "size": 287375,
+          "mimeType": "image/jpeg",
+          "duration": null,
+          "name": "file_77.jpg",
+          "sourceMessageId": 2083
+        },
+        {
+          "type": "photo",
+          "src": "/assets/telegram/live/2026/07/16/2084-photo-file_78.jpg",
+          "width": 1178,
+          "height": 2560,
+          "size": 168383,
+          "mimeType": "image/jpeg",
+          "duration": null,
+          "name": "file_78.jpg",
+          "sourceMessageId": 2084
+        },
+        {
+          "type": "photo",
+          "src": "/assets/telegram/live/2026/07/16/2085-photo-file_79.jpg",
+          "width": 1178,
+          "height": 2560,
+          "size": 248067,
+          "mimeType": "image/jpeg",
+          "duration": null,
+          "name": "file_79.jpg",
+          "sourceMessageId": 2085
+        }
+      ],
+      "reactions": []
+    },
     {
       "id": "2081",
       "messageIds": [

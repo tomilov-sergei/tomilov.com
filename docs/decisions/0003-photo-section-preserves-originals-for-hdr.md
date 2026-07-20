@@ -16,13 +16,13 @@ The production runtime is still a static site with small Python services only wh
 
 Photos are stored as original uploaded files under `assets/photos/originals/**`. Publishing happens through Apple Shortcut rather than a public upload form on the site. The upload service validates the token and file signature, updates `assets/photos/photos.json`, and does not resize, draw to canvas, strip metadata, or transcode images.
 
-The public page has static photo cards for crawlers and a JavaScript-enhanced lazy-loaded photo feed for people. The detail viewer opens the same original file and uses `dynamic-range-limit: no-limit` as a progressive enhancement for browsers and displays that support HDR.
+The public page has static photo cards for crawlers and a JavaScript-enhanced lazy-loaded photo feed for people. HDR photos use the untouched original directly in the feed and set `dynamic-range-limit: no-limit`, so HDR is visible without opening the viewer when the browser and display support it. SDR photos use generated 480/960/1440 WebP derivatives with JPEG fallbacks in the feed. The detail viewer always opens the original file.
 
 Production deploys symlink `assets/photos` to shared storage, matching the Telegram media policy, so phone uploads survive code releases.
 
 ## Consequences
 
 - HDR gain maps and wide-dynamic-range data have the best chance to survive because the file bytes are preserved.
-- The first version does not generate responsive SDR thumbnails, so very large originals can make the feed heavier.
+- Responsive SDR derivatives keep the feed light without replacing or transcoding HDR originals.
 - Browser and display support still determines whether a visitor actually sees HDR.
 - If the photo library grows, add a derivative pipeline that keeps originals and creates separate previews without replacing them.

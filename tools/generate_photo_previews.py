@@ -14,12 +14,14 @@ ROOT_DIR = Path(__file__).resolve().parent.parent
 PHOTOS_JSON_PATH = ROOT_DIR / "assets/photos/photos.json"
 PHOTOS_ROOT = ROOT_DIR / "assets/photos"
 PREVIEW_DIR = PHOTOS_ROOT / "canvas"
+FEED_PREVIEW_DIR = PHOTOS_ROOT / "feed"
 PREVIEW_MAX_EDGE = 960
+FEED_PREVIEW_WIDTHS = (480, 960, 1440)
 PREVIEW_JPEG_QUALITY = 5
 
 
 def main():
-    parser = argparse.ArgumentParser(description="Generate lightweight JPEG previews for the home canvas.")
+    parser = argparse.ArgumentParser(description="Generate lightweight responsive JPEG/WebP previews for the canvas and photo feed.")
     parser.add_argument(
         "--strict",
         action="store_true",
@@ -42,11 +44,15 @@ def generate(photos, strict=False):
 
     for photo in photos:
         source = source_path(photo)
-        output = preview_path(photo)
         if not source or not source.exists():
             missing.append(str(photo.get("id") or photo.get("src") or "unknown"))
             continue
-        entries.append((photo, source, output))
+        outputs = [(preview_path(photo), PREVIEW_MAX_EDGE, "edge")]
+        if not photo.get("hdr"):
+            for width in feed_preview_widths(photo):
+                outputs.append((feed_preview_path(photo, width), width, "width"))
+                outputs.append((feed_preview_path(photo, width, "webp"), width, "width"))
+        entries.append((photo, source, outputs))
 
     ffmpeg = shutil.which("ffmpeg")
     failures = []
@@ -56,16 +62,17 @@ def generate(photos, strict=False):
     if entries and not ffmpeg:
         failures.extend(str(photo.get("id") or source) for photo, source, _ in entries)
     else:
-        for photo, source, output in entries:
-            if preview_is_current(source, output):
-                cached += 1
-                continue
+        for photo, source, outputs in entries:
+            for output, size, mode in outputs:
+                if preview_is_current(source, output):
+                    cached += 1
+                    continue
 
-            try:
-                generate_preview(ffmpeg, source, output)
-                generated += 1
-            except (OSError, subprocess.CalledProcessError) as error:
-                failures.append(f"{photo.get('id') or source}: {error}")
+                try:
+                    generate_preview(ffmpeg, source, output, size, mode)
+                    generated += 1
+                except (OSError, subprocess.CalledProcessError) as error:
+                    failures.append(f"{photo.get('id') or source}: {error}")
 
     summary = {
         "generated": generated,
@@ -81,12 +88,15 @@ def generate(photos, strict=False):
     return summary
 
 
-def generate_preview(ffmpeg, source, output):
+def generate_preview(ffmpeg, source, output, size=PREVIEW_MAX_EDGE, mode="edge"):
     output.parent.mkdir(parents=True, exist_ok=True)
-    temporary = output.with_name(f".{output.stem}.{os.getpid()}.tmp.jpg")
+    temporary = output.with_name(f".{output.stem}.{os.getpid()}.tmp{output.suffix}")
     temporary.unlink(missing_ok=True)
 
-    scale = f"scale={PREVIEW_MAX_EDGE}:{PREVIEW_MAX_EDGE}:force_original_aspect_ratio=decrease"
+    if mode == "width":
+        scale = f"scale={size}:-2"
+    else:
+        scale = f"scale={size}:{size}:force_original_aspect_ratio=decrease"
     command = [
         ffmpeg,
         "-hide_banner",
@@ -100,12 +110,14 @@ def generate_preview(ffmpeg, source, output):
         scale,
         "-frames:v",
         "1",
-        "-q:v",
-        str(PREVIEW_JPEG_QUALITY),
         "-map_metadata",
         "-1",
-        str(temporary),
     ]
+    if output.suffix.lower() == ".webp":
+        command.extend(["-c:v", "libwebp", "-quality", "82", "-compression_level", "4"])
+    else:
+        command.extend(["-q:v", str(PREVIEW_JPEG_QUALITY)])
+    command.append(str(temporary))
 
     try:
         subprocess.run(command, check=True, stdout=subprocess.DEVNULL, stderr=subprocess.PIPE)
@@ -139,6 +151,31 @@ def preview_path(photo):
 
 def preview_public_url(photo):
     return f"/assets/photos/canvas/{safe_photo_id(photo)}.jpg"
+
+
+def feed_preview_path(photo, width=960, extension="jpg"):
+    return FEED_PREVIEW_DIR / f"{safe_photo_id(photo)}-{int(width)}.{extension}"
+
+
+def feed_preview_public_url(photo, width=960, extension="jpg"):
+    return f"/assets/photos/feed/{safe_photo_id(photo)}-{int(width)}.{extension}"
+
+
+def feed_preview_widths(photo):
+    try:
+        source_width = int(photo.get("width") or 0)
+    except (TypeError, ValueError):
+        source_width = 0
+    return tuple(width for width in FEED_PREVIEW_WIDTHS if not source_width or width <= source_width)
+
+
+def feed_preview_srcset(photo, extension="jpg"):
+    if photo.get("hdr"):
+        return ""
+    return ", ".join(
+        f"{feed_preview_public_url(photo, width, extension)} {width}w"
+        for width in feed_preview_widths(photo)
+    )
 
 
 def safe_photo_id(photo):

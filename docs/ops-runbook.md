@@ -17,6 +17,9 @@ This runbook covers production checks for `tomilov.com` on the Timeweb VPS.
 - Photo upload env: production env file based on `ops/photo-upload.env.example`
 - Telegram service: `tomilov-telegram-live.service`
 - Photo service: `tomilov-photo-upload.service`
+- Nginx compression and security policy: `ops/nginx-site-hardening.conf.example`
+
+The hardening snippet belongs in the HTTPS `server` block. After changing nginx, run `nginx -t`, reload it, and verify that HTML, CSS, JavaScript, and JSON responses carry gzip where accepted plus the documented security headers. Locations with their own `add_header` directives must repeat or include the same header set because nginx does not inherit parent headers into such locations.
 
 ## After Deploy
 

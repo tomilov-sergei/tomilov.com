@@ -129,7 +129,8 @@ find photos -maxdepth 2 -type f | sort"
   exit 0
 fi
 
-node "$ROOT_DIR/tools/generate-seo-pages.mjs"
+python3 "$ROOT_DIR/tools/generate_telegram_seo.py"
+python3 "$ROOT_DIR/tools/generate_photo_seo.py"
 
 if [[ "${PUSH_LOCAL_TELEGRAM:-0}" == "1" && -f "$LOCAL_TELEGRAM_DIR/posts.json" ]]; then
   scp -i "$KEY" -o IdentitiesOnly=yes \

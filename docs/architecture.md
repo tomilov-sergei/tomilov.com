@@ -22,6 +22,7 @@ Product direction for `/screenshots/`: a public collection of observations about
 - Static HTML, CSS, and vanilla JavaScript.
 - Served by nginx on Ubuntu.
 - No React, Next.js, Astro, CMS, or build step in the current production runtime.
+- Node.js 24 LTS is the pinned development and CI toolchain for generation, PostCSS, Stylelint, Browserslist, and size budgets; production remains static and does not require Node.js.
 - Framer output exists only as an archived reference in `framer-snapshot/`.
 
 ## Key Files
@@ -35,7 +36,8 @@ Product direction for `/screenshots/`: a public collection of observations about
 - `barcelona-guide/index.html` - curated Barcelona guide.
 - `assets/barcelona-guide/**` - local working mirror of guide images; ignored by Git and stored in production shared storage.
 - `styles.css` - shared styles.
-- `script.js` - home canvas interaction and viewport hydration, YouTube activation, Telegram feed rendering, photo feed rendering, places rendering, overlays, and photo viewer.
+- `script.js` - small route-aware bootstrap; it loads `assets/js/features.js` only on pages that need the full interactive runtime.
+- `assets/canvas/{ru,en}-*.json` - generated, thematic home-canvas content chunks loaded only when a nearby card needs hydration.
 - `assets/telegram/posts.json` - imported Telegram post database.
 - `assets/photos/photos.json` - uploaded photo manifest.
 - `feed.xml`, `screenshots/feed.xml`, `photos/feed.xml` - RSS feeds generated from the same manifests as SEO pages.
@@ -45,7 +47,7 @@ Product direction for `/screenshots/`: a public collection of observations about
 - `tools/photo_upload_server.py` - token-protected Apple Shortcut upload endpoint.
 - `tools/generate_telegram_seo.py` - production refresh for blog pages, RSS, and sitemap after Telegram webhook updates.
 - `tools/generate_home_canvas.py` - deterministic static generation of every home-canvas card into `index.html` and `en/index.html`.
-- `tools/generate_photo_previews.py` - lightweight 960 px JPEG derivatives for home-canvas photo cards; originals remain untouched.
+- `tools/generate_photo_previews.py` - lightweight canvas previews plus 480/960/1440 WebP and JPEG feed derivatives for SDR photos; HDR photos keep the untouched original as the feed source.
 - `tools/translate-content.mjs` - OpenAI-backed translation backfill for `translations.en`.
 - `tools/deploy-site.sh` - production deployment script.
 - `tools/check-site.py` - static integrity check for links, manifests, generated pages, feeds, and sitemap.
@@ -74,7 +76,7 @@ Photo originals are intentionally stored without canvas processing, resizing, or
 
 Static SEO pages, sitemap, and RSS are generated from `assets/telegram/posts.json` and `assets/photos/photos.json`. The full deploy path uses `tools/generate-seo-pages.mjs`. The production Telegram webhook path uses `tools/generate_telegram_seo.py` so new posts update `/screenshots/<id>/`, `/screenshots/feed.xml`, `/feed.xml`, and `sitemap.xml` immediately. The production photo upload path uses `tools/generate_photo_seo.py` so new photos update `/photos/**`, `/photos/feed.xml`, `/feed.xml`, and `sitemap.xml` immediately. Both production refresh generators are Python-only, so they do not require Node.js on the VPS.
 
-Both production refresh generators also call `tools/generate_home_canvas.py`. The home page therefore contains static lightweight links for every post and photo and does not download either full manifest at runtime. Card templates and media are hydrated by `script.js` only near the visible canvas viewport.
+Both production refresh generators also call `tools/generate_home_canvas.py`. The home page therefore contains static lightweight links for every post and photo and does not download either full manifest at runtime. Card bodies live in thematic JSON chunks and are hydrated only near the visible canvas viewport.
 
 Personal photo cards use generated files under `assets/photos/canvas/`. The photo generator creates missing previews with ffmpeg before refreshing the home canvas, while permanent photo pages continue to use the original HDR-capable files.
 

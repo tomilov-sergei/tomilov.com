@@ -1,0 +1,2 @@
+minimumReleaseAgeExclude:
+  - stylelint@17.14.1

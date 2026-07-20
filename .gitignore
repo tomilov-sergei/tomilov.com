@@ -4,10 +4,13 @@
 .env.*
 .DS_Store
 ._*
+node_modules/
+.pnpm-store/
 __pycache__/
 *.py[cod]
 assets/telegram/*
 !assets/telegram/posts.json
 assets/photos/originals/
 assets/photos/canvas/
+assets/photos/feed/
 assets/barcelona-guide/

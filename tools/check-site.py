@@ -12,7 +12,7 @@ ROOT = Path(__file__).resolve().parent.parent
 SITE_HOSTS = {"tomilov.com", "www.tomilov.com"}
 SHARED_ASSET_PREFIXES = (
     "/assets/barcelona-guide/",
-    "/assets/photos/originals/",
+    "/assets/photos/",
     "/assets/telegram/",
 )
 RUNTIME_ENDPOINTS = {
@@ -144,6 +144,8 @@ def check_manifests(errors):
     return {
         "posts": len(posts),
         "photos": len(photos),
+        "hdr_photos": sum(bool(photo.get("hdr")) for photo in photos),
+        "sdr_photos": sum(not photo.get("hdr") for photo in photos),
         "missing_media": len(posts_payload.get("missing") or []),
         "translated_posts": len(translated_posts),
         "text_posts": len(text_posts),
@@ -153,11 +155,13 @@ def check_manifests(errors):
 
 def check_home_canvas(errors, expected_cards, expected_photos):
     counts = []
-    for path in (ROOT / "index.html", ROOT / "en/index.html"):
+    for lang, path in (("ru", ROOT / "index.html"), ("en", ROOT / "en/index.html")):
         source = path.read_text(encoding="utf-8")
-        count = source.count('data-home-node="true"')
-        preview_count = source.count('data-src="/assets/photos/canvas/')
-        fallback_count = source.count('data-fallback-src="https://tomilov.com/assets/photos/')
+        count = source.count('class="home-canvas-node ')
+        chunk_paths = sorted((ROOT / "assets/canvas").glob(f"{lang}-*.json"))
+        chunk_source = "\n".join(chunk.read_text(encoding="utf-8") for chunk in chunk_paths)
+        preview_count = chunk_source.count('/assets/photos/canvas/')
+        fallback_count = chunk_source.count('data-fallback-src=\\"https://tomilov.com/assets/photos/')
         counts.append(count)
         if count != expected_cards:
             errors.append(
@@ -166,6 +170,10 @@ def check_home_canvas(errors, expected_cards, expected_photos):
             )
         if "<!-- home-canvas-generated:start -->" not in source or "<!-- home-canvas-generated:end -->" not in source:
             errors.append(f"Missing home canvas generation markers in {path.relative_to(ROOT)}")
+        if len(chunk_paths) < 7:
+            errors.append(
+                f"Home canvas chunk count mismatch for {lang}: expected at least 7, found {len(chunk_paths)}"
+            )
         if preview_count != expected_photos or fallback_count != expected_photos:
             errors.append(
                 f"Home canvas photo preview mismatch in {path.relative_to(ROOT)}: "
@@ -236,6 +244,33 @@ def check_xml(errors):
     return len(locations)
 
 
+def check_page_contracts(errors, manifest_summary):
+    for path in (ROOT / "about/index.html", ROOT / "en/about/index.html"):
+        source = path.read_text(encoding="utf-8")
+        if source.count("<h1") != 1:
+            errors.append(f"About page must contain exactly one h1: {path.relative_to(ROOT)}")
+        if "about-socials" not in source or "work-kicker" not in source:
+            errors.append(f"About page structure is incomplete: {path.relative_to(ROOT)}")
+
+    for path in (ROOT / "screenshots/index.html", ROOT / "en/screenshots/index.html"):
+        source = path.read_text(encoding="utf-8")
+        if "data-static-post-feed" not in source or "data-post-search" not in source:
+            errors.append(f"Blog collection controls are missing: {path.relative_to(ROOT)}")
+        if source.count('class="screenshot-post"') != 12:
+            errors.append(f"Blog page must contain 12 static fallback posts: {path.relative_to(ROOT)}")
+
+    for path in (ROOT / "photos/index.html", ROOT / "en/photos/index.html"):
+        source = path.read_text(encoding="utf-8")
+        if source.count('loading="eager"') != 1:
+            errors.append(f"Photo feed must eagerly load exactly one image: {path.relative_to(ROOT)}")
+        if source.count('type="image/webp"') != manifest_summary["sdr_photos"]:
+            errors.append(f"Every SDR feed image must have a WebP source: {path.relative_to(ROOT)}")
+        if source.count('data-fallback-src=') != manifest_summary["sdr_photos"]:
+            errors.append(f"Every optimized SDR image must preserve its original fallback: {path.relative_to(ROOT)}")
+        if source.count('class="photo-hdr-badge"') != manifest_summary["hdr_photos"]:
+            errors.append(f"HDR feed badge count does not match the manifest: {path.relative_to(ROOT)}")
+
+
 def main():
     errors = []
 
@@ -248,6 +283,7 @@ def main():
             manifest_summary["photos"],
         )
         sitemap_count = check_xml(errors)
+        check_page_contracts(errors, manifest_summary)
     except (json.JSONDecodeError, OSError, ValueError) as error:
         errors.append(str(error))
         html_count = reference_count = sitemap_count = canvas_count = 0

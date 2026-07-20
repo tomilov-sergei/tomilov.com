@@ -16,29 +16,45 @@ jobs:
 
       - uses: actions/setup-python@v6
         with:
-          python-version: "3.10"
+          python-version: "3.13"
 
       - uses: actions/setup-node@v6
         with:
-          node-version: "22"
+          node-version: "24.18.0"
+
+      - name: Install frontend tooling
+        run: |
+          corepack enable
+          corepack prepare pnpm@11.9.0 --activate
+          pnpm install --frozen-lockfile
 
       - name: Check committed secrets
         run: python3 tools/check-secrets.py
 
       - name: Check static site integrity
-        run: python3 tools/check-site.py
+        run: pnpm run check:site
+
+      - name: Check CSS and performance budgets
+        run: |
+          pnpm run lint:css
+          pnpm run check:css
+          pnpm run check:size
 
       - name: Check script syntax
         run: |
           python3 -m compileall -q tools
           bash -n tools/*.sh
           node --check script.js
+          find assets/js -maxdepth 1 -type f -name '*.js' -exec node --check {} \;
           find tools -maxdepth 1 -type f \( -name '*.js' -o -name '*.mjs' \) -exec node --check {} \;
 
       - name: Verify generated pages are current
         run: |
-          node tools/generate-seo-pages.mjs
+          pnpm run generate
           git diff --exit-code -- \
+            index.html \
+            en/index.html \
+            assets/canvas \
             sitemap.xml \
             feed.xml \
             en/feed.xml \
