@@ -5,8 +5,17 @@
     <link>https://tomilov.com/screenshots/</link>
     <description>Новые посты канала Screenshot of the Day.</description>
     <language>ru-RU</language>
-    <lastBuildDate>Sun, 19 Jul 2026 08:37:34 GMT</lastBuildDate>
+    <lastBuildDate>Tue, 21 Jul 2026 19:04:56 GMT</lastBuildDate>
     <atom:link href="https://tomilov.com/screenshots/feed.xml" rel="self" type="application/rss+xml"/>
+    <item>
+      <title>«Мне интересно» Мы пишем письма, что отправляем сами себе, ведём бесконечные гугл-доки со списком дел, делаем скриншоты…</title>
+      <link>https://tomilov.com/screenshots/2088/</link>
+      <guid isPermaLink="true">https://tomilov.com/screenshots/2088/</guid>
+      <pubDate>Tue, 21 Jul 2026 19:04:56 GMT</pubDate>
+      <description>«Мне интересно» Мы пишем письма, что отправляем сами себе, ведём бесконечные гугл-доки со списком дел, делаем скриншоты явлений, что нас заинтересовали: Об…</description>
+      <category>Screenshot of the Day</category>
+      <media:content url="https://s3.twcstorage.ru/00df5bd5-137f-492a-8d95-c7ee2cc2d851/assets/telegram/live/2026/07/21/2088-photo-1.jpg" medium="image" type="image/jpeg"/>
+    </item>
     <item>
       <title>Представим, что академическая музыка и электронная находятся на разных полюсах воображаемой системы координат: мелодия…</title>
       <link>https://tomilov.com/screenshots/2087/</link>
@@ -431,15 +440,6 @@
       <description>Пост канала Screenshot of the Day от 23 апреля 2026 г..</description>
       <category>Screenshot of the Day</category>
       <media:content url="https://s3.twcstorage.ru/00df5bd5-137f-492a-8d95-c7ee2cc2d851/assets/telegram/photos/photo_1329%4023-04-2026_22-07-34.jpg" medium="image" type="image/jpeg"/>
-    </item>
-    <item>
-      <title>Пост от 23 апреля 2026 г.</title>
-      <link>https://tomilov.com/screenshots/1976/</link>
-      <guid isPermaLink="true">https://tomilov.com/screenshots/1976/</guid>
-      <pubDate>Thu, 23 Apr 2026 19:07:30 GMT</pubDate>
-      <description>Пост канала Screenshot of the Day от 23 апреля 2026 г..</description>
-      <category>Screenshot of the Day</category>
-      <media:content url="https://s3.twcstorage.ru/00df5bd5-137f-492a-8d95-c7ee2cc2d851/assets/telegram/video_files/Imagine_every_pixel_on_your_screen%2C_streamed_live_directly_from.mp4_thumb.jpg" medium="image" type="image/jpeg"/>
     </item>
   </channel>
 </rss>
