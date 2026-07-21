@@ -14,7 +14,7 @@ The production runtime is still a static site with small Python services only wh
 
 ## Decision
 
-Photos are stored as original uploaded files under `assets/photos/originals/**`. Publishing happens through Apple Shortcut rather than a public upload form on the site. The upload service validates the token and file signature, updates `assets/photos/photos.json`, and does not resize, draw to canvas, strip metadata, or transcode images.
+Photos are stored as original uploaded files under `assets/photos/originals/**`. Publishing happens through Apple Shortcut rather than a public upload form on the site. The upload service validates the token and file signature, automatically detects embedded Apple/ISO 21496 HDR gain maps, updates `assets/photos/photos.json`, and does not resize, draw to canvas, strip metadata, or transcode images. A deploy-time backfill repairs missing HDR flags in older manifest records from the untouched originals.
 
 The public page has static photo cards for crawlers and a JavaScript-enhanced lazy-loaded photo feed for people. HDR photos use the untouched original directly in the feed and set `dynamic-range-limit: no-limit`, so HDR is visible without opening the viewer when the browser and display support it. SDR photos use generated 480/960/1440 WebP derivatives with JPEG fallbacks in the feed. The detail viewer always opens the original file.
 

@@ -392,7 +392,7 @@ def render_photo_page(photo, newer, older, lang="ru"):
     image = photo_asset_url(photo.get("src"))
     json_ld = photo_json_ld(photo, url, description, lang)
     caption_text = photo_caption(photo, lang)
-    caption = f"<p>{escape_html(caption_text)}</p>" if caption_text else ""
+    caption = f"\n            <p>{escape_html(caption_text)}</p>" if caption_text else ""
     newer_link = f'<a href="{localized_path("/photos/" + str(newer["id"]) + "/", lang)}">{tr(lang, "newer")}</a>' if newer else "<span></span>"
     older_link = f'<a href="{localized_path("/photos/" + str(older["id"]) + "/", lang)}">{tr(lang, "older")}</a>' if older else "<span></span>"
 
@@ -439,8 +439,7 @@ def render_photo_page(photo, newer, older, lang="ru"):
             <img src="{escape_attr(photo.get('src'))}"{image_dimensions_attrs(photo)} decoding="async" alt="{escape_attr(photo_alt(photo, lang))}">
           </a>
           <figcaption>
-            <h1>{escape_html(photo_title(photo, 140, lang))}</h1>
-            {caption}
+            <h1>{escape_html(photo_title(photo, 140, lang))}</h1>{caption}
           </figcaption>
         </figure>
 

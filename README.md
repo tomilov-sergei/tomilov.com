@@ -136,7 +136,7 @@ PULL_REMOTE_POSTS=0 PUSH_LOCAL_TELEGRAM=1 ./tools/deploy-site.sh
    - File — исходный Shortcut Input или Repeat Item;
    - опционально заголовок `X-Photo-Caption` — подпись.
 
-HDR/Ultra HDR поддерживается сохранением исходного файла без canvas, ресайза и перекодирования. Shortcut должен отправлять оригинальный HEIC/JPEG как файл. HDR-снимок показывается прямо в ленте из оригинала с `dynamic-range-limit: no-limit`; для SDR-снимков генератор создаёт варианты 480/960/1440 px в WebP с JPEG fallback. Полноэкранный просмотр всегда использует оригинал.
+HDR/Ultra HDR поддерживается сохранением исходного файла без canvas, ресайза и перекодирования. Shortcut должен отправлять оригинальный HEIC/JPEG как файл. Upload-сервис автоматически распознаёт встроенные Apple/ISO 21496 HDR gain maps; `X-Photo-HDR` остаётся доступен как ручная подсказка для других HDR-контейнеров. HDR-снимок показывается прямо в ленте из оригинала с `dynamic-range-limit: no-limit`; для SDR-снимков генератор создаёт варианты 480/960/1440 px в WebP с JPEG fallback. Полноэкранный просмотр всегда использует оригинал.
 
 После каждой успешной загрузки сервис запускает production SEO-генератор `tools/generate_photo_seo.py`. Новые фото получают страницы `/photos/<id>/`, попадают в `/photos/archive/`, тематические срезы `/photos/film/` и `/photos/iphone/`, `/photos/feed.xml`, `/feed.xml` и в `sitemap.xml`. Фотографии опубликованы по лицензии CC BY 4.0: использовать можно с указанием авторства и ссылки на страницу фото.
 

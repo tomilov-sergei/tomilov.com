@@ -28,6 +28,11 @@ IMAGE_TYPE_EXTENSIONS = {
     "image/heic": {".heic", ".heif"},
 }
 ALLOWED_EXTENSIONS = set().union(*IMAGE_TYPE_EXTENSIONS.values())
+HDR_GAIN_MAP_SIGNATURES = (
+    b"urn:iso:std:iso:ts:21496",
+    b"hdrgainmap",
+    b"hdrgm",
+)
 
 
 class Config:
@@ -185,6 +190,7 @@ def save_photo(file_part, fields):
     output_path.parent.mkdir(parents=True, exist_ok=True)
     output_path.write_bytes(file_part["body"])
     metadata = extract_photo_metadata(file_part["body"], content_type, len(file_part["body"]), fields)
+    hdr = parse_boolean(fields.get("hdr")) or detect_hdr_image(file_part["body"], content_type)
 
     photo = {
         "id": photo_id,
@@ -194,7 +200,7 @@ def save_photo(file_part, fields):
         "height": parse_int(fields.get("height")) or metadata.get("height"),
         "caption": fields.get("caption", "").strip(),
         "alt": fields.get("caption", "").strip(),
-        "hdr": fields.get("hdr") in {"on", "1", "true", "yes"},
+        "hdr": hdr,
         "mimeType": content_type,
         "size": len(file_part["body"]),
         "location": metadata.get("location"),
@@ -313,6 +319,22 @@ def image_type_family(content_type):
         return "heic"
 
     return content_type
+
+
+def parse_boolean(value):
+    return str(value or "").strip().casefold() in {"on", "1", "true", "yes"}
+
+
+def detect_hdr_image(body, content_type=""):
+    if not body:
+        return False
+
+    normalized_type = normalize_content_type(content_type) or detect_image_type(body)[0]
+    if image_type_family(normalized_type) not in {"jpeg", "heic", "image/avif"}:
+        return False
+
+    lowered = body.lower()
+    return any(signature in lowered for signature in HDR_GAIN_MAP_SIGNATURES)
 
 
 def read_photos_json():

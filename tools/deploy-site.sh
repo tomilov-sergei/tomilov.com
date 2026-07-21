@@ -116,6 +116,7 @@ if [ ! -d '$REMOTE_ROOT/current' ]; then
   exit 1
 fi
 cd '$REMOTE_ROOT/current'
+python3 tools/backfill_photo_hdr.py --strict
 python3 tools/generate_photo_previews.py --strict
 python3 tools/generate_photo_seo.py
 if [ \"\$(id -u)\" -eq 0 ]; then
@@ -213,7 +214,10 @@ ln -sfn \"\$telegram_shared\" '$REMOTE_STORAGE_ROOT/releases/'\$stamp'/assets/te
 ln -sfn '$REMOTE_STORAGE_ROOT/shared/assets/photos' '$REMOTE_STORAGE_ROOT/releases/'\$stamp'/assets/photos'
 ln -sfn '$REMOTE_STORAGE_ROOT/shared/assets/barcelona-guide' '$REMOTE_STORAGE_ROOT/releases/'\$stamp'/assets/barcelona-guide'
 cd '$REMOTE_STORAGE_ROOT/releases/'\$stamp
+python3 tools/backfill_photo_hdr.py --strict
 python3 tools/generate_photo_previews.py --strict
+python3 tools/generate_telegram_seo.py
+python3 tools/generate_photo_seo.py
 if [ -r /etc/tomilov-telegram-live.env ]; then
   release_telegram_dir=\$(readlink -f '$REMOTE_STORAGE_ROOT/releases/'\$stamp'/assets/telegram')
   live_posts_path=\$(awk -F= '\$1 == \"POSTS_JSON_PATH\" { print \$2 }' /etc/tomilov-telegram-live.env | tail -n 1)

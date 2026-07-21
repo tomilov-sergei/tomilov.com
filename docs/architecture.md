@@ -72,7 +72,7 @@ Photo content flows through a token-protected Apple Shortcut endpoint:
 
 Apple Photos share sheet -> Apple Shortcut -> `/photos/upload` -> Python service on `127.0.0.1:8788` -> `assets/photos/photos.json` and `assets/photos/originals/**`.
 
-Photo originals are intentionally stored without canvas processing, resizing, or transcoding so HDR/Ultra HDR metadata and gain maps can survive. The Shortcut must not use image transform actions. The upload service validates the token and file signature, then stores the original bytes. The browser is responsible for actual HDR display support.
+Photo originals are intentionally stored without canvas processing, resizing, or transcoding so HDR/Ultra HDR metadata and gain maps can survive. The Shortcut must not use image transform actions. The upload service validates the token and file signature, detects embedded Apple/ISO 21496 HDR gain maps, then stores the original bytes. Deploys backfill missing HDR flags from shared originals before generating previews and pages. The browser is responsible for actual HDR display support.
 
 Static SEO pages, sitemap, and RSS are generated from `assets/telegram/posts.json` and `assets/photos/photos.json`. The full deploy path uses `tools/generate-seo-pages.mjs`. The production Telegram webhook path uses `tools/generate_telegram_seo.py` so new posts update `/screenshots/<id>/`, `/screenshots/feed.xml`, `/feed.xml`, and `sitemap.xml` immediately. The production photo upload path uses `tools/generate_photo_seo.py` so new photos update `/photos/**`, `/photos/feed.xml`, `/feed.xml`, and `sitemap.xml` immediately. Both production refresh generators are Python-only, so they do not require Node.js on the VPS.
 

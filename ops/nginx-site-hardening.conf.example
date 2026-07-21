@@ -1,4 +1,7 @@
 # Include these directives in the HTTPS server block for tomilov.com.
+# If an existing location has its own add_header directive, repeat/include every
+# security add_header below inside that location: nginx otherwise drops the
+# server-level add_header inheritance for that location.
 
 gzip on;
 gzip_vary on;
