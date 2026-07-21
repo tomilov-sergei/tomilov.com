@@ -13,9 +13,10 @@
     "lint:css": "stylelint styles.css",
     "check:css": "postcss styles.css --no-map --output /tmp/tomilov-postcss.css",
     "check:size": "size-limit",
+    "test:telegram": "python3 -m unittest tools/test_telegram_live_importer.py",
     "check:prod": "python3 tools/check-production.py",
     "check:prod:strict": "python3 tools/check-production.py --strict",
-    "check": "pnpm run check:secrets && pnpm run lint:css && pnpm run check:css && pnpm run check:size && pnpm run check:site"
+    "check": "pnpm run check:secrets && pnpm run lint:css && pnpm run check:css && pnpm run check:size && pnpm run test:telegram && pnpm run check:site"
   },
   "size-limit": [
     {

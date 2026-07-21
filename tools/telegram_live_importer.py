@@ -127,10 +127,11 @@ def process_update(update):
 
     db = read_posts_json()
     missing_before = len(db.setdefault("missing", []))
-    media = get_message_media(message, db)
+    rich_content = get_message_rich_content(message, db)
+    media = collect_rich_media(rich_content) if rich_content else get_message_media(message, db)
     text = get_message_text(message)
 
-    if not text.strip() and not media:
+    if not text.strip() and not media and not rich_content:
         if len(db["missing"]) != missing_before:
             write_posts_json(db)
 
@@ -139,7 +140,7 @@ def process_update(update):
 
         return
 
-    upsert_post(db, message, text, media, bool(update.get("edited_channel_post")))
+    upsert_post(db, message, text, media, rich_content, bool(update.get("edited_channel_post")))
     write_posts_json(db)
 
     if CONFIG.upload_posts_json_to_s3:
@@ -148,7 +149,7 @@ def process_update(update):
     regenerate_seo_pages()
 
 
-def upsert_post(db, message, text, media, is_edit):
+def upsert_post(db, message, text, media, rich_content, is_edit):
     message_id = message["message_id"]
     media_group_id = message.get("media_group_id")
     post = find_post(db["posts"], message_id, media_group_id)
@@ -164,6 +165,7 @@ def upsert_post(db, message, text, media, is_edit):
             "edited": None,
             "text": "",
             "entities": [],
+            "richContent": None,
             "media": [],
             "reactions": [],
         }
@@ -180,17 +182,22 @@ def upsert_post(db, message, text, media, is_edit):
     post["id"] = str(first_message_id)
     post["telegramUrl"] = f"https://t.me/{CONFIG.channel_username}/{first_message_id}"
 
-    if text.strip() or is_edit:
+    if rich_content is not None:
+        post["text"] = text
+        post["entities"] = []
+        post["richContent"] = rich_content
+    elif text.strip() or is_edit:
         post["text"] = text
         post["entities"] = normalize_entities(text, message.get("caption_entities") or message.get("entities") or [])
+        post["richContent"] = None
 
-    if media:
+    if media or rich_content is not None:
         post["media"] = [item for item in post["media"] if item.get("sourceMessageId") != message_id]
         post["media"].extend(media)
-        post["media"].sort(key=lambda item: item.get("sourceMessageId", 0))
+        post["media"].sort(key=lambda item: (item.get("sourceMessageId", 0), item.get("sourceBlockPath", "")))
 
     if is_edit:
-        post["edited"] = datetime.now(timezone.utc).isoformat().replace("+00:00", "Z")
+        post["edited"] = iso_from_unix(message.get("edit_date", int(time.time())))
 
     db["posts"].sort(key=lambda item: item.get("dateUnixtime", 0), reverse=True)
     db["importedAt"] = datetime.now(timezone.utc).isoformat().replace("+00:00", "Z")
@@ -213,7 +220,7 @@ def get_message_media(message, db):
     entries = []
 
     if message.get("photo"):
-        photo = sorted(message["photo"], key=lambda item: item.get("file_size", 0), reverse=True)[0]
+        photo = max(message["photo"], key=photo_size_score)
         entries.append(media_entry(photo, "photo"))
 
     if message.get("video"):
@@ -221,6 +228,12 @@ def get_message_media(message, db):
 
     if message.get("animation"):
         entries.append(media_entry(message["animation"], "animation"))
+
+    if message.get("audio"):
+        entries.append(media_entry(message["audio"], "audio"))
+
+    if message.get("voice"):
+        entries.append(media_entry(message["voice"], "voice_note"))
 
     if message.get("sticker"):
         sticker_type = "video" if message["sticker"].get("is_video") else "sticker"
@@ -230,6 +243,12 @@ def get_message_media(message, db):
         document = message["document"]
         media_type = media_type_from_mime(document.get("mime_type", ""))
         entries.append(media_entry(document, media_type))
+
+    return download_message_media(message, entries, db)
+
+
+def download_message_media(message, entries, db):
+    """Download normalized media entries and return the public site records."""
 
     media = []
 
@@ -273,12 +292,201 @@ def get_message_media(message, db):
             "duration": entry["duration"],
             "name": entry["name"] or Path(telegram_file["file_path"]).name,
             "sourceMessageId": message["message_id"],
+            "sourceBlockPath": entry.get("sourceBlockPath", ""),
         })
 
     return media
 
 
-def media_entry(value, media_type):
+def get_message_rich_content(message, db):
+    rich_message = message.get("rich_message")
+
+    if not isinstance(rich_message, dict):
+        return None
+
+    return {
+        "blocks": [
+            normalize_rich_block(block, message, db, f"{index:04d}")
+            for index, block in enumerate(rich_message.get("blocks") or [])
+            if isinstance(block, dict)
+        ],
+        "isRtl": bool(rich_message.get("is_rtl")),
+    }
+
+
+def normalize_rich_block(block, message, db, block_path):
+    block_type = block.get("type", "")
+    normalized = {"type": block_type}
+
+    if "text" in block:
+        normalized["text"] = normalize_rich_text(block.get("text"))
+
+    if "credit" in block:
+        normalized["credit"] = normalize_rich_text(block.get("credit"))
+
+    if "caption" in block:
+        normalized["caption"] = (
+            normalize_rich_text(block.get("caption"))
+            if block_type == "table"
+            else normalize_rich_caption(block.get("caption"))
+        )
+
+    if "summary" in block:
+        normalized["summary"] = normalize_rich_text(block.get("summary"))
+
+    for key in (
+        "size", "language", "expression", "name", "is_bordered", "is_striped",
+        "is_open", "zoom", "width", "height", "has_spoiler",
+    ):
+        if key in block:
+            normalized[key] = block[key]
+
+    if block_type in {"photo", "video", "animation", "audio", "voice_note"}:
+        entry = rich_media_entry(block, block_type, block_path)
+        downloaded = download_message_media(message, [entry], db) if entry else []
+        normalized["media"] = downloaded[0] if downloaded else None
+
+    if isinstance(block.get("blocks"), list):
+        normalized["blocks"] = [
+            normalize_rich_block(child, message, db, f"{block_path}.{index:04d}")
+            for index, child in enumerate(block["blocks"])
+            if isinstance(child, dict)
+        ]
+
+    if isinstance(block.get("items"), list):
+        normalized["items"] = [
+            normalize_rich_list_item(item, message, db, f"{block_path}.item{index:04d}")
+            for index, item in enumerate(block["items"])
+            if isinstance(item, dict)
+        ]
+
+    if isinstance(block.get("cells"), list):
+        normalized["cells"] = [
+            [normalize_rich_table_cell(cell) for cell in row if isinstance(cell, dict)]
+            for row in block["cells"]
+            if isinstance(row, list)
+        ]
+
+    if isinstance(block.get("location"), dict):
+        normalized["location"] = {
+            key: block["location"][key]
+            for key in ("latitude", "longitude", "horizontal_accuracy")
+            if key in block["location"]
+        }
+
+    return normalized
+
+
+def normalize_rich_list_item(item, message, db, block_path):
+    normalized = {
+        "blocks": [
+            normalize_rich_block(block, message, db, f"{block_path}.{index:04d}")
+            for index, block in enumerate(item.get("blocks") or [])
+            if isinstance(block, dict)
+        ]
+    }
+
+    for key in ("label", "has_checkbox", "is_checked", "value", "type"):
+        if key in item:
+            normalized[key] = item[key]
+
+    return normalized
+
+
+def normalize_rich_table_cell(cell):
+    normalized = {}
+
+    if "text" in cell:
+        normalized["text"] = normalize_rich_text(cell.get("text"))
+
+    for key in ("is_header", "colspan", "rowspan", "align", "valign"):
+        if key in cell:
+            normalized[key] = cell[key]
+
+    return normalized
+
+
+def normalize_rich_caption(caption):
+    if not isinstance(caption, dict):
+        return None
+
+    normalized = {"text": normalize_rich_text(caption.get("text", ""))}
+
+    if "credit" in caption:
+        normalized["credit"] = normalize_rich_text(caption.get("credit"))
+
+    return normalized
+
+
+def normalize_rich_text(value):
+    if isinstance(value, str):
+        return value
+
+    if isinstance(value, list):
+        return [normalize_rich_text(item) for item in value]
+
+    if not isinstance(value, dict):
+        return ""
+
+    normalized = {"type": value.get("type", "")}
+
+    if "text" in value:
+        normalized["text"] = normalize_rich_text(value.get("text"))
+
+    for key in (
+        "url", "email_address", "phone_number", "bank_card_number", "username",
+        "hashtag", "cashtag", "bot_command", "name", "anchor_name", "reference_name",
+        "custom_emoji_id", "alternative_text", "expression", "unix_time", "date_time_format",
+    ):
+        if key in value:
+            normalized[key] = value[key]
+
+    if isinstance(value.get("user"), dict) and value["user"].get("id") is not None:
+        normalized["user_id"] = value["user"]["id"]
+
+    return normalized
+
+
+def rich_media_entry(block, block_type, block_path):
+    field = block_type
+
+    if block_type == "voice_note":
+        field = "voice_note"
+
+    value = block.get(field)
+
+    if block_type == "photo" and isinstance(value, list) and value:
+        value = max(value, key=photo_size_score)
+
+    if not isinstance(value, dict):
+        return None
+
+    return media_entry(value, block_type, source_block_path=block_path)
+
+
+def photo_size_score(value):
+    return (
+        value.get("file_size") or 0,
+        (value.get("width") or 0) * (value.get("height") or 0),
+    )
+
+
+def collect_rich_media(rich_content):
+    media = []
+
+    def visit(blocks):
+        for block in blocks or []:
+            if block.get("media"):
+                media.append(block["media"])
+            visit(block.get("blocks"))
+            for item in block.get("items") or []:
+                visit(item.get("blocks"))
+
+    visit((rich_content or {}).get("blocks"))
+    return media
+
+
+def media_entry(value, media_type, source_block_path=""):
     return {
         "telegram_file": value,
         "type": media_type,
@@ -287,6 +495,7 @@ def media_entry(value, media_type):
         "size": value.get("file_size"),
         "duration": value.get("duration"),
         "name": value.get("file_name"),
+        "sourceBlockPath": source_block_path,
     }
 
 
@@ -479,7 +688,63 @@ def is_target_channel(chat):
 
 
 def get_message_text(message):
+    if isinstance(message.get("rich_message"), dict):
+        return plain_rich_blocks(message["rich_message"].get("blocks") or [])
+
     return message.get("caption") or message.get("text") or ""
+
+
+def plain_rich_blocks(blocks):
+    values = []
+
+    for block in blocks:
+        if not isinstance(block, dict):
+            continue
+
+        block_type = block.get("type")
+
+        if block_type in {"paragraph", "heading", "pre", "footer", "pullquote"}:
+            values.append(plain_rich_text(block.get("text")))
+        elif block_type == "mathematical_expression":
+            values.append(str(block.get("expression") or ""))
+        elif block_type == "blockquote":
+            values.append(plain_rich_blocks(block.get("blocks") or []))
+            values.append(plain_rich_text(block.get("credit")))
+        elif block_type == "list":
+            for item in block.get("items") or []:
+                label = str(item.get("label") or "").strip()
+                item_text = plain_rich_blocks(item.get("blocks") or [])
+                values.append(f"{label} {item_text}".strip())
+        elif block_type in {"collage", "slideshow", "details"}:
+            if block_type == "details":
+                values.append(plain_rich_text(block.get("summary")))
+            values.append(plain_rich_blocks(block.get("blocks") or []))
+        elif block_type == "table":
+            for row in block.get("cells") or []:
+                values.append("\t".join(plain_rich_text(cell.get("text")) for cell in row if isinstance(cell, dict)))
+
+        caption = block.get("caption")
+        if block_type == "table":
+            values.append(plain_rich_text(caption))
+        elif isinstance(caption, dict):
+            values.append(plain_rich_text(caption.get("text")))
+            values.append(plain_rich_text(caption.get("credit")))
+
+    return "\n\n".join(value.strip() for value in values if value and value.strip())
+
+
+def plain_rich_text(value):
+    if isinstance(value, str):
+        return value
+    if isinstance(value, list):
+        return "".join(plain_rich_text(item) for item in value)
+    if not isinstance(value, dict):
+        return ""
+    if value.get("type") == "custom_emoji":
+        return str(value.get("alternative_text") or "")
+    if value.get("type") == "mathematical_expression":
+        return str(value.get("expression") or "")
+    return plain_rich_text(value.get("text"))
 
 
 def normalize_entities(text, entities):
@@ -526,6 +791,8 @@ def media_type_from_mime(mime_type):
         return "photo"
     if mime_type.startswith("video/"):
         return "video"
+    if mime_type.startswith("audio/"):
+        return "audio"
     return "file"
 
 

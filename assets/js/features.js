@@ -1481,8 +1481,9 @@ function createPost(post, lang) {
   const article = document.createElement("article");
   article.className = "screenshot-post";
   article.id = `post-${post.id}`;
+  const richContent = getPostRichContent(post, lang);
 
-  if (post.media?.length) {
+  if (post.media?.length && !richContent) {
     const [singleMedia] = post.media;
     const isSinglePortrait =
       post.media.length === 1 &&
@@ -1502,7 +1503,13 @@ function createPost(post, lang) {
   body.className = "screenshot-body";
 
   const postText = getPostText(post, lang);
-  if (postText) {
+  if (richContent) {
+    const rich = document.createElement("div");
+    rich.className = "screenshot-rich";
+    if (richContent.isRtl) rich.dir = "rtl";
+    appendRichBlocks(rich, richContent.blocks, post, lang);
+    body.append(rich);
+  } else if (postText) {
     const text = document.createElement("div");
     text.className = "screenshot-text";
     appendRichText(text, post, lang);
@@ -1576,6 +1583,13 @@ function createMedia(mediaItems, post, lang) {
     } else if (media.type === "video" || media.type === "animation") {
       item.classList.add("is-video");
       item.append(createVideoPreview(media, lang));
+    } else if (media.type === "audio" || media.type === "voice_note") {
+      item.classList.add("is-audio");
+      const audio = document.createElement("audio");
+      audio.src = getTelegramAssetUrl(media.src);
+      audio.controls = true;
+      audio.preload = "metadata";
+      item.append(audio);
     }
 
     wrapper.append(item);
@@ -1691,6 +1705,248 @@ function appendRichText(container, post, lang) {
       container.append(document.createTextNode(entity.text));
     }
   }
+}
+
+function getPostRichContent(post, lang) {
+  if (!post.richContent?.blocks) return null;
+  if (lang === "en" && normalizeText(post.translations?.en?.text)) return null;
+  return post.richContent;
+}
+
+function appendRichBlocks(container, blocks = [], post, lang) {
+  for (const block of blocks) appendRichBlock(container, block, post, lang);
+}
+
+function appendRichBlock(container, block, post, lang) {
+  if (!block || typeof block !== "object") return;
+  const type = block.type;
+  let element;
+
+  if (type === "paragraph" || type === "footer") {
+    element = document.createElement(type === "footer" ? "footer" : "p");
+    element.append(createRichInline(block.text, post));
+  } else if (type === "heading") {
+    element = document.createElement(`h${Math.min(6, Math.max(2, Number(block.size || 1) + 1))}`);
+    element.append(createRichInline(block.text, post));
+  } else if (type === "pre" || type === "mathematical_expression") {
+    element = document.createElement("pre");
+    if (type === "mathematical_expression") element.className = "screenshot-rich-math";
+    const code = document.createElement("code");
+    code.textContent = type === "pre" ? richPlainText(block.text) : block.expression || "";
+    if (block.language) code.className = `language-${block.language.replace(/[^\w-]/g, "")}`;
+    element.append(code);
+  } else if (type === "divider") {
+    element = document.createElement("hr");
+  } else if (type === "anchor") {
+    element = document.createElement("span");
+    element.id = richAnchorId(post, block.name);
+  } else if (type === "list") {
+    const ordered = block.items?.some((item) => item.value != null || item.type);
+    element = document.createElement(ordered ? "ol" : "ul");
+    for (const item of block.items || []) {
+      const li = document.createElement("li");
+      if (item.value != null) li.value = Number(item.value);
+      if (item.has_checkbox) {
+        const checkbox = document.createElement("input");
+        checkbox.type = "checkbox";
+        checkbox.disabled = true;
+        checkbox.checked = Boolean(item.is_checked);
+        checkbox.ariaHidden = "true";
+        li.append(checkbox);
+      }
+      appendRichBlocks(li, item.blocks, post, lang);
+      element.append(li);
+    }
+  } else if (type === "blockquote" || type === "pullquote") {
+    element = document.createElement("blockquote");
+    if (type === "pullquote") {
+      element.className = "is-pullquote";
+      const paragraph = document.createElement("p");
+      paragraph.append(createRichInline(block.text, post));
+      element.append(paragraph);
+    } else {
+      appendRichBlocks(element, block.blocks, post, lang);
+    }
+    appendRichCredit(element, block.credit, post);
+  } else if (type === "collage" || type === "slideshow") {
+    element = document.createElement("figure");
+    element.className = `screenshot-rich-gallery is-${type}`;
+    const media = collectRichBlockMedia(block.blocks);
+    if (media.length) element.append(createMedia(media, post, lang));
+    appendRichCaption(element, block.caption, post);
+  } else if (type === "table") {
+    element = createRichTable(block, post);
+  } else if (type === "details") {
+    element = document.createElement("details");
+    element.open = Boolean(block.is_open);
+    const summary = document.createElement("summary");
+    summary.append(createRichInline(block.summary, post));
+    element.append(summary);
+    appendRichBlocks(element, block.blocks, post, lang);
+  } else if (type === "map") {
+    element = document.createElement("figure");
+    element.className = "screenshot-rich-map";
+    const { latitude, longitude } = block.location || {};
+    if (latitude != null && longitude != null) {
+      const link = document.createElement("a");
+      link.href = `https://www.openstreetmap.org/?mlat=${latitude}&mlon=${longitude}#map=${block.zoom || 15}/${latitude}/${longitude}`;
+      link.target = "_blank";
+      link.rel = "noopener";
+      link.textContent = lang === "en" ? "Open map" : "Открыть карту";
+      element.append(link);
+    }
+    appendRichCaption(element, block.caption, post);
+  } else if (["photo", "video", "animation", "audio", "voice_note"].includes(type)) {
+    element = document.createElement("figure");
+    element.className = "screenshot-rich-media";
+    if (block.media) {
+      element.append(createMedia([block.media], post, lang));
+    } else {
+      const unavailable = document.createElement("p");
+      unavailable.className = "screenshot-rich-unavailable";
+      unavailable.textContent = lang === "en" ? "Media unavailable" : "Медиа недоступно";
+      element.append(unavailable);
+    }
+    appendRichCaption(element, block.caption, post);
+  } else if (block.text != null) {
+    element = document.createElement("p");
+    element.append(createRichInline(block.text, post));
+  } else {
+    appendRichBlocks(container, block.blocks, post, lang);
+    return;
+  }
+
+  container.append(element);
+}
+
+function createRichInline(value, post) {
+  const fragment = document.createDocumentFragment();
+  if (typeof value === "string") {
+    fragment.append(document.createTextNode(value));
+    return fragment;
+  }
+  if (Array.isArray(value)) {
+    for (const item of value) fragment.append(createRichInline(item, post));
+    return fragment;
+  }
+  if (!value || typeof value !== "object") return fragment;
+
+  const tags = { bold: "strong", italic: "em", underline: "u", strikethrough: "s", code: "code", marked: "mark", subscript: "sub", superscript: "sup" };
+  if (tags[value.type] || value.type === "spoiler") {
+    const element = document.createElement(tags[value.type] || "span");
+    if (value.type === "spoiler") element.className = "screenshot-rich-spoiler";
+    element.append(createRichInline(value.text, post));
+    fragment.append(element);
+  } else if (value.type === "custom_emoji") {
+    fragment.append(document.createTextNode(value.alternative_text || ""));
+  } else if (value.type === "mathematical_expression") {
+    const code = document.createElement("code");
+    code.className = "screenshot-rich-inline-math";
+    code.textContent = value.expression || "";
+    fragment.append(code);
+  } else if (["url", "email_address", "phone_number", "mention", "text_mention"].includes(value.type)) {
+    const href = richTextHref(value);
+    if (href) {
+      const link = document.createElement("a");
+      link.href = href;
+      link.target = "_blank";
+      link.rel = "noopener";
+      link.append(createRichInline(value.text, post));
+      fragment.append(link);
+    } else {
+      fragment.append(createRichInline(value.text, post));
+    }
+  } else if (value.type === "anchor" || value.type === "reference") {
+    const span = document.createElement("span");
+    span.id = richAnchorId(post, value.name);
+    span.append(createRichInline(value.text, post));
+    fragment.append(span);
+  } else if (value.type === "anchor_link" || value.type === "reference_link") {
+    const link = document.createElement("a");
+    link.href = `#${richAnchorId(post, value.anchor_name || value.reference_name)}`;
+    link.append(createRichInline(value.text, post));
+    fragment.append(link);
+  } else {
+    fragment.append(createRichInline(value.text, post));
+  }
+  return fragment;
+}
+
+function richTextHref(value) {
+  const href = value.type === "url" ? value.url
+    : value.type === "email_address" ? `mailto:${value.email_address || ""}`
+      : value.type === "phone_number" ? `tel:${value.phone_number || ""}`
+        : value.type === "mention" ? `https://t.me/${value.username || ""}`
+          : value.user_id != null ? `tg://user?id=${value.user_id}` : "";
+  return /^(https?:\/\/|mailto:|tel:|tg:\/\/)/i.test(href || "") ? href : "";
+}
+
+function richPlainText(value) {
+  if (typeof value === "string") return value;
+  if (Array.isArray(value)) return value.map(richPlainText).join("");
+  if (!value || typeof value !== "object") return "";
+  if (value.type === "custom_emoji") return value.alternative_text || "";
+  if (value.type === "mathematical_expression") return value.expression || "";
+  return richPlainText(value.text);
+}
+
+function createRichTable(block, post) {
+  const wrapper = document.createElement("div");
+  wrapper.className = "screenshot-rich-table";
+  const table = document.createElement("table");
+  if (block.is_bordered) table.classList.add("is-bordered");
+  if (block.is_striped) table.classList.add("is-striped");
+  if (block.caption) {
+    const caption = document.createElement("caption");
+    caption.append(createRichInline(block.caption, post));
+    table.append(caption);
+  }
+  const body = document.createElement("tbody");
+  for (const row of block.cells || []) {
+    const tr = document.createElement("tr");
+    for (const cell of row || []) {
+      const td = document.createElement(cell.is_header ? "th" : "td");
+      if (cell.colspan) td.colSpan = Number(cell.colspan);
+      if (cell.rowspan) td.rowSpan = Number(cell.rowspan);
+      if (["left", "center", "right"].includes(cell.align)) td.style.textAlign = cell.align;
+      if (["top", "middle", "bottom"].includes(cell.valign)) td.style.verticalAlign = cell.valign;
+      td.append(createRichInline(cell.text, post));
+      tr.append(td);
+    }
+    body.append(tr);
+  }
+  table.append(body);
+  wrapper.append(table);
+  return wrapper;
+}
+
+function appendRichCaption(parent, caption, post) {
+  if (!caption) return;
+  const element = document.createElement("figcaption");
+  element.append(createRichInline(caption.text, post));
+  appendRichCredit(element, caption.credit, post);
+  if (element.textContent) parent.append(element);
+}
+
+function appendRichCredit(parent, credit, post) {
+  if (!richPlainText(credit)) return;
+  const cite = document.createElement("cite");
+  cite.append(createRichInline(credit, post));
+  parent.append(cite);
+}
+
+function collectRichBlockMedia(blocks = []) {
+  const media = [];
+  for (const block of blocks) {
+    if (block?.media) media.push(block.media);
+    media.push(...collectRichBlockMedia(block?.blocks));
+  }
+  return media;
+}
+
+function richAnchorId(post, name) {
+  const safeName = String(name || "top").replace(/[^a-z0-9_-]+/gi, "-").replace(/^-|-$/g, "") || "top";
+  return `rich-${post.id || "post"}-${safeName}`;
 }
 
 function getPostText(post, lang) {

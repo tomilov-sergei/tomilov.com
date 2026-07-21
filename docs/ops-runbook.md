@@ -1,6 +1,6 @@
 # Operations Runbook
 
-Last updated: 2026-07-06.
+Last updated: 2026-07-22.
 
 This runbook covers production checks for `tomilov.com` on the Timeweb VPS.
 
@@ -72,6 +72,21 @@ active
 The live path is:
 
 Telegram channel update -> `/telegram/webhook` -> `tomilov-telegram-live.service` -> shared `posts.json` and S3 media -> `tools/generate_telegram_seo.py`.
+
+Rich Messages require Telegram Bot API 10.2 or newer. Check the local server version after Telegram platform updates:
+
+```sh
+/usr/local/bin/telegram-bot-api --version
+```
+
+Upgrade the pinned official build as root, then restart the live importer so both services use the new schema:
+
+```sh
+sudo /var/www/tomilov.com/current/tools/update-telegram-bot-api.sh
+sudo systemctl restart tomilov-telegram-live.service
+```
+
+The upgrade script builds before stopping the service, backs up the current binary, verifies 10.2, and restores the backup automatically if startup fails.
 
 Check the service:
 

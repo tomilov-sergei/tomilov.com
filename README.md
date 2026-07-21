@@ -200,6 +200,14 @@ TELEGRAM_WEBHOOK_URL=https://tomilov.com/telegram/webhook \
 Путь `POSTS_JSON_PATH` в production env должен совпадать с shared storage, на который указывает публичный `$REMOTE_ROOT/current/assets/telegram`.
 Для live-медиа nginx проксирует `/assets/telegram/live/...` в Timeweb S3; пример location лежит в `ops/nginx-telegram-webhook.conf.example`.
 
+Расширенные публикации Telegram (`rich_message`) с заголовками, списками, таблицами и медиа между абзацами требуют Telegram Bot API 10.2 или новее. Импортёр сохраняет порядок блоков и одновременно создаёт плоский текст для поиска, SEO, RSS и главного холста. Если используется локальный Bot API, его версию нужно обновлять отдельно от кода сайта:
+
+```sh
+sudo /var/www/tomilov.com/current/tools/update-telegram-bot-api.sh
+```
+
+Скрипт собирает закреплённый официальный исходник 10.2, проверяет бинарник до переключения, сохраняет предыдущую версию и автоматически откатывается, если systemd-сервис не запускается.
+
 ## Framer snapshot
 
 `framer-snapshot/` — архивная копия опубликованного Framer-вывода по состоянию на момент миграции. Это не основной исходник для правок, а референс для сверки. Отдельные CSS-архивы лежат в `framer-snapshot/styles/`.

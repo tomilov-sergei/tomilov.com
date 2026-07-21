@@ -1284,6 +1284,174 @@ a {
   white-space: pre-wrap;
 }
 
+.screenshot-rich {
+  display: grid;
+  gap: 20px;
+  font-size: 17px;
+  line-height: 1.58;
+}
+
+.screenshot-rich > :where(p, h2, h3, h4, h5, h6, ul, ol, blockquote, pre, footer, details) {
+  width: min(100%, 680px);
+  margin: 0;
+}
+
+.screenshot-rich p,
+.screenshot-rich footer {
+  white-space: pre-wrap;
+}
+
+.screenshot-rich :where(h2, h3, h4, h5, h6) {
+  font-family: var(--font-display);
+  line-height: 1.16;
+}
+
+.screenshot-rich h2 {
+  font-size: clamp(26px, 4vw, 40px);
+}
+
+.screenshot-rich h3 {
+  font-size: clamp(22px, 3vw, 32px);
+}
+
+.screenshot-rich :where(ul, ol) {
+  display: grid;
+  gap: 10px;
+  padding-inline-start: 24px;
+}
+
+.screenshot-rich li > p {
+  display: inline;
+}
+
+.screenshot-rich li input {
+  margin: 0 8px 0 0;
+}
+
+.screenshot-rich blockquote {
+  padding-inline-start: 18px;
+  border-inline-start: 3px solid var(--accent);
+}
+
+.screenshot-rich blockquote.is-pullquote {
+  padding: 8px 32px;
+  border: 0;
+  text-align: center;
+}
+
+.screenshot-rich cite {
+  display: block;
+  margin-top: 8px;
+  color: var(--muted);
+  font-size: 0.86em;
+}
+
+.screenshot-rich pre {
+  overflow-x: auto;
+  padding: 16px;
+  border-radius: 10px;
+  background: oklch(95.4% 0 258);
+  white-space: pre-wrap;
+}
+
+.screenshot-rich hr {
+  width: min(100%, 680px);
+  border: 0;
+  border-top: 1px solid var(--line);
+}
+
+.screenshot-rich-media,
+.screenshot-rich-gallery,
+.screenshot-rich-map {
+  display: grid;
+  gap: 10px;
+  margin: 0;
+}
+
+.screenshot-rich .screenshot-media {
+  overflow: hidden;
+  border-radius: 12px;
+}
+
+.screenshot-rich .screenshot-media-item {
+  min-height: min(52vw, 520px);
+}
+
+.screenshot-rich .screenshot-media.is-single .screenshot-media-item.is-video {
+  min-height: min(58vw, 640px);
+  padding: clamp(12px, 3vw, 32px);
+}
+
+.screenshot-media-item.is-audio {
+  min-height: 96px;
+  padding: 20px;
+}
+
+.screenshot-media-item audio {
+  width: min(100%, 680px);
+}
+
+.screenshot-rich figcaption {
+  width: min(100%, 680px);
+  color: var(--muted);
+  font-size: 14px;
+}
+
+.screenshot-rich-table {
+  overflow-x: auto;
+}
+
+.screenshot-rich table {
+  width: max-content;
+  min-width: min(100%, 680px);
+  border-collapse: collapse;
+}
+
+.screenshot-rich :where(th, td) {
+  padding: 8px 12px;
+  border-bottom: 1px solid var(--line);
+  text-align: start;
+}
+
+.screenshot-rich table.is-bordered :where(th, td) {
+  border: 1px solid var(--line);
+}
+
+.screenshot-rich table.is-striped tr:nth-child(even) {
+  background: oklch(95.4% 0 258 / 0.7);
+}
+
+.screenshot-rich caption {
+  padding-bottom: 8px;
+  color: var(--muted);
+  text-align: start;
+}
+
+.screenshot-rich details {
+  padding: 12px 0;
+  border-block: 1px solid var(--line);
+}
+
+.screenshot-rich summary {
+  cursor: pointer;
+  font-weight: 700;
+}
+
+.screenshot-rich details > :not(summary) {
+  margin-top: 16px;
+}
+
+.screenshot-rich-spoiler {
+  padding-inline: 3px;
+  border-radius: 4px;
+  background: oklch(89% 0 258);
+}
+
+.screenshot-rich-unavailable {
+  color: var(--muted);
+  font-size: 14px;
+}
+
 .screenshot-meta {
   display: flex;
   flex-wrap: wrap;
