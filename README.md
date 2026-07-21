@@ -166,9 +166,12 @@ RSS-фиды генерируются из тех же данных:
 Разовый или регулярный перевод:
 
 ```sh
-OPENAI_API_KEY=... node tools/translate-content.mjs --limit 20 --status draft
+./tools/setup-translation-key.sh
+node tools/translate-content.mjs --limit 40 --status draft
 node tools/generate-seo-pages.mjs
 ```
+
+Setup-скрипт принимает ключ скрытым вводом и сохраняет его только в `.env.local` с правами `600`. Файл игнорируется Git. Используйте отдельный project-scoped API key с лимитом расходов; не вставляйте ключ в команду или переписку.
 
 Скрипт переводит только записи без `translations.en`, сохраняет результат в JSON и помечает модель, дату и статус. Для проверки очереди без API:
 

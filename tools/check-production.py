@@ -89,11 +89,13 @@ def main():
             f"encoding={encoded} bytes={len(response.raw_body)}"
         )
 
-    root = responses.get("/")
-    if root:
-        missing = [name for name in SECURITY_HEADERS if not root.headers.get(name)]
+    for path in ("/", "/styles.css"):
+        response = responses.get(path)
+        if not response:
+            continue
+        missing = [name for name in SECURITY_HEADERS if not response.headers.get(name)]
         if missing:
-            hardening.append("/: missing security headers: " + ", ".join(missing))
+            hardening.append(f"{path}: missing security headers: " + ", ".join(missing))
 
     for path in (
         "/",

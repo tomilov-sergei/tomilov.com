@@ -174,7 +174,7 @@ else
   echo "Skipping Telegram media sync because SKIP_MEDIA_SYNC=1"
 fi
 
-COPYFILE_DISABLE=1 tar --no-xattrs --exclude "assets/telegram" --exclude "assets/photos" --exclude "assets/barcelona-guide" --exclude "tools/__pycache__" -czf "$ARCHIVE" \
+git archive --format=tar.gz --output="$ARCHIVE" HEAD \
   index.html \
   styles.css \
   script.js \
@@ -191,7 +191,10 @@ COPYFILE_DISABLE=1 tar --no-xattrs --exclude "assets/telegram" --exclude "assets
   photos \
   ops \
   screenshots \
-  tools
+  tools \
+  ':(exclude)assets/telegram' \
+  ':(exclude)assets/photos' \
+  ':(exclude)assets/barcelona-guide'
 
 ssh -i "$KEY" -o IdentitiesOnly=yes "$SERVER" "mkdir -p '$(dirname "$REMOTE_ARCHIVE")'"
 scp -i "$KEY" -o IdentitiesOnly=yes "$ARCHIVE" "$SERVER:$REMOTE_ARCHIVE"

@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 import json
+import re
 import sys
 from html.parser import HTMLParser
 from pathlib import Path
@@ -19,6 +20,7 @@ RUNTIME_ENDPOINTS = {
     "/photos/upload",
     "/telegram/webhook",
 }
+CANVAS_CHUNK_PATTERN = re.compile(r"^(?:ru|en)-[a-z0-9-]+-\d+\.json$")
 
 
 class ReferenceParser(HTMLParser):
@@ -158,7 +160,11 @@ def check_home_canvas(errors, expected_cards, expected_photos):
     for lang, path in (("ru", ROOT / "index.html"), ("en", ROOT / "en/index.html")):
         source = path.read_text(encoding="utf-8")
         count = source.count('class="home-canvas-node ')
-        chunk_paths = sorted((ROOT / "assets/canvas").glob(f"{lang}-*.json"))
+        chunk_paths = sorted(
+            path
+            for path in (ROOT / "assets/canvas").glob(f"{lang}-*.json")
+            if CANVAS_CHUNK_PATTERN.fullmatch(path.name)
+        )
         chunk_source = "\n".join(chunk.read_text(encoding="utf-8") for chunk in chunk_paths)
         preview_count = chunk_source.count('/assets/photos/canvas/')
         fallback_count = chunk_source.count('data-fallback-src=\\"https://tomilov.com/assets/photos/')

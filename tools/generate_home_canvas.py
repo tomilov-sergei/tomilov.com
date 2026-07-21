@@ -18,6 +18,7 @@ HOME_PATHS = {
     "en": ROOT_DIR / "en/index.html",
 }
 CANVAS_DATA_DIR = ROOT_DIR / "assets/canvas"
+CANVAS_CHUNK_PATTERN = re.compile(r"^(?:ru|en)-[a-z0-9-]+-\d+\.json$")
 TELEGRAM_MEDIA_BASE = "https://s3.twcstorage.ru/00df5bd5-137f-492a-8d95-c7ee2cc2d851"
 SITE_URL = "https://tomilov.com"
 START_MARKER = "<!-- home-canvas-generated:start -->"
@@ -318,7 +319,8 @@ def write_content_chunks(items, lang):
     chunks = {}
 
     for stale_path in CANVAS_DATA_DIR.glob(f"{lang}-*.json"):
-        stale_path.unlink()
+        if CANVAS_CHUNK_PATTERN.fullmatch(stale_path.name):
+            stale_path.unlink()
 
     for item in items:
         chunks.setdefault(item_chunk_id(item), {})[item_content_key(item)] = render_card_content(

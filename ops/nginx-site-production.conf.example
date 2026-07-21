@@ -1,0 +1,94 @@
+server {
+    server_name tomilov.com www.tomilov.com;
+
+    root /var/www/tomilov.com/current;
+    index index.html;
+
+    access_log /var/log/nginx/tomilov.com.access.log;
+    error_log /var/log/nginx/tomilov.com.error.log;
+
+    gzip on;
+    gzip_vary on;
+    gzip_proxied any;
+    gzip_comp_level 6;
+    gzip_min_length 1024;
+    gzip_types
+        application/javascript
+        application/json
+        application/ld+json
+        application/rss+xml
+        application/xml
+        image/svg+xml
+        text/css
+        text/plain
+        text/xml;
+
+    include /etc/nginx/snippets/tomilov-security-headers.conf;
+
+    location = /telegram/webhook {
+        proxy_pass http://127.0.0.1:8787/telegram/webhook;
+        proxy_http_version 1.1;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+    }
+
+    location = /photos/upload {
+        client_max_body_size 80m;
+        proxy_pass http://127.0.0.1:8788/photos/upload;
+        proxy_http_version 1.1;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+    }
+
+    location ^~ /assets/photos/originals/ {
+        expires 30d;
+        add_header Cache-Control "public, immutable";
+        include /etc/nginx/snippets/tomilov-security-headers.conf;
+    }
+
+    location / {
+        try_files $uri $uri/ =404;
+    }
+
+    location ^~ /assets/telegram/live/ {
+        proxy_pass https://s3.twcstorage.ru/00df5bd5-137f-492a-8d95-c7ee2cc2d851/assets/telegram/live/;
+        proxy_set_header Host s3.twcstorage.ru;
+        proxy_ssl_server_name on;
+        expires 30d;
+        add_header Cache-Control "public, immutable";
+        include /etc/nginx/snippets/tomilov-security-headers.conf;
+    }
+
+    location ~* \.(?:css|js|mjs|png|jpg|jpeg|gif|webp|svg|ico|woff2?)$ {
+        try_files $uri =404;
+        expires 30d;
+        add_header Cache-Control "public, immutable";
+        include /etc/nginx/snippets/tomilov-security-headers.conf;
+    }
+
+    listen [::]:443 ssl ipv6only=on; # managed by Certbot
+    listen 443 ssl; # managed by Certbot
+    ssl_certificate /etc/letsencrypt/live/tomilov.com/fullchain.pem; # managed by Certbot
+    ssl_certificate_key /etc/letsencrypt/live/tomilov.com/privkey.pem; # managed by Certbot
+    include /etc/letsencrypt/options-ssl-nginx.conf; # managed by Certbot
+    ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem; # managed by Certbot
+}
+
+server {
+    if ($host = www.tomilov.com) {
+        return 301 https://$host$request_uri;
+    } # managed by Certbot
+
+    if ($host = tomilov.com) {
+        return 301 https://$host$request_uri;
+    } # managed by Certbot
+
+    listen 80;
+    listen [::]:80;
+    server_name tomilov.com www.tomilov.com;
+    return 404; # managed by Certbot
+}

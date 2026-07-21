@@ -17,9 +17,9 @@ This runbook covers production checks for `tomilov.com` on the Timeweb VPS.
 - Photo upload env: production env file based on `ops/photo-upload.env.example`
 - Telegram service: `tomilov-telegram-live.service`
 - Photo service: `tomilov-photo-upload.service`
-- Nginx compression and security policy: `ops/nginx-site-hardening.conf.example`
+- Nginx compression and security policy: `ops/nginx-site-production.conf.example`
 
-The hardening snippet belongs in the HTTPS `server` block and must be installed by an account that can edit `/etc/nginx`. After changing nginx, run `nginx -t`, reload it, and verify with `python3 tools/check-production.py --strict`. Locations with their own `add_header` directives must repeat or include the same header set because nginx does not inherit parent headers into such locations.
+Install the exact production config from a Timeweb root console with `sudo /var/www/tomilov.com/current/tools/install-nginx-hardening.sh`. The installer backs up both files, validates nginx, rolls back automatically on a syntax failure, reloads the service, and runs `python3 tools/check-production.py --strict`. Locations with their own `add_header` directives include the shared header snippet because nginx does not inherit parent headers into such locations.
 
 ## After Deploy
 
