@@ -21,6 +21,22 @@ This runbook covers production checks for `tomilov.com` on the Timeweb VPS.
 
 Install the exact production config from a Timeweb root console with `sudo /var/www/tomilov.com/current/tools/install-nginx-hardening.sh`. The installer backs up both files, validates nginx, rolls back automatically on a syntax failure, reloads the service, and runs `python3 tools/check-production.py --strict`. Locations with their own `add_header` directives include the shared header snippet because nginx does not inherit parent headers into such locations.
 
+## Ubuntu Maintenance
+
+Run routine package maintenance from the Timeweb root console:
+
+```sh
+sudo /var/www/tomilov.com/current/tools/update-ubuntu-safely.sh
+```
+
+The script validates package state, SSH, netplan, nginx, site services, and the
+public site before making changes. It stores root-only configuration and package
+state under `/var/backups/tomilov-ubuntu-update/`, keeps existing configuration
+files during package upgrades, never removes packages, and never reboots
+automatically. After upgrading, it repeats the full validation and reports
+whether a reboot is required. Provider-held packages such as
+`qemu-guest-agent` remain held unless the provider explicitly says otherwise.
+
 ## After Deploy
 
 Load local deploy config before running SSH snippets:
