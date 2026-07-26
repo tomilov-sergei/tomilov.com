@@ -39,4 +39,19 @@ fi
 
 systemctl reload nginx
 printf 'nginx hardening installed; backup: %s\n' "$BACKUP_DIR"
-python3 "$ROOT_DIR/tools/check-production.py" --strict
+
+# A graceful reload briefly keeps the previous worker generation alive. Retry
+# the public check so it cannot observe a mix of old and new responses.
+for attempt in {1..10}; do
+  if python3 "$ROOT_DIR/tools/check-production.py" --strict; then
+    exit 0
+  fi
+
+  if [[ "$attempt" -eq 10 ]]; then
+    printf 'production check still failing after %s attempts\n' "$attempt" >&2
+    exit 1
+  fi
+
+  printf 'production check not ready (attempt %s/10); retrying...\n' "$attempt"
+  sleep 2
+done
