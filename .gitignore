@@ -14,3 +14,5 @@ assets/photos/originals/
 assets/photos/canvas/
 assets/photos/feed/
 assets/barcelona-guide/
+# iCloud conflict copies; canonical canvas chunks have no numeric suffix.
+assets/canvas/* [2-9]*.json

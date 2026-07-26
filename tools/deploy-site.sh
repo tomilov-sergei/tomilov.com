@@ -134,19 +134,21 @@ python3 "$ROOT_DIR/tools/generate_telegram_seo.py"
 python3 "$ROOT_DIR/tools/generate_photo_seo.py"
 
 if [[ "${PUSH_LOCAL_TELEGRAM:-0}" == "1" && -f "$LOCAL_TELEGRAM_DIR/posts.json" ]]; then
+  remote_posts_tmp="$REMOTE_TELEGRAM_DIR/.posts.json.deploy-$$"
   scp -i "$KEY" -o IdentitiesOnly=yes \
     "$LOCAL_TELEGRAM_DIR/posts.json" \
-    "$SERVER:$REMOTE_TELEGRAM_DIR/posts.json"
+    "$SERVER:$remote_posts_tmp"
+  ssh -i "$KEY" -o IdentitiesOnly=yes "$SERVER" \
+    "chmod 0664 '$remote_posts_tmp' && mv -f '$remote_posts_tmp' '$REMOTE_TELEGRAM_DIR/posts.json'"
 fi
 
 if [[ "${PUSH_LOCAL_PHOTOS:-0}" == "1" && -f "$LOCAL_PHOTOS_DIR/photos.json" ]]; then
-  rsync -a --partial --progress --stats \
-    "${REMOTE_WRITE_RSYNC_OPTIONS[@]}" \
-    --exclude ".DS_Store" \
-    --exclude "._*" \
-    -e "ssh -i \"$KEY\" -o IdentitiesOnly=yes" \
-    "$LOCAL_PHOTOS_DIR/" \
-    "$SERVER:$REMOTE_PHOTOS_DIR/"
+  remote_photos_tmp="$REMOTE_PHOTOS_DIR/.photos.json.deploy-$$"
+  scp -i "$KEY" -o IdentitiesOnly=yes \
+    "$LOCAL_PHOTOS_DIR/photos.json" \
+    "$SERVER:$remote_photos_tmp"
+  ssh -i "$KEY" -o IdentitiesOnly=yes "$SERVER" \
+    "chmod 0664 '$remote_photos_tmp' && mv -f '$remote_photos_tmp' '$REMOTE_PHOTOS_DIR/photos.json'"
 fi
 
 if [[ -d "$LOCAL_BARCELONA_DIR" && "${SKIP_BARCELONA_SYNC:-0}" != "1" ]]; then

@@ -153,8 +153,11 @@ async function translateItemOnce(item) {
   });
 
   if (!response.ok) {
-    const error = new Error(`OpenAI API ${response.status}: ${await response.text()}`);
+    const errorText = await response.text();
+    const errorPayload = parseErrorPayload(errorText);
+    const error = new Error(`OpenAI API ${response.status}: ${errorText}`);
     error.status = response.status;
+    error.code = errorPayload?.error?.code || "";
     error.retryAfter = response.headers.get("retry-after");
     throw error;
   }
@@ -274,7 +277,16 @@ function writeJson(filePath, value) {
 
 function shouldRetry(error) {
   const statusCode = Number(error?.status || 0);
+  if (error?.code === "insufficient_quota") return false;
   return statusCode === 408 || statusCode === 409 || statusCode === 429 || statusCode >= 500;
+}
+
+function parseErrorPayload(value) {
+  try {
+    return JSON.parse(value);
+  } catch {
+    return null;
+  }
 }
 
 function retryDelayMs(error, attempt) {

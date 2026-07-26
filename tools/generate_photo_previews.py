@@ -59,20 +59,21 @@ def generate(photos, strict=False):
     generated = 0
     cached = 0
 
-    if entries and not ffmpeg:
-        failures.extend(str(photo.get("id") or source) for photo, source, _ in entries)
-    else:
-        for photo, source, outputs in entries:
-            for output, size, mode in outputs:
-                if preview_is_current(source, output):
-                    cached += 1
-                    continue
+    for photo, source, outputs in entries:
+        for output, size, mode in outputs:
+            if preview_is_current(source, output):
+                cached += 1
+                continue
 
-                try:
-                    generate_preview(ffmpeg, source, output, size, mode)
-                    generated += 1
-                except (OSError, subprocess.CalledProcessError) as error:
-                    failures.append(f"{photo.get('id') or source}: {error}")
+            if not ffmpeg:
+                failures.append(f"{photo.get('id') or source}: ffmpeg is unavailable for {output.name}")
+                continue
+
+            try:
+                generate_preview(ffmpeg, source, output, size, mode)
+                generated += 1
+            except (OSError, subprocess.CalledProcessError) as error:
+                failures.append(f"{photo.get('id') or source}: {error}")
 
     summary = {
         "generated": generated,

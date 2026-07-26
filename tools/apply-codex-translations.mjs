@@ -31,10 +31,12 @@ for (const translation of normalizeItems(translations.posts)) {
   const post = postsById.get(id);
   if (!post) throw new Error(`Unknown post id: ${id}`);
 
-  const text = cleanRequiredText(translation.text, `post ${id}`);
+  const text = Array.isArray(translation.sourceReplacements)
+    ? translatedSourceText(post.text, translation.sourceReplacements, `post ${id}`)
+    : cleanRequiredText(translation.text, `post ${id}`);
   const entities = Array.isArray(translation.entities)
     ? validateEntities(translation.entities, text, `post ${id}`)
-    : entitiesFromSourceLinks(text, post.entities || []);
+    : entitiesFromSourceLinks(text, post.entities || [], translation.linkTexts);
 
   post.translations ||= {};
   post.translations.en = {
@@ -84,50 +86,58 @@ function normalizeItems(value) {
   return Object.entries(value).map(([id, translation]) => ({ id, ...translation }));
 }
 
-function entitiesFromSourceLinks(text, sourceEntities) {
-  const links = sourceEntities
+function entitiesFromSourceLinks(text, sourceEntities, translatedLinkTexts) {
+  const sourceLinks = sourceEntities
     .filter((entity) => entity.type === "text_link" && entity.href && entity.text)
     .map((entity) => ({ type: "text_link", text: String(entity.text), href: String(entity.href) }));
 
-  if (!links.length) {
+  if (!sourceLinks.length) {
     return [{ type: "plain", text, href: null }];
   }
 
+  const links = translatedLinks(sourceLinks, translatedLinkTexts);
   const chunks = [];
   let cursor = 0;
 
-  while (cursor < text.length) {
-    const next = findNextLink(text, links, cursor);
-    if (!next) break;
-
-    if (next.index > cursor) {
-      chunks.push({ type: "plain", text: text.slice(cursor, next.index), href: null });
+  for (const link of links) {
+    const index = text.indexOf(link.text, cursor);
+    if (index < 0) {
+      throw new Error(`Translated link text was not found: ${link.text}`);
     }
 
-    chunks.push({ type: "text_link", text: next.link.text, href: next.link.href });
-    cursor = next.index + next.link.text.length;
+    if (index > cursor) {
+      chunks.push({ type: "plain", text: text.slice(cursor, index), href: null });
+    }
+
+    chunks.push(link);
+    cursor = index + link.text.length;
   }
 
   if (cursor < text.length) {
     chunks.push({ type: "plain", text: text.slice(cursor), href: null });
   }
 
-  const entities = chunks.length ? chunks : [{ type: "plain", text, href: null }];
-  return validateEntities(entities, text, "auto-linked translation");
+  return validateEntities(chunks, text, "auto-linked translation");
 }
 
-function findNextLink(text, links, cursor) {
-  let match = null;
-
-  for (const link of links) {
-    const index = text.indexOf(link.text, cursor);
-    if (index < 0) continue;
-    if (!match || index < match.index || (index === match.index && link.text.length > match.link.text.length)) {
-      match = { index, link };
-    }
+function translatedLinks(sourceLinks, translatedLinkTexts) {
+  if (translatedLinkTexts == null) return sourceLinks;
+  if (!Array.isArray(translatedLinkTexts) || translatedLinkTexts.length !== sourceLinks.length) {
+    throw new Error(
+      `Expected ${sourceLinks.length} translated link text(s), found ${
+        Array.isArray(translatedLinkTexts) ? translatedLinkTexts.length : 0
+      }`,
+    );
   }
 
-  return match;
+  return sourceLinks.map((link, index) => {
+    const text = cleanRequiredText(translatedLinkTexts[index], `translated link ${index + 1}`);
+    return {
+      type: "text_link",
+      text,
+      href: link.href,
+    };
+  });
 }
 
 function validateEntities(entities, text, label) {
@@ -149,6 +159,24 @@ function cleanRequiredText(value, label) {
   const text = cleanOptionalText(value);
   if (!text) throw new Error(`Empty translation for ${label}`);
   return text;
+}
+
+function translatedSourceText(sourceText, replacements, label) {
+  let text = String(sourceText || "");
+
+  for (const replacement of replacements) {
+    if (!Array.isArray(replacement) || replacement.length !== 2) {
+      throw new Error(`Invalid source replacement for ${label}`);
+    }
+
+    const [source, translated] = replacement.map((value) => String(value));
+    if (!source || !text.includes(source)) {
+      throw new Error(`Source replacement was not found for ${label}: ${source}`);
+    }
+    text = text.replace(source, translated);
+  }
+
+  return cleanRequiredText(text, label);
 }
 
 function cleanOptionalText(value) {
