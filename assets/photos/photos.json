@@ -1,7 +1,69 @@
 {
   "source": "Photo upload service",
-  "updatedAt": "2026-07-21T19:54:44.243148Z",
+  "updatedAt": "2026-07-22T19:33:45.753310Z",
   "photos": [
+    {
+      "id": "20260722-193345-a9a219d0",
+      "date": "2018-07-21T16:13:48Z",
+      "src": "/assets/photos/originals/2026/07/20260722-193345-a9a219d0-shortcut-upload.jpg",
+      "width": 2632,
+      "height": 3516,
+      "caption": "",
+      "alt": "",
+      "hdr": false,
+      "mimeType": "image/jpeg",
+      "size": 1095798,
+      "location": {
+        "name": null,
+        "latitude": 55.761322,
+        "longitude": 37.619483,
+        "label": "Тверской район, Москва"
+      },
+      "technical": {
+        "hasExif": true,
+        "camera": "Apple iPhone X",
+        "cameraLine": "Apple iPhone X",
+        "lensLine": "Main Camera — 28 mm ƒ1,8",
+        "format": "JPEG",
+        "megapixels": 9,
+        "dimensions": "2632 × 3516",
+        "size": "1,0 MB",
+        "summary": "9 MP • 2632 × 3516 • 1,0 MB",
+        "settings": [
+          {
+            "label": "ISO",
+            "value": "40"
+          },
+          {
+            "label": "ФР",
+            "value": "28 mm"
+          },
+          {
+            "label": "EV",
+            "value": "+0,0 ev"
+          },
+          {
+            "label": "ƒ",
+            "value": "ƒ1,8"
+          },
+          {
+            "label": "S",
+            "value": "1/20 s"
+          }
+        ]
+      },
+      "uploadedAt": "2026-07-22T19:33:45.753310Z",
+      "translations": {
+        "en": {
+          "caption": "",
+          "alt": "",
+          "locationLabel": "Tverskoy District, Moscow",
+          "status": "codex-draft",
+          "translatedAt": "2026-07-26T20:10:47.203Z",
+          "model": "codex"
+        }
+      }
+    },
     {
       "id": "20260721-195444-8f755451",
       "date": "2026-02-07T17:05:10Z",
@@ -1884,5 +1946,5 @@
       }
     }
   ],
-  "translationUpdatedAt": "2026-07-21T20:14:40Z"
+  "translationUpdatedAt": "2026-07-26T20:10:47.203Z"
 }

@@ -5,8 +5,25 @@
     <link>https://tomilov.com/screenshots/</link>
     <description>Новые посты канала Screenshot of the Day.</description>
     <language>ru-RU</language>
-    <lastBuildDate>Tue, 21 Jul 2026 19:04:56 GMT</lastBuildDate>
+    <lastBuildDate>Wed, 22 Jul 2026 16:43:01 GMT</lastBuildDate>
     <atom:link href="https://tomilov.com/screenshots/feed.xml" rel="self" type="application/rss+xml"/>
+    <item>
+      <title>Моя волна на двоих Я фанат этой фичи. Сегодня релиз и можно поделиться своим восторгом Под капотом новый алгоритм реком…</title>
+      <link>https://tomilov.com/screenshots/2090/</link>
+      <guid isPermaLink="true">https://tomilov.com/screenshots/2090/</guid>
+      <pubDate>Wed, 22 Jul 2026 16:43:01 GMT</pubDate>
+      <description>Моя волна на двоих Я фанат этой фичи. Сегодня релиз и можно поделиться своим восторгом Под капотом новый алгоритм рекомендаций — волна совмещает вкусы обои…</description>
+      <category>Screenshot of the Day</category>
+      <media:content url="https://s3.twcstorage.ru/00df5bd5-137f-492a-8d95-c7ee2cc2d851/assets/telegram/live/2026/07/22/2090-photo-file_82.jpg" medium="image" type="image/jpeg"/>
+    </item>
+    <item>
+      <title>Моя волна на двоих Я фанат этой фичи. Сегодня можно поделиться своим восторгом Под капотом новый алгоритм рекомендаций…</title>
+      <link>https://tomilov.com/screenshots/2089/</link>
+      <guid isPermaLink="true">https://tomilov.com/screenshots/2089/</guid>
+      <pubDate>Wed, 22 Jul 2026 16:39:19 GMT</pubDate>
+      <description>Моя волна на двоих Я фанат этой фичи. Сегодня можно поделиться своим восторгом Под капотом новый алгоритм рекомендаций — волна совмещает вкусы обоих слушат…</description>
+      <category>Screenshot of the Day</category>
+    </item>
     <item>
       <title>«Мне интересно» Мы пишем письма, что отправляем сами себе, ведём бесконечные гугл-доки со списком дел, делаем скриншоты…</title>
       <link>https://tomilov.com/screenshots/2088/</link>
@@ -422,24 +439,6 @@
       <description>Идеи интерфейсов, организации пространства в двухмерном пространстве канвасе не дают покоя В предыдущих сериях: концепт Pinterest feels like real moodboard…</description>
       <category>Screenshot of the Day</category>
       <media:content url="https://s3.twcstorage.ru/00df5bd5-137f-492a-8d95-c7ee2cc2d851/assets/telegram/video_files/Spatial.mp4_thumb.jpg" medium="image" type="image/jpeg"/>
-    </item>
-    <item>
-      <title>— I haven’t quite been in a store that looks and feels like this before. In terms of customer journey, how do you measu…</title>
-      <link>https://tomilov.com/screenshots/1980/</link>
-      <guid isPermaLink="true">https://tomilov.com/screenshots/1980/</guid>
-      <pubDate>Mon, 27 Apr 2026 17:43:13 GMT</pubDate>
-      <description>— I haven’t quite been in a store that looks and feels like this before. In terms of customer journey, how do you measure ROI when these spaces are taking…</description>
-      <category>Screenshot of the Day</category>
-      <media:content url="https://s3.twcstorage.ru/00df5bd5-137f-492a-8d95-c7ee2cc2d851/assets/telegram/photos/photo_1331%4027-04-2026_20-43-13.jpg" medium="image" type="image/jpeg"/>
-    </item>
-    <item>
-      <title>Пост от 23 апреля 2026 г.</title>
-      <link>https://tomilov.com/screenshots/1978/</link>
-      <guid isPermaLink="true">https://tomilov.com/screenshots/1978/</guid>
-      <pubDate>Thu, 23 Apr 2026 19:07:34 GMT</pubDate>
-      <description>Пост канала Screenshot of the Day от 23 апреля 2026 г..</description>
-      <category>Screenshot of the Day</category>
-      <media:content url="https://s3.twcstorage.ru/00df5bd5-137f-492a-8d95-c7ee2cc2d851/assets/telegram/photos/photo_1329%4023-04-2026_22-07-34.jpg" medium="image" type="image/jpeg"/>
     </item>
   </channel>
 </rss>

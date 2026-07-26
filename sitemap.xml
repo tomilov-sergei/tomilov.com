@@ -15,26 +15,26 @@
   </url>
   <url>
     <loc>https://tomilov.com/photos/</loc>
-    <lastmod>2026-07-21</lastmod>
+    <lastmod>2026-07-22</lastmod>
   </url>
   <url>
     <loc>https://tomilov.com/places/</loc>
   </url>
   <url>
     <loc>https://tomilov.com/photos/film/</loc>
-    <lastmod>2026-07-21</lastmod>
+    <lastmod>2026-07-22</lastmod>
   </url>
   <url>
     <loc>https://tomilov.com/photos/iphone/</loc>
-    <lastmod>2026-07-21</lastmod>
+    <lastmod>2026-07-22</lastmod>
   </url>
   <url>
     <loc>https://tomilov.com/photos/archive/</loc>
-    <lastmod>2026-07-21</lastmod>
+    <lastmod>2026-07-22</lastmod>
   </url>
   <url>
     <loc>https://tomilov.com/screenshots/posts/</loc>
-    <lastmod>2026-07-21</lastmod>
+    <lastmod>2026-07-22</lastmod>
   </url>
   <url>
     <loc>https://tomilov.com/en/</loc>
@@ -47,26 +47,34 @@
   </url>
   <url>
     <loc>https://tomilov.com/en/photos/</loc>
-    <lastmod>2026-07-21</lastmod>
+    <lastmod>2026-07-22</lastmod>
   </url>
   <url>
     <loc>https://tomilov.com/en/places/</loc>
   </url>
   <url>
     <loc>https://tomilov.com/en/photos/film/</loc>
-    <lastmod>2026-07-21</lastmod>
+    <lastmod>2026-07-22</lastmod>
   </url>
   <url>
     <loc>https://tomilov.com/en/photos/iphone/</loc>
-    <lastmod>2026-07-21</lastmod>
+    <lastmod>2026-07-22</lastmod>
   </url>
   <url>
     <loc>https://tomilov.com/en/photos/archive/</loc>
-    <lastmod>2026-07-21</lastmod>
+    <lastmod>2026-07-22</lastmod>
   </url>
   <url>
     <loc>https://tomilov.com/en/screenshots/posts/</loc>
-    <lastmod>2026-07-21</lastmod>
+    <lastmod>2026-07-22</lastmod>
+  </url>
+  <url>
+    <loc>https://tomilov.com/screenshots/2090/</loc>
+    <lastmod>2026-07-22</lastmod>
+  </url>
+  <url>
+    <loc>https://tomilov.com/screenshots/2089/</loc>
+    <lastmod>2026-07-22</lastmod>
   </url>
   <url>
     <loc>https://tomilov.com/screenshots/2088/</loc>
@@ -2737,6 +2745,14 @@
     <lastmod>2023-05-29</lastmod>
   </url>
   <url>
+    <loc>https://tomilov.com/en/screenshots/2090/</loc>
+    <lastmod>2026-07-22</lastmod>
+  </url>
+  <url>
+    <loc>https://tomilov.com/en/screenshots/2089/</loc>
+    <lastmod>2026-07-22</lastmod>
+  </url>
+  <url>
     <loc>https://tomilov.com/en/screenshots/2088/</loc>
     <lastmod>2026-07-21</lastmod>
   </url>
@@ -5405,6 +5421,16 @@
     <lastmod>2023-05-29</lastmod>
   </url>
   <url>
+    <loc>https://tomilov.com/photos/20260722-193345-a9a219d0/</loc>
+    <lastmod>2026-07-22</lastmod>
+    <image:image>
+      <image:loc>https://tomilov.com/assets/photos/originals/2026/07/20260722-193345-a9a219d0-shortcut-upload.jpg</image:loc>
+      <image:title>Тверской район, Москва · Apple iPhone X · 21 июля 2018 г.</image:title>
+      <image:caption>Тверской район, Москва · Apple iPhone X · 21 июля 2018 г.</image:caption>
+      <image:license>https://creativecommons.org/licenses/by/4.0/</image:license>
+    </image:image>
+  </url>
+  <url>
     <loc>https://tomilov.com/photos/20260721-195444-8f755451/</loc>
     <lastmod>2026-07-21</lastmod>
     <image:image>
@@ -5891,6 +5917,16 @@
       <image:loc>https://tomilov.com/assets/photos/originals/2026/05/20260529-235227-c5697f57-shortcut-upload.jpg</image:loc>
       <image:title>Leica M6 — плёнка · 8 ноября 2025 г.</image:title>
       <image:caption>Leica M6 — плёнка · 8 ноября 2025 г.</image:caption>
+      <image:license>https://creativecommons.org/licenses/by/4.0/</image:license>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://tomilov.com/en/photos/20260722-193345-a9a219d0/</loc>
+    <lastmod>2026-07-22</lastmod>
+    <image:image>
+      <image:loc>https://tomilov.com/assets/photos/originals/2026/07/20260722-193345-a9a219d0-shortcut-upload.jpg</image:loc>
+      <image:title>Tverskoy District, Moscow · Apple iPhone X · July 21, 2018</image:title>
+      <image:caption>Tverskoy District, Moscow · Apple iPhone X · July 21, 2018</image:caption>
       <image:license>https://creativecommons.org/licenses/by/4.0/</image:license>
     </image:image>
   </url>

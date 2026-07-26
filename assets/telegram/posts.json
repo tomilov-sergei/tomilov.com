@@ -1,8 +1,145 @@
 {
   "source": "Screenshot of the Day",
   "channelUsername": "screenshot_of_the_day",
-  "importedAt": "2026-07-21T21:48:21.788014Z",
+  "importedAt": "2026-07-22T16:43:03.124642Z",
   "posts": [
+    {
+      "id": "2090",
+      "messageIds": [
+        2090
+      ],
+      "mediaGroupId": null,
+      "telegramUrl": "https://t.me/screenshot_of_the_day/2090",
+      "date": "2026-07-22T16:43:01Z",
+      "dateUnixtime": 1784738581,
+      "edited": null,
+      "text": "Моя волна на двоих \nЯ фанат этой фичи. Сегодня  релиз и можно поделиться своим восторгом  \n\nПод капотом новый алгоритм рекомендаций — волна совмещает вкусы обоих слушателей. И это чувствуется  \n\nНастолько сильно даёт ощущение контакта и соприсутсвия с другим человеком и ощущение: «я как будто бы глубже тебя узнаю»\n\nПо моим ощущениями, это довольно интимная и сложная штука — показать из какой музыки человек состоит получилась просто и экологично \n\nОтдельно хочется отметить, что уровень любопытства выше и вовлечения. \n\nНасколько сильно меняется восприятие от человеческого соприсутствия",
+      "entities": [
+        {
+          "type": "bold",
+          "text": "Моя волна на двоих",
+          "href": null
+        },
+        {
+          "type": "plain",
+          "text": " \nЯ фанат этой фичи. Сегодня  ",
+          "href": null
+        },
+        {
+          "type": "text_link",
+          "text": "релиз",
+          "href": "https://t.me/yandexmusic_live/11909"
+        },
+        {
+          "type": "plain",
+          "text": " и можно поделиться своим восторгом  \n\n",
+          "href": null
+        },
+        {
+          "type": "text_link",
+          "text": "Под капотом",
+          "href": "https://habr.com/ru/news/1061536/"
+        },
+        {
+          "type": "plain",
+          "text": " новый алгоритм рекомендаций — волна совмещает вкусы обоих слушателей. И это чувствуется  \n\nНастолько сильно даёт ощущение контакта и соприсутсвия с другим человеком и ощущение: «я как будто бы глубже тебя узнаю»\n\nПо моим ощущениями, это довольно интимная и сложная штука — показать из какой музыки человек состоит получилась просто и экологично \n\nОтдельно хочется отметить, что уровень любопытства выше и вовлечения. \n\nНасколько сильно меняется восприятие от человеческого соприсутствия",
+          "href": null
+        }
+      ],
+      "richContent": null,
+      "media": [
+        {
+          "type": "photo",
+          "src": "/assets/telegram/live/2026/07/22/2090-photo-file_82.jpg",
+          "width": 2124,
+          "height": 2560,
+          "size": 247532,
+          "mimeType": "image/jpeg",
+          "duration": null,
+          "name": "file_82.jpg",
+          "sourceMessageId": 2090,
+          "sourceBlockPath": ""
+        }
+      ],
+      "reactions": [],
+      "translations": {
+        "en": {
+          "text": "My Wave for Two\nI’m a fan of this feature. It was released today, so now I can share my excitement.\n\nUnder the hood is a new recommendation algorithm: the Wave combines the tastes of both listeners. And you can feel it.\n\nIt creates such a strong sense of contact and co-presence with another person — a feeling of “it’s as if I’m getting to know you more deeply.”\n\nTo me, showing what music a person is made of is a rather intimate and complicated thing. Here it became simple and considerate.\n\nAnother thing worth noting: curiosity and engagement are both higher.\n\nIt’s striking how much human co-presence changes perception.",
+          "entities": [
+            {
+              "type": "plain",
+              "text": "My Wave for Two\nI’m a fan of this feature. It was ",
+              "href": null
+            },
+            {
+              "type": "text_link",
+              "text": "released",
+              "href": "https://t.me/yandexmusic_live/11909"
+            },
+            {
+              "type": "plain",
+              "text": " today, so now I can share my excitement.\n\n",
+              "href": null
+            },
+            {
+              "type": "text_link",
+              "text": "Under the hood",
+              "href": "https://habr.com/ru/news/1061536/"
+            },
+            {
+              "type": "plain",
+              "text": " is a new recommendation algorithm: the Wave combines the tastes of both listeners. And you can feel it.\n\nIt creates such a strong sense of contact and co-presence with another person — a feeling of “it’s as if I’m getting to know you more deeply.”\n\nTo me, showing what music a person is made of is a rather intimate and complicated thing. Here it became simple and considerate.\n\nAnother thing worth noting: curiosity and engagement are both higher.\n\nIt’s striking how much human co-presence changes perception.",
+              "href": null
+            }
+          ],
+          "status": "codex-draft",
+          "translatedAt": "2026-07-26T20:10:47.203Z",
+          "model": "codex"
+        }
+      }
+    },
+    {
+      "id": "2089",
+      "messageIds": [
+        2089
+      ],
+      "mediaGroupId": null,
+      "telegramUrl": "https://t.me/screenshot_of_the_day/2089",
+      "date": "2026-07-22T16:39:19Z",
+      "dateUnixtime": 1784738359,
+      "edited": null,
+      "text": "Моя волна на двоих \nЯ фанат этой фичи. Сегодня можно поделиться своим восторгом  \n\nПод капотом новый алгоритм рекомендаций — волна совмещает вкусы обоих слушателей. И это чувствуется в потоке.  \n\nНастолько сильно даёт ощущение контакта и соприсутсвия с другим человеком и ощущение: «я как будто бы глубже тебя узнаю»\n\nПо моим ощущениями, это довольно интимная и сложная штука — показать из какой музыки человек состоит получилась просто и экологично \n\nОтдельно хочется отметить, что уровень любопытства выше и вовлечения. \n\nНасколько сильно меняется восприятие от человеческого соприсутствия",
+      "entities": [
+        {
+          "type": "bold",
+          "text": "Моя волна на двоих",
+          "href": null
+        },
+        {
+          "type": "plain",
+          "text": " \nЯ фанат этой фичи. Сегодня можно поделиться своим восторгом  \n\nПод капотом новый алгоритм рекомендаций — волна совмещает вкусы обоих слушателей. И это чувствуется в потоке.  \n\nНастолько сильно даёт ощущение контакта и соприсутсвия с другим человеком и ощущение: «я как будто бы глубже тебя узнаю»\n\nПо моим ощущениями, это довольно интимная и сложная штука — показать из какой музыки человек состоит получилась просто и экологично \n\nОтдельно хочется отметить, что уровень любопытства выше и вовлечения. \n\nНасколько сильно меняется восприятие от человеческого соприсутствия",
+          "href": null
+        }
+      ],
+      "richContent": null,
+      "media": [],
+      "reactions": [],
+      "translations": {
+        "en": {
+          "text": "My Wave for Two\nI’m a fan of this feature. Today I can finally share my excitement.\n\nUnder the hood is a new recommendation algorithm: the Wave combines the tastes of both listeners. And you can feel it in the flow.\n\nIt creates such a strong sense of contact and co-presence with another person — a feeling of “it’s as if I’m getting to know you more deeply.”\n\nTo me, showing what music a person is made of is a rather intimate and complicated thing. Here it became simple and considerate.\n\nAnother thing worth noting: curiosity and engagement are both higher.\n\nIt’s striking how much human co-presence changes perception.",
+          "entities": [
+            {
+              "type": "plain",
+              "text": "My Wave for Two\nI’m a fan of this feature. Today I can finally share my excitement.\n\nUnder the hood is a new recommendation algorithm: the Wave combines the tastes of both listeners. And you can feel it in the flow.\n\nIt creates such a strong sense of contact and co-presence with another person — a feeling of “it’s as if I’m getting to know you more deeply.”\n\nTo me, showing what music a person is made of is a rather intimate and complicated thing. Here it became simple and considerate.\n\nAnother thing worth noting: curiosity and engagement are both higher.\n\nIt’s striking how much human co-presence changes perception.",
+              "href": null
+            }
+          ],
+          "status": "codex-draft",
+          "translatedAt": "2026-07-26T20:10:47.203Z",
+          "model": "codex"
+        }
+      }
+    },
     {
       "id": "2088",
       "messageIds": [
@@ -222,7 +359,22 @@
           "sourceBlockPath": "0010"
         }
       ],
-      "reactions": []
+      "reactions": [],
+      "translations": {
+        "en": {
+          "text": "“I’m interested”\n\nWe write emails that we send to ourselves, keep endless Google Docs with to-do lists, take screenshots of things that caught our attention:\n\nA review of a new café — screenshot\n\nA content recommendation — screenshot\n\nA fragment of an important conversation — screenshot\n\nYet another syrniki recipe — screenshot\n\nAfter you take a screenshot, operating systems show an interface with tools for working with it. An example from iOS: I want to remember information about an upcoming concert.\n\nNotice the button at the bottom for adding the event to the calendar.\n\nAnd it works! An event written in Russian inside a Russian-language app is recognized by an English-speaking OS and added to the calendar. Magic!\n\nYeeah, large language models don’t care which languages they speak. That is why they are large.\n\nRecognizing information in a screenshot is only the first step.\n\n— It feels natural. Computers are meant to understand what interests us. Not through a reasoning crutch like “why did he take a screenshot just now?” or a forced exchange with an AI assistant:\n\n“Siri, there’s this, like, concert thing on my phone, I’ll probably, well, maybe go, we’ll see.”\n\nOne step later, computers and phones need an “I’m interested” button. Pressing it should not create a screenshot, but return a personalized understanding of what exactly is interesting and what our next steps are. — Want me to book a transfer to Krutoyak in Vladimir Oblast?",
+          "entities": [
+            {
+              "type": "plain",
+              "text": "“I’m interested”\n\nWe write emails that we send to ourselves, keep endless Google Docs with to-do lists, take screenshots of things that caught our attention:\n\nA review of a new café — screenshot\n\nA content recommendation — screenshot\n\nA fragment of an important conversation — screenshot\n\nYet another syrniki recipe — screenshot\n\nAfter you take a screenshot, operating systems show an interface with tools for working with it. An example from iOS: I want to remember information about an upcoming concert.\n\nNotice the button at the bottom for adding the event to the calendar.\n\nAnd it works! An event written in Russian inside a Russian-language app is recognized by an English-speaking OS and added to the calendar. Magic!\n\nYeeah, large language models don’t care which languages they speak. That is why they are large.\n\nRecognizing information in a screenshot is only the first step.\n\n— It feels natural. Computers are meant to understand what interests us. Not through a reasoning crutch like “why did he take a screenshot just now?” or a forced exchange with an AI assistant:\n\n“Siri, there’s this, like, concert thing on my phone, I’ll probably, well, maybe go, we’ll see.”\n\nOne step later, computers and phones need an “I’m interested” button. Pressing it should not create a screenshot, but return a personalized understanding of what exactly is interesting and what our next steps are. — Want me to book a transfer to Krutoyak in Vladimir Oblast?",
+              "href": null
+            }
+          ],
+          "status": "codex-draft",
+          "translatedAt": "2026-07-26T20:10:47.203Z",
+          "model": "codex"
+        }
+      }
     },
     {
       "id": "2087",
@@ -265,7 +417,32 @@
           "sourceMessageId": 2087
         }
       ],
-      "reactions": []
+      "reactions": [],
+      "translations": {
+        "en": {
+          "text": "Imagine academic music and electronic music at opposite ends of an imaginary coordinate system: melody vs rhythm.\n\nNow replace music with literature.\n\nFosse’s Trilogy is electronic music in the world of literature.",
+          "entities": [
+            {
+              "type": "plain",
+              "text": "Imagine academic music and electronic music at opposite ends of an imaginary coordinate system: melody vs rhythm.\n\nNow replace music with literature.\n\n",
+              "href": null
+            },
+            {
+              "type": "text_link",
+              "text": "Fosse’s Trilogy",
+              "href": "https://books.yandex.ru/books/bO1QVtco?utm_campaign=users_referral&utm_medium=referral&utm_source=direct_link"
+            },
+            {
+              "type": "plain",
+              "text": " is electronic music in the world of literature.",
+              "href": null
+            }
+          ],
+          "status": "codex-draft",
+          "translatedAt": "2026-07-26T20:10:47.203Z",
+          "model": "codex"
+        }
+      }
     },
     {
       "id": "2086",
@@ -303,7 +480,32 @@
           "sourceMessageId": 2086
         }
       ],
-      "reactions": []
+      "reactions": [],
+      "translations": {
+        "en": {
+          "text": "I like the photo for Lookzine.",
+          "entities": [
+            {
+              "type": "plain",
+              "text": "I like the photo for ",
+              "href": null
+            },
+            {
+              "type": "text_link",
+              "text": "Lookzine",
+              "href": "https://t.me/lookziner/492"
+            },
+            {
+              "type": "plain",
+              "text": ".",
+              "href": null
+            }
+          ],
+          "status": "codex-draft",
+          "translatedAt": "2026-07-26T20:10:47.203Z",
+          "model": "codex"
+        }
+      }
     },
     {
       "id": "2082",
@@ -382,7 +584,32 @@
           "sourceMessageId": 2085
         }
       ],
-      "reactions": []
+      "reactions": [],
+      "translations": {
+        "en": {
+          "text": "Jovan, look, there’s Jamboree.\n\nInstagram with games, just like you never asked for.\n\nYou can make your own.\n\nBy the way, a game editor-generator is head and shoulders more fun than the empty input field in “serious” LLM wrappers.",
+          "entities": [
+            {
+              "type": "plain",
+              "text": "Jovan, look, there’s ",
+              "href": null
+            },
+            {
+              "type": "text_link",
+              "text": "Jamboree",
+              "href": "https://apps.apple.com/app/id6747311034"
+            },
+            {
+              "type": "plain",
+              "text": ".\n\nInstagram with games, just like you never asked for.\n\nYou can make your own.\n\nBy the way, a game editor-generator is head and shoulders more fun than the empty input field in “serious” LLM wrappers.",
+              "href": null
+            }
+          ],
+          "status": "codex-draft",
+          "translatedAt": "2026-07-26T20:10:47.203Z",
+          "model": "codex"
+        }
+      }
     },
     {
       "id": "2081",
@@ -409,7 +636,22 @@
           "sourceMessageId": 2081
         }
       ],
-      "reactions": []
+      "reactions": [],
+      "translations": {
+        "en": {
+          "text": "The sticker picker in Threads.\n\nCategory navigation follows a familiar pattern, but not thoughtlessly. I like that the quick horizontal category navigation was moved to the bottom, so your fingers cover less of the screen while you use it. The sheet can be expanded to give you the full screen for search and immersion in the fun.\n\nPasha, it seems time to revisit sticker navigation. Now we have a reference.",
+          "entities": [
+            {
+              "type": "plain",
+              "text": "The sticker picker in Threads.\n\nCategory navigation follows a familiar pattern, but not thoughtlessly. I like that the quick horizontal category navigation was moved to the bottom, so your fingers cover less of the screen while you use it. The sheet can be expanded to give you the full screen for search and immersion in the fun.\n\nPasha, it seems time to revisit sticker navigation. Now we have a reference.",
+              "href": null
+            }
+          ],
+          "status": "codex-draft",
+          "translatedAt": "2026-07-26T20:10:47.203Z",
+          "model": "codex"
+        }
+      }
     },
     {
       "id": "2080",
@@ -452,7 +694,32 @@
           "sourceMessageId": 2080
         }
       ],
-      "reactions": []
+      "reactions": [],
+      "translations": {
+        "en": {
+          "text": "From my beloved\n ⣎⡇ꉺლ༽இ•̛)ྀ◞ ༎ຶ ༽ৣৢ؞ৢ؞ؖ ꉺლ\n\n\nA new release!\n\n\n\n\n ʅ͡͡͡͡͡͡͡͡͡͡͡(̸̢̛̼̞̭͋ͅ)̸͚̰͛̔̾̀ ͒͂:̴͓̞̑̌̂̆ ͋̀:̸͎̟̯̂̓̌ ҉ ͡ ͞ ͞ ͞ ҉● ࿀ ● ࿀ ● ҉⃝ ⃝͢ ͞ ͘ ͞⃝̕ ͢ ̛ ⃝ ̸ ̡ ͢⃝̧ ͡ ͡ ̀ ̧ ̢⃝͜ ҉ ͞ ͞ ⃝͞ ͘ ͞ ͡⃝ ⃝҉҈҉҈҉҈҉҈҉҈҉ :̶̢͙͙͕̠̩͆(̷̮͍͚̫͚͂̍)̵ ̗ ( ̟̞̝̜̙̘̗̖҉̵̴̨̧̢̡̼̻̺̹ ̲̱̰̯̮̭̬̫̪̩̦̥̤̣̠҈͈͇͉͍͎͓͔͕͖͙͚͜͢͢͢͢͢͢͢͢͢͢͢͢͢͢ͅ l̡̡̡ ̡͌ Ɵʅ͡͡͡͡͡͡͡͡͡͡͡(̸\n\n\n\nTrack:\n\n\n\n(̸̢̛̼̞̭͋ͅ)̸͚̰͛̔̾̀ ͒͂v̴̢͚͚͎ȯ̶̞̮͖̑̈́OOOOOOOooo☼⃝☼⃝◉࿃ूੂ࿃ूੂੂ ʅ͡͡͡͡͡͡͡͡͡͡͡()ʃ͡͡͡͡͡͡͡͡͡͡ ꐑ(ఠీੂȯ̶̞̮͖̑̈́ )̸ ̥̰̜̥̺̐ͅ࿃ूੂ✧⃛✧⃛)̴͎̜͍̱̋̌͋̓̾̚͜ ̷̨̢̥̅͝ͅ(̸̢̛̼̞̭͋ͅ)̸͚̰͛̔̾̀ ͒͂:̴͓̞̑̌̂̆ ͋̀:̸͎̟̯̂̓̌:̶̢͙͙͕̠̩͆(̷̮͍͚̫͚͂̍̒̋̕)̵ ̗ ̍̽́ ̵͍̪̲̀̍ ̴̤̚ ̴̹̙͙̻̓̉̚͝ ̟̞̝̜̙̘̗̖҉̵̴̨̧̢̡̼̻̺̹ ̲̱̰̯̮̭̬̫̪̩\n\n\n on repeat, like a mantra\n\n\n\n\nꉂ(˵˃ ᗜ ˂˵)",
+          "entities": [
+            {
+              "type": "plain",
+              "text": "From my beloved\n ⣎⡇ꉺლ༽இ•̛)ྀ◞ ༎ຶ ༽ৣৢ؞ৢ؞ؖ ꉺლ\n\n\nA new release!\n\n\n\n\n ",
+              "href": null
+            },
+            {
+              "type": "text_link",
+              "text": "ʅ͡͡͡͡͡͡͡͡͡͡͡(̸̢̛̼̞̭͋ͅ)̸͚̰͛̔̾̀ ͒͂:̴͓̞̑̌̂̆ ͋̀:̸͎̟̯̂̓̌ ҉ ͡ ͞ ͞ ͞ ҉● ࿀ ● ࿀ ● ҉⃝ ⃝͢ ͞ ͘ ͞⃝̕ ͢ ̛ ⃝ ̸ ̡ ͢⃝̧ ͡ ͡ ̀ ̧ ̢⃝͜ ҉ ͞ ͞ ⃝͞ ͘ ͞ ͡⃝ ⃝҉҈҉҈҉҈҉҈҉҈҉ :̶̢͙͙͕̠̩͆(̷̮͍͚̫͚͂̍)̵ ̗ ( ̟̞̝̜̙̘̗̖҉̵̴̨̧̢̡̼̻̺̹ ̲̱̰̯̮̭̬̫̪̩̦̥̤̣̠҈͈͇͉͍͎͓͔͕͖͙͚͜͢͢͢͢͢͢͢͢͢͢͢͢͢͢ͅ l̡̡̡ ̡͌ Ɵʅ͡͡͡͡͡͡͡͡͡͡͡(̸",
+              "href": "https://00000ooooo.bandcamp.com/album/--5"
+            },
+            {
+              "type": "plain",
+              "text": "\n\n\n\nTrack:\n\n\n\n(̸̢̛̼̞̭͋ͅ)̸͚̰͛̔̾̀ ͒͂v̴̢͚͚͎ȯ̶̞̮͖̑̈́OOOOOOOooo☼⃝☼⃝◉࿃ूੂ࿃ूੂੂ ʅ͡͡͡͡͡͡͡͡͡͡͡()ʃ͡͡͡͡͡͡͡͡͡͡ ꐑ(ఠీੂȯ̶̞̮͖̑̈́ )̸ ̥̰̜̥̺̐ͅ࿃ूੂ✧⃛✧⃛)̴͎̜͍̱̋̌͋̓̾̚͜ ̷̨̢̥̅͝ͅ(̸̢̛̼̞̭͋ͅ)̸͚̰͛̔̾̀ ͒͂:̴͓̞̑̌̂̆ ͋̀:̸͎̟̯̂̓̌:̶̢͙͙͕̠̩͆(̷̮͍͚̫͚͂̍̒̋̕)̵ ̗ ̍̽́ ̵͍̪̲̀̍ ̴̤̚ ̴̹̙͙̻̓̉̚͝ ̟̞̝̜̙̘̗̖҉̵̴̨̧̢̡̼̻̺̹ ̲̱̰̯̮̭̬̫̪̩\n\n\n on repeat, like a mantra\n\n\n\n\nꉂ(˵˃ ᗜ ˂˵)",
+              "href": null
+            }
+          ],
+          "status": "codex-draft",
+          "translatedAt": "2026-07-26T20:10:47.203Z",
+          "model": "codex"
+        }
+      }
     },
     {
       "id": "2072",
@@ -609,7 +876,42 @@
           "sourceMessageId": 2079
         }
       ],
-      "reactions": []
+      "reactions": [],
+      "translations": {
+        "en": {
+          "text": "We undoubtedly love Teenage Engineering not only for its values — here is a great interview with the founder — but also for a visual language close to us: machines, knobs, drawings; strict, but without picking a brutal fight with minimalism.\n\nIt is lovely to watch the team refuse to limit itself with a dress code, some kind of nine-to-six suit, and instead reinvent itself and its devices by adding fun. And it releases:\n\nEP–40 riddim & EP–2350 ting\n\nWhat a cutie. It seems like the same EP, only stripped of severity and offering a light adventure: press a few buttons and your mood changes.\n\nThe microphone especially. An object of desire 🥺\n\nNow I only want to join Zoom calls with a microphone like this.",
+          "entities": [
+            {
+              "type": "plain",
+              "text": "We undoubtedly love Teenage Engineering not only for its values — here is a ",
+              "href": null
+            },
+            {
+              "type": "text_link",
+              "text": "great interview with the founder",
+              "href": "https://scandinavianmind.com/human-touch-interview-jesper-kouthoofd-teenage-engineering/"
+            },
+            {
+              "type": "plain",
+              "text": " — but also for a visual language close to us: machines, knobs, drawings; strict, but without picking a brutal fight with minimalism.\n\nIt is lovely to watch the team refuse to limit itself with a dress code, some kind of nine-to-six suit, and instead reinvent itself and its devices by adding fun. And it ",
+              "href": null
+            },
+            {
+              "type": "text_link",
+              "text": "releases",
+              "href": "https://teenage.engineering/products/ep-40"
+            },
+            {
+              "type": "plain",
+              "text": ":\n\nEP–40 riddim & EP–2350 ting\n\nWhat a cutie. It seems like the same EP, only stripped of severity and offering a light adventure: press a few buttons and your mood changes.\n\nThe microphone especially. An object of desire 🥺\n\nNow I only want to join Zoom calls with a microphone like this.",
+              "href": null
+            }
+          ],
+          "status": "codex-draft",
+          "translatedAt": "2026-07-26T20:10:47.203Z",
+          "model": "codex"
+        }
+      }
     },
     {
       "id": "2071",
@@ -697,7 +999,27 @@
           "sourceMessageId": 2071
         }
       ],
-      "reactions": []
+      "reactions": [],
+      "translations": {
+        "en": {
+          "text": "You don’t have to be just gay. You don’t have to be just straight. You might not be able to be gay with most people, but maybe there’s one person where it would work\n\nI think the idea of me telling anybody a message is ridiculous, but if anyone is paying attention, I’m letting people know that the possibilities are endless\n\nSketching is just kind of masturbation. It’s just jacking off. Get a step closer to actually realizing it instead of having some kind of fantasy about it\n\nI really learned not to think about what other people like. The other thing I’ve learned recently is not to look at sales reports\n\nIt’s impossible to do this kind of thing alone. There’s a lot of people that could be designers, a lot of people have great ideas, but it’s the execution\n\nI NEVER HAD THAT MUCH TO LOSE",
+          "entities": [
+            {
+              "type": "plain",
+              "text": "You don’t have to be just gay. You don’t have to be just straight. You might not be able to be gay with most people, but maybe there’s one person where it would work\n\nI think the idea of me telling anybody a message is ridiculous, but if anyone is paying attention, I’m letting people know that the possibilities are endless\n\nSketching is just kind of masturbation. It’s just jacking off. Get a step closer to actually realizing it instead of having some kind of fantasy about it\n\nI really learned not to think about what other people like. The other thing I’ve learned recently is not to look at sales reports\n\nIt’s impossible to do this kind of thing alone. There’s a lot of people that could be designers, a lot of people have great ideas, but it’s the execution\n\n",
+              "href": null
+            },
+            {
+              "type": "text_link",
+              "text": "I NEVER HAD THAT MUCH TO LOSE",
+              "href": "https://the-talks.com/interview/rick-owens/"
+            }
+          ],
+          "status": "codex-draft",
+          "translatedAt": "2026-07-26T20:10:47.203Z",
+          "model": "codex"
+        }
+      }
     },
     {
       "id": "2068",
@@ -799,7 +1121,32 @@
           "sourceMessageId": 2070
         }
       ],
-      "reactions": []
+      "reactions": [],
+      "translations": {
+        "en": {
+          "text": "How to Tame Creativity\n\nThroughout its existence, Apple has consistently hit the creativity nerve. Its campaigns are built around the creative process. Creativity as play. And all along, that playfulness was somewhat staged.\n\nWell, generally... yeeah, playful — just spend a hundred hours turning knobs in GarageBand, a hundred hours turning knobs in Final Cut, a hundred hours turning knobs in Aperture...\n\nRight. We talked, the idea sparked — now off we go to turn knobs. See you in a hundred hours.\n\nMisha, who is five, and I were talking:\n— Imagine we could make our own game. What should it be about?\n— Make it, for example, about Toothless. About different dragons. I’ll be the dragon myself and look for an owner, a boy or a girl. I’ll be able to fly around and see what little people are there.\n\nToday Anthropic restored access to Fable 5. I wondered how I could touch this legend. How I could turn its knobs. So I wrote a prompt:\nCreate a game where you play as a dragon and the goal is to find an owner. The game is inspired by the world of How to Train Your Dragon. You can fly around the island and complete quests. Completing quests reveals clues about which person living on the island will become the dragon’s owner.\n\nPlease welcome the game:\nDragonheart 3D — Find Your Human\n\nThe gameplay is designed for iPad because Misha has a tablet. It works with a keyboard too. There is even a day-and-night cycle!\n\nToday creativity finally feels like real creative work: the author brings the idea and references; the model turns the knobs.\n\nMagic!\n\nP.S. I did not invent a single quest myself; the model made everything. I was deeply struck that the game turned out constructive and the quests kind, despite the dragon’s capacity for force.",
+          "entities": [
+            {
+              "type": "plain",
+              "text": "How to Tame Creativity\n\nThroughout its existence, Apple has consistently hit the creativity nerve. Its campaigns are built around the creative process. Creativity as play. And all along, that playfulness was somewhat staged.\n\nWell, generally... yeeah, playful — just spend a hundred hours turning knobs in GarageBand, a hundred hours turning knobs in Final Cut, a hundred hours turning knobs in Aperture...\n\nRight. We talked, the idea sparked — now off we go to turn knobs. See you in a hundred hours.\n\nMisha, who is five, and I were talking:\n— Imagine we could make our own game. What should it be about?\n— Make it, for example, about Toothless. About different dragons. I’ll be the dragon myself and look for an owner, a boy or a girl. I’ll be able to fly around and see what little people are there.\n\nToday Anthropic restored access to Fable 5. I wondered how I could touch this legend. How I could turn its knobs. So I wrote a prompt:\nCreate a game where you play as a dragon and the goal is to find an owner. The game is inspired by the world of How to Train Your Dragon. You can fly around the island and complete quests. Completing quests reveals clues about which person living on the island will become the dragon’s owner.\n\nPlease welcome the game:\n",
+              "href": null
+            },
+            {
+              "type": "text_link",
+              "text": "Dragonheart 3D — Find Your Human",
+              "href": "https://tomilov-sergei.github.io/game/"
+            },
+            {
+              "type": "plain",
+              "text": "\n\nThe gameplay is designed for iPad because Misha has a tablet. It works with a keyboard too. There is even a day-and-night cycle!\n\nToday creativity finally feels like real creative work: the author brings the idea and references; the model turns the knobs.\n\nMagic!\n\nP.S. I did not invent a single quest myself; the model made everything. I was deeply struck that the game turned out constructive and the quests kind, despite the dragon’s capacity for force.",
+              "href": null
+            }
+          ],
+          "status": "codex-draft",
+          "translatedAt": "2026-07-26T20:10:47.203Z",
+          "model": "codex"
+        }
+      }
     },
     {
       "id": "2067",
@@ -899,7 +1246,52 @@
           "sourceMessageId": 2066
         }
       ],
-      "reactions": []
+      "reactions": [],
+      "translations": {
+        "en": {
+          "text": "A word about the news itself. I’m happy for the Rabbit 3 Times team, creators of Create with Play — but only a little.\n\nMost likely Apple bought the technology and the team, and it will turn into slightly friendlier app-production tools for the Apple ecosystem.\n\nWe can speculate about an Xcode update with visual UI assembly, or a separate app like Keynote or Icon Composer.\n\nPlay stood apart in the world of prototyping tools because it let you build prototypes natively, using SwiftUI logic and components. We held things that felt like native apps and rendered on the device as native apps, not imitations.\n\nPlay won an Apple Design Award for Innovation in 2025.\n\nThanks to Play and Roma, we were able to assemble and test our innovative approaches to recommendation-system controls, catch solutions that were not obvious to people, and deliver a better experience.",
+          "entities": [
+            {
+              "type": "plain",
+              "text": "A word about ",
+              "href": null
+            },
+            {
+              "type": "text_link",
+              "text": "the news",
+              "href": "https://9to5mac.com/2026/06/29/apple-just-acquired-the-app-that-won-last-years-innovation-apple-design-award/"
+            },
+            {
+              "type": "plain",
+              "text": " itself. I’m happy for the Rabbit 3 Times team, creators of ",
+              "href": null
+            },
+            {
+              "type": "text_link",
+              "text": "Create with Play",
+              "href": "https://www.baselinedesign.com/posts/baseline-15-creating-with-play"
+            },
+            {
+              "type": "plain",
+              "text": " — but only a little.\n\nMost likely Apple bought the technology and the team, and it will turn into slightly friendlier app-production tools for the Apple ecosystem.\n\nWe can speculate about an Xcode update with visual UI assembly, or a separate app like Keynote or Icon Composer.\n\nPlay stood apart in the world of prototyping tools because it let you build prototypes natively, using SwiftUI logic and components. We held things that felt like native apps and rendered on the device as native apps, not imitations.\n\nPlay ",
+              "href": null
+            },
+            {
+              "type": "text_link",
+              "text": "won",
+              "href": "https://www.apple.com/newsroom/2025/06/apple-unveils-winners-and-finalists-of-the-2025-apple-design-awards/"
+            },
+            {
+              "type": "plain",
+              "text": " an Apple Design Award for Innovation in 2025.\n\nThanks to Play and Roma, we were able to assemble and test our innovative approaches to recommendation-system controls, catch solutions that were not obvious to people, and deliver a better experience.",
+              "href": null
+            }
+          ],
+          "status": "codex-draft",
+          "translatedAt": "2026-07-26T20:10:47.203Z",
+          "model": "codex"
+        }
+      }
     },
     {
       "id": "2065",
@@ -987,7 +1379,52 @@
         }
       ],
       "media": [],
-      "reactions": []
+      "reactions": [],
+      "translations": {
+        "en": {
+          "text": "A word about the news itself. I’m happy for the Rabbit 3 Times team, creators of Create with Play — but only a little.\n\nMost likely Apple bought the technology and the team, and it will turn into slightly friendlier app-production tools for the Apple ecosystem.\n\nWe can speculate about an Xcode update with visual UI assembly, or a separate app like Keynote or Icon Composer.\n\nPlay stood apart in the world of prototyping tools because it let you build prototypes natively, using SwiftUI logic and components. We held things that felt like native apps and rendered on the device as native apps, not imitations.\n\nPlay won an Apple Design Award for Innovation in 2025.\n\nThanks to Play and Roma, we were able to assemble and test our innovative approaches to recommendation-system controls, catch solutions that were not obvious to people, and deliver a better experience.",
+          "entities": [
+            {
+              "type": "plain",
+              "text": "A word about ",
+              "href": null
+            },
+            {
+              "type": "text_link",
+              "text": "the news",
+              "href": "https://9to5mac.com/2026/06/29/apple-just-acquired-the-app-that-won-last-years-innovation-apple-design-award/"
+            },
+            {
+              "type": "plain",
+              "text": " itself. I’m happy for the Rabbit 3 Times team, creators of ",
+              "href": null
+            },
+            {
+              "type": "text_link",
+              "text": "Create with Play",
+              "href": "https://www.baselinedesign.com/posts/baseline-15-creating-with-play"
+            },
+            {
+              "type": "plain",
+              "text": " — but only a little.\n\nMost likely Apple bought the technology and the team, and it will turn into slightly friendlier app-production tools for the Apple ecosystem.\n\nWe can speculate about an Xcode update with visual UI assembly, or a separate app like Keynote or Icon Composer.\n\nPlay stood apart in the world of prototyping tools because it let you build prototypes natively, using SwiftUI logic and components. We held things that felt like native apps and rendered on the device as native apps, not imitations.\n\nPlay ",
+              "href": null
+            },
+            {
+              "type": "text_link",
+              "text": "won",
+              "href": "https://www.apple.com/newsroom/2025/06/apple-unveils-winners-and-finalists-of-the-2025-apple-design-awards/"
+            },
+            {
+              "type": "plain",
+              "text": " an Apple Design Award for Innovation in 2025.\n\nThanks to Play and Roma, we were able to assemble and test our innovative approaches to recommendation-system controls, catch solutions that were not obvious to people, and deliver a better experience.",
+              "href": null
+            }
+          ],
+          "status": "codex-draft",
+          "translatedAt": "2026-07-26T20:10:47.203Z",
+          "model": "codex"
+        }
+      }
     },
     {
       "id": "2062",
@@ -1042,7 +1479,22 @@
           "sourceMessageId": 2063
         }
       ],
-      "reactions": []
+      "reactions": [],
+      "translations": {
+        "en": {
+          "text": "The Google app on iOS adds its own page preview to the “share link” flow.\n\nDoes it often feel as if everything has already been invented and there is no room left for innovation? Yet here it is: beauty appeared out of nowhere, at an unexpected moment, and added a pleasant emotion.\n\nThe second screencast shows how sharing works out of the box. There are no sexy previews there.\n\nP.S. Google did not add this beauty to its Android app. Think about it...",
+          "entities": [
+            {
+              "type": "plain",
+              "text": "The Google app on iOS adds its own page preview to the “share link” flow.\n\nDoes it often feel as if everything has already been invented and there is no room left for innovation? Yet here it is: beauty appeared out of nowhere, at an unexpected moment, and added a pleasant emotion.\n\nThe second screencast shows how sharing works out of the box. There are no sexy previews there.\n\nP.S. Google did not add this beauty to its Android app. Think about it...",
+              "href": null
+            }
+          ],
+          "status": "codex-draft",
+          "translatedAt": "2026-07-26T20:10:47.203Z",
+          "model": "codex"
+        }
+      }
     },
     {
       "id": "2058",
@@ -1126,7 +1578,22 @@
           "sourceMessageId": 2061
         }
       ],
-      "reactions": []
+      "reactions": [],
+      "translations": {
+        "en": {
+          "text": "This is not continuity 😣\n\nLet’s take it step by step.\nStep 1: default state — input at the top, large icons below.\nStep 2: the “transformation” starts — the input instantly jumps, and its new starting position is different. This is not a continuation of the previous state; it is a new state.\nStep 3: somewhere in the middle of the transformation — for some reason the icons rise upward and disappear (!).\nStep 4: closer to the end. Yes, the input expands and moves toward its final position. If its coordinates had stayed synchronized with step 1, there would be no questions. But as it is...\n\nOnly questions.\n\nWhat... Why... How... Which metric were they growing?",
+          "entities": [
+            {
+              "type": "plain",
+              "text": "This is not continuity 😣\n\nLet’s take it step by step.\nStep 1: default state — input at the top, large icons below.\nStep 2: the “transformation” starts — the input instantly jumps, and its new starting position is different. This is not a continuation of the previous state; it is a new state.\nStep 3: somewhere in the middle of the transformation — for some reason the icons rise upward and disappear (!).\nStep 4: closer to the end. Yes, the input expands and moves toward its final position. If its coordinates had stayed synchronized with step 1, there would be no questions. But as it is...\n\nOnly questions.\n\nWhat... Why... How... Which metric were they growing?",
+              "href": null
+            }
+          ],
+          "status": "codex-draft",
+          "translatedAt": "2026-07-26T20:10:47.203Z",
+          "model": "codex"
+        }
+      }
     },
     {
       "id": "2057",
@@ -1164,7 +1631,22 @@
           "sourceMessageId": 2057
         }
       ],
-      "reactions": []
+      "reactions": [],
+      "translations": {
+        "en": {
+          "text": "One more for the continuity toolbox.",
+          "entities": [
+            {
+              "type": "plain",
+              "text": "One more for the continuity toolbox.",
+              "href": null
+            }
+          ],
+          "status": "codex-draft",
+          "translatedAt": "2026-07-26T20:10:47.203Z",
+          "model": "codex"
+        }
+      }
     },
     {
       "id": "2049",
@@ -1311,7 +1793,37 @@
           "sourceMessageId": 2056
         }
       ],
-      "reactions": []
+      "reactions": [],
+      "translations": {
+        "en": {
+          "text": "RICK OWENS SS27 MENS STONE\n\nWe are all processing menace\n\nSome of us arm.\nSome of us train.\nSome of us turn away.\nSome of us turn to stone\n\nProbably the most dystopian and atmospheric show since GETHSEMANE FW21.\n\nThat show was a statement about living in a state of tension before approaching chthonic horror. STONE is life inside the catastrophe after it has happened: militarization, adaptation of the service class’s uniform, comfortable shoes.\n\nPerformance under pressure",
+          "entities": [
+            {
+              "type": "text_link",
+              "text": "RICK OWENS SS27 MENS STONE",
+              "href": "https://youtu.be/vnN4px9a4jg?si=G1dmup9_6lJZHBVJ"
+            },
+            {
+              "type": "plain",
+              "text": "\n\nWe are all processing menace\n\nSome of us arm.\nSome of us train.\nSome of us turn away.\nSome of us turn to stone\n\nProbably the most dystopian and atmospheric show since ",
+              "href": null
+            },
+            {
+              "type": "text_link",
+              "text": "GETHSEMANE FW21",
+              "href": "https://youtu.be/B0F3s9pQ1XM?si=dzWsS2U7F-GJ8CX0"
+            },
+            {
+              "type": "plain",
+              "text": ".\n\nThat show was a statement about living in a state of tension before approaching chthonic horror. STONE is life inside the catastrophe after it has happened: militarization, adaptation of the service class’s uniform, comfortable shoes.\n\nPerformance under pressure",
+              "href": null
+            }
+          ],
+          "status": "codex-draft",
+          "translatedAt": "2026-07-26T20:10:47.203Z",
+          "model": "codex"
+        }
+      }
     },
     {
       "id": "2048",
@@ -1359,7 +1871,32 @@
           "sourceMessageId": 2048
         }
       ],
-      "reactions": []
+      "reactions": [],
+      "translations": {
+        "en": {
+          "text": "The ChatGPT app update has a beautiful example of the Continuity principle.\n\nOr, put differently: an embodiment of the Liquid Glass design principles — I wrote about it here.\n\nThe add control, the plus button, smoothly unfolds into a menu of options. Unexpectedly, the camera unfolds just as continuously, without taking you away from the current context. Bravo!\n\nThe principle of continuity in interface interaction:\nVisual connectedness; uninterrupted interaction with the app. Every object lives in one space that transforms under your finger. The eye and brain understand where these clusters of information come from and where they go. Their hierarchy is clear.",
+          "entities": [
+            {
+              "type": "plain",
+              "text": "The ChatGPT app update has a beautiful example of the Continuity principle.\n\nOr, put differently: an embodiment of the Liquid Glass design principles — ",
+              "href": null
+            },
+            {
+              "type": "text_link",
+              "text": "I wrote about it here",
+              "href": "https://t.me/screenshot_of_the_day/1447"
+            },
+            {
+              "type": "plain",
+              "text": ".\n\nThe add control, the plus button, smoothly unfolds into a menu of options. Unexpectedly, the camera unfolds just as continuously, without taking you away from the current context. Bravo!\n\nThe principle of continuity in interface interaction:\nVisual connectedness; uninterrupted interaction with the app. Every object lives in one space that transforms under your finger. The eye and brain understand where these clusters of information come from and where they go. Their hierarchy is clear.",
+              "href": null
+            }
+          ],
+          "status": "codex-draft",
+          "translatedAt": "2026-07-26T20:10:47.203Z",
+          "model": "codex"
+        }
+      }
     },
     {
       "id": "2042",
@@ -1446,7 +1983,22 @@
           "sourceMessageId": 2047
         }
       ],
-      "reactions": []
+      "reactions": [],
+      "translations": {
+        "en": {
+          "text": "YE LIVE IN ISTANBUL 2026\n\nA human figure on top of the world.\n\nAn experience closer to the religious than the entertaining. This is how I will remember it.\n\nA 360° show lets you sell many more tickets and use the entire stadium. On the other hand, it raises the demands on the performance. The sphere is a brilliant idea.",
+          "entities": [
+            {
+              "type": "plain",
+              "text": "YE LIVE IN ISTANBUL 2026\n\nA human figure on top of the world.\n\nAn experience closer to the religious than the entertaining. This is how I will remember it.\n\nA 360° show lets you sell many more tickets and use the entire stadium. On the other hand, it raises the demands on the performance. The sphere is a brilliant idea.",
+              "href": null
+            }
+          ],
+          "status": "codex-draft",
+          "translatedAt": "2026-07-26T20:10:47.203Z",
+          "model": "codex"
+        }
+      }
     },
     {
       "id": "2036",
@@ -1543,7 +2095,37 @@
           "sourceMessageId": 2041
         }
       ],
-      "reactions": []
+      "reactions": [],
+      "translations": {
+        "en": {
+          "text": "The Refodushka folks published a post with the recording of our conversation.\n\nThank you for inviting me! While thinking and preparing, a few ideas took shape. Apparently they had long been spinning somewhere in the background, and I could not catch them by the tail. Now I have.\n\nWatch on YouTube",
+          "entities": [
+            {
+              "type": "plain",
+              "text": "The Refodushka folks published a ",
+              "href": null
+            },
+            {
+              "type": "text_link",
+              "text": "post",
+              "href": "https://t.me/sortofdesign/1609"
+            },
+            {
+              "type": "plain",
+              "text": " with the recording of our conversation.\n\nThank you for inviting me! While thinking and preparing, a few ideas took shape. Apparently they had long been spinning somewhere in the background, and I could not catch them by the tail. Now I have.\n\n",
+              "href": null
+            },
+            {
+              "type": "text_link",
+              "text": "Watch on YouTube",
+              "href": "https://www.youtube.com/watch?v=qqSuME7t9UE"
+            }
+          ],
+          "status": "codex-draft",
+          "translatedAt": "2026-07-26T20:10:47.203Z",
+          "model": "codex"
+        }
+      }
     },
     {
       "id": "2035",
@@ -1558,7 +2140,22 @@
       "text": "Классный хук в первом кадре. Приятный эксплорейшн. Пойду чашки переворачивать \n\nВ целом, государства осваивающие инструменты присущие капитализму (конкуренция за клиента, привлечение, маркетинг) это всё как называется?",
       "entities": [],
       "media": [],
-      "reactions": []
+      "reactions": [],
+      "translations": {
+        "en": {
+          "text": "A great hook in the first frame. Pleasant exploration. I’m off to turn some cups upside down.\n\nMore broadly, what do we call it when governments master tools native to capitalism — competing for customers, acquisition, marketing?",
+          "entities": [
+            {
+              "type": "plain",
+              "text": "A great hook in the first frame. Pleasant exploration. I’m off to turn some cups upside down.\n\nMore broadly, what do we call it when governments master tools native to capitalism — competing for customers, acquisition, marketing?",
+              "href": null
+            }
+          ],
+          "status": "codex-draft",
+          "translatedAt": "2026-07-26T20:10:47.203Z",
+          "model": "codex"
+        }
+      }
     },
     {
       "id": "2032",
@@ -1685,7 +2282,52 @@
           "sourceMessageId": 2034
         }
       ],
-      "reactions": []
+      "reactions": [],
+      "translations": {
+        "en": {
+          "text": "My own canvas instead of a Miro embed.\n\nOnce I played around with Framer until tomilov.com appeared.\nScreenshot 1\n\nSometimes I gave talks here and there, so I made an archive containing all the materials. The animation lectures are still relevant — take a look. They are free.\n\nI came up with a visualization called “What’s in My Head” as the face of the site. I gathered some material on a Miro board. The end. I was too lazy to prepare materials separately and keep the board current.\n\nThen I became too lazy to keep paying for Miro. The sense of purpose disappeared.\n\nThen paying for Framer stopped being interesting too — here is the post about moving to HTML with Codex.\n\nJune 17, 2026 — I ask Codex to build a canvas for me.\nScreenshot 2\n\nI think about how to keep it current: my posts are the material for “what’s in my head.” The fresher a post, the closer it sits to the center; older ones move toward the edge of the map.\n\nAn hour of Codex work, and there is a canvas where posts are grouped by related topics and extend in rays beyond the horizon, every post clickable.\nScreenshot 3\n\nThe feeling is like opening Paintbrush in Windows 3.11 for the first time — my God, I can do absolutely anything!\n\nWhat an astonishing time to be alive. It gives me goosebumps.",
+          "entities": [
+            {
+              "type": "plain",
+              "text": "My own canvas instead of a Miro embed.\n\nOnce I played around with Framer until ",
+              "href": null
+            },
+            {
+              "type": "text_link",
+              "text": "tomilov.com",
+              "href": "http://tomilov.com/"
+            },
+            {
+              "type": "plain",
+              "text": " appeared.\nScreenshot 1\n\nSometimes I gave talks here and there, so I made an ",
+              "href": null
+            },
+            {
+              "type": "text_link",
+              "text": "archive",
+              "href": "https://tomilov.com/about/"
+            },
+            {
+              "type": "plain",
+              "text": " containing all the materials. The animation lectures are still relevant — take a look. They are free.\n\nI came up with a visualization called “What’s in My Head” as the face of the site. I gathered some material on a Miro board. The end. I was too lazy to prepare materials separately and keep the board current.\n\nThen I became too lazy to keep paying for Miro. The sense of purpose disappeared.\n\nThen paying for Framer stopped being interesting too — here is the ",
+              "href": null
+            },
+            {
+              "type": "text_link",
+              "text": "post about moving to HTML with Codex",
+              "href": "https://t.me/screenshot_of_the_day/2008"
+            },
+            {
+              "type": "plain",
+              "text": ".\n\nJune 17, 2026 — I ask Codex to build a canvas for me.\nScreenshot 2\n\nI think about how to keep it current: my posts are the material for “what’s in my head.” The fresher a post, the closer it sits to the center; older ones move toward the edge of the map.\n\nAn hour of Codex work, and there is a canvas where posts are grouped by related topics and extend in rays beyond the horizon, every post clickable.\nScreenshot 3\n\nThe feeling is like opening Paintbrush in Windows 3.11 for the first time — my God, I can do absolutely anything!\n\nWhat an astonishing time to be alive. It gives me goosebumps.",
+              "href": null
+            }
+          ],
+          "status": "codex-draft",
+          "translatedAt": "2026-07-26T20:10:47.203Z",
+          "model": "codex"
+        }
+      }
     },
     {
       "id": "2028",
@@ -1769,7 +2411,32 @@
           "sourceMessageId": 2031
         }
       ],
-      "reactions": []
+      "reactions": [],
+      "translations": {
+        "en": {
+          "text": "Siri is Ready\n\nThe new Siri has started arriving in the iOS 27 Developer Beta.\n\nIt answers every other time. We can judge its “intelligence” another day. Today we admire its appearance. Liquid Glass would have been worth introducing for Siri alone. A reminder: Apple’s OS transformation is not only about appearances.\n\nI like that the new Siri does not discard the old one, but evolves it consistently: there was the sphere, and there were the petal-like waves.\n\nWhen we develop or update features, it is useful to look inside the drawer and review the work already done — especially things that have been in production.\n\nThe familiar is easier to perceive. Easier to perceive means faster adoption.",
+          "entities": [
+            {
+              "type": "plain",
+              "text": "Siri is Ready\n\nThe new Siri has started arriving in the iOS 27 Developer Beta.\n\nIt answers every other time. We can judge its “intelligence” another day. Today we admire its appearance. Liquid Glass would have been worth introducing for Siri alone. ",
+              "href": null
+            },
+            {
+              "type": "text_link",
+              "text": "A reminder",
+              "href": "https://t.me/screenshot_of_the_day/1447"
+            },
+            {
+              "type": "plain",
+              "text": ": Apple’s OS transformation is not only about appearances.\n\nI like that the new Siri does not discard the old one, but evolves it consistently: there was the sphere, and there were the petal-like waves.\n\nWhen we develop or update features, it is useful to look inside the drawer and review the work already done — especially things that have been in production.\n\nThe familiar is easier to perceive. Easier to perceive means faster adoption.",
+              "href": null
+            }
+          ],
+          "status": "codex-draft",
+          "translatedAt": "2026-07-26T20:10:47.203Z",
+          "model": "codex"
+        }
+      }
     },
     {
       "id": "2027",
@@ -1796,7 +2463,22 @@
           "sourceMessageId": 2027
         }
       ],
-      "reactions": []
+      "reactions": [],
+      "translations": {
+        "en": {
+          "text": "There will be slides.",
+          "entities": [
+            {
+              "type": "plain",
+              "text": "There will be slides.",
+              "href": null
+            }
+          ],
+          "status": "codex-draft",
+          "translatedAt": "2026-07-26T20:10:47.203Z",
+          "model": "codex"
+        }
+      }
     },
     {
       "id": "2026",
@@ -1897,7 +2579,37 @@
         }
       ],
       "media": [],
-      "reactions": []
+      "reactions": [],
+      "translations": {
+        "en": {
+          "text": "Tomorrow — June 16 at 5:00 PM Moscow time — our guest is the actual LEGEND Seryozha Tomilov!!! 🌠🩷\n\nSeryozha is Head of Design and Creative at Yandex Music. He created the new My Wave and worked on Zvuk, Zen, the first Yandex devices, and holds 12 patents for design solutions. In short, his main interest is aesthetics that brings product, brand communication, and team together. Extremely relevant!\n\nWhat’s happening:\n\n● We’ll discuss how to work with aesthetics — including how to maintain consistency when product, brand, and team all live by different rules.\n\n● We’ll look into neurophysiology and fears!!! (+ explain how reading can be harmful)\n\n● We’ll see what Seryozha himself loves, watches, and listens to.\n\n☘️ Subscribe to Seryozha’s channel\n\n☘️ Join us on Zoom via the permanent link",
+          "entities": [
+            {
+              "type": "plain",
+              "text": "Tomorrow — June 16 at 5:00 PM Moscow time — our guest is the actual LEGEND Seryozha Tomilov!!! 🌠🩷\n\nSeryozha is Head of Design and Creative at Yandex Music. He created the new My Wave and worked on Zvuk, Zen, the first Yandex devices, and holds 12 patents for design solutions. In short, his main interest is aesthetics that brings product, brand communication, and team together. Extremely relevant!\n\nWhat’s happening:\n\n● We’ll discuss how to work with aesthetics — including how to maintain consistency when product, brand, and team all live by different rules.\n\n● We’ll look into neurophysiology and fears!!! (+ explain how reading can be harmful)\n\n● We’ll see what Seryozha himself loves, watches, and listens to.\n\n☘️ ",
+              "href": null
+            },
+            {
+              "type": "text_link",
+              "text": "Subscribe to Seryozha’s channel",
+              "href": "https://t.me/screenshot_of_the_day"
+            },
+            {
+              "type": "plain",
+              "text": "\n\n☘️ ",
+              "href": null
+            },
+            {
+              "type": "text_link",
+              "text": "Join us on Zoom via the permanent link",
+              "href": "https://us06web.zoom.us/j/83668592483?pwd=iaBS6isezIqGFOvgG6RcZVqU4N4aIa.1"
+            }
+          ],
+          "status": "codex-draft",
+          "translatedAt": "2026-07-26T20:10:47.203Z",
+          "model": "codex"
+        }
+      }
     },
     {
       "id": "2025",
@@ -1924,7 +2636,22 @@
           "sourceMessageId": 2025
         }
       ],
-      "reactions": []
+      "reactions": [],
+      "translations": {
+        "en": {
+          "text": "I wonder how they arrived at the decision to make the “more” menu as three dots from the Android universe. Is it an Easter egg, like in Marvel’s worlds?",
+          "entities": [
+            {
+              "type": "plain",
+              "text": "I wonder how they arrived at the decision to make the “more” menu as three dots from the Android universe. Is it an Easter egg, like in Marvel’s worlds?",
+              "href": null
+            }
+          ],
+          "status": "codex-draft",
+          "translatedAt": "2026-07-26T20:10:47.203Z",
+          "model": "codex"
+        }
+      }
     },
     {
       "id": "2024",
@@ -1939,7 +2666,22 @@
       "text": "у меня случился полный ресет приложения и оно теперь заново мои 39к заливает. ну и изменилось сильно",
       "entities": [],
       "media": [],
-      "reactions": []
+      "reactions": [],
+      "translations": {
+        "en": {
+          "text": "My app did a full reset and is now uploading my 39K all over again. And it changed a lot.",
+          "entities": [
+            {
+              "type": "plain",
+              "text": "My app did a full reset and is now uploading my 39K all over again. And it changed a lot.",
+              "href": null
+            }
+          ],
+          "status": "codex-draft",
+          "translatedAt": "2026-07-26T20:10:47.203Z",
+          "model": "codex"
+        }
+      }
     },
     {
       "id": "2023",
@@ -1982,7 +2724,32 @@
           "sourceMessageId": 2023
         }
       ],
-      "reactions": []
+      "reactions": [],
+      "translations": {
+        "en": {
+          "text": "Folks, news.\n\nPool is available to everyone.\n\nLet’s drink to that ✨",
+          "entities": [
+            {
+              "type": "plain",
+              "text": "Folks, news.\n\n",
+              "href": null
+            },
+            {
+              "type": "text_link",
+              "text": "Pool",
+              "href": "https://t.me/screenshot_of_the_day/1963"
+            },
+            {
+              "type": "plain",
+              "text": " is available to everyone.\n\nLet’s drink to that ✨",
+              "href": null
+            }
+          ],
+          "status": "codex-draft",
+          "translatedAt": "2026-07-26T20:10:47.203Z",
+          "model": "codex"
+        }
+      }
     },
     {
       "id": "2022",
@@ -2009,7 +2776,22 @@
           "sourceMessageId": 2022
         }
       ],
-      "reactions": []
+      "reactions": [],
+      "translations": {
+        "en": {
+          "text": "And here is beautiful footage from yesterday’s event:\n\nPope Leo XIV celebrated Holy Mass at the Sagrada Família and blessed the tallest spire of what is now the world’s tallest church.\n\nInauguration of the Tower of Jesus Christ.\n\nAn astonishing phenomenon. During his lifetime, Gaudí saw only the façade of one entrance — there are four. A person dies, but his work lives and keeps moving for the next hundred years.",
+          "entities": [
+            {
+              "type": "plain",
+              "text": "And here is beautiful footage from yesterday’s event:\n\nPope Leo XIV celebrated Holy Mass at the Sagrada Família and blessed the tallest spire of what is now the world’s tallest church.\n\nInauguration of the Tower of Jesus Christ.\n\nAn astonishing phenomenon. During his lifetime, Gaudí saw only the façade of one entrance — there are four. A person dies, but his work lives and keeps moving for the next hundred years.",
+              "href": null
+            }
+          ],
+          "status": "codex-draft",
+          "translatedAt": "2026-07-26T20:10:47.203Z",
+          "model": "codex"
+        }
+      }
     },
     {
       "id": "2021",
@@ -2036,7 +2818,22 @@
           "sourceMessageId": 2021
         }
       ],
-      "reactions": []
+      "reactions": [],
+      "translations": {
+        "en": {
+          "text": "And here is a beautiful edit.",
+          "entities": [
+            {
+              "type": "plain",
+              "text": "And here is a beautiful edit.",
+              "href": null
+            }
+          ],
+          "status": "codex-draft",
+          "translatedAt": "2026-07-26T20:10:47.203Z",
+          "model": "codex"
+        }
+      }
     },
     {
       "id": "2018",
@@ -2087,7 +2884,22 @@
           "sourceMessageId": 2020
         }
       ],
-      "reactions": []
+      "reactions": [],
+      "translations": {
+        "en": {
+          "text": "I remember you when you were thiiis small. June 10, 2013.",
+          "entities": [
+            {
+              "type": "plain",
+              "text": "I remember you when you were thiiis small. June 10, 2013.",
+              "href": null
+            }
+          ],
+          "status": "codex-draft",
+          "translatedAt": "2026-07-26T20:10:47.203Z",
+          "model": "codex"
+        }
+      }
     },
     {
       "id": "2016",
@@ -2126,7 +2938,22 @@
           "sourceMessageId": 2017
         }
       ],
-      "reactions": []
+      "reactions": [],
+      "translations": {
+        "en": {
+          "text": "The first wow discovery in the iOS 27 Developer Beta.\n\nThe timer shortcut in Control Center now opens a Dynamic Island interface for setting the timer duration.\n\nIt looks skeuomorphic: a horizontal wheel with a scale. It is immediately clear what to turn and where.",
+          "entities": [
+            {
+              "type": "plain",
+              "text": "The first wow discovery in the iOS 27 Developer Beta.\n\nThe timer shortcut in Control Center now opens a Dynamic Island interface for setting the timer duration.\n\nIt looks skeuomorphic: a horizontal wheel with a scale. It is immediately clear what to turn and where.",
+              "href": null
+            }
+          ],
+          "status": "codex-draft",
+          "translatedAt": "2026-07-26T20:10:47.203Z",
+          "model": "codex"
+        }
+      }
     },
     {
       "id": "2015",
@@ -2153,7 +2980,22 @@
           "sourceMessageId": 2015
         }
       ],
-      "reactions": []
+      "reactions": [],
+      "translations": {
+        "en": {
+          "text": "It really is!",
+          "entities": [
+            {
+              "type": "plain",
+              "text": "It really is!",
+              "href": null
+            }
+          ],
+          "status": "codex-draft",
+          "translatedAt": "2026-07-26T20:10:47.203Z",
+          "model": "codex"
+        }
+      }
     },
     {
       "id": "2014",
@@ -2179,7 +3021,27 @@
         }
       ],
       "media": [],
-      "reactions": []
+      "reactions": [],
+      "translations": {
+        "en": {
+          "text": "Look what they’ve made!\nhttps://scrn.gallery/app/yandex-music",
+          "entities": [
+            {
+              "type": "plain",
+              "text": "Look what they’ve made!\n",
+              "href": null
+            },
+            {
+              "type": "text_link",
+              "text": "https://scrn.gallery/app/yandex-music",
+              "href": "https://scrn.gallery/app/yandex-music"
+            }
+          ],
+          "status": "codex-draft",
+          "translatedAt": "2026-07-26T20:10:47.203Z",
+          "model": "codex"
+        }
+      }
     },
     {
       "id": "2008",
@@ -60401,5 +61263,5 @@
       "recordedAt": "2026-06-22T10:09:16.470252Z"
     }
   ],
-  "translationUpdatedAt": "2026-06-01T16:55:35.204Z"
+  "translationUpdatedAt": "2026-07-26T20:10:47.203Z"
 }
