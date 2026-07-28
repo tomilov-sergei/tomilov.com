@@ -23,6 +23,7 @@ EN_FEED_PATH = ROOT_DIR / "en/feed.xml"
 SCREENSHOTS_FEED_PATH = SCREENSHOTS_DIR / "feed.xml"
 EN_SCREENSHOTS_FEED_PATH = EN_SCREENSHOTS_DIR / "feed.xml"
 DISPLAY_TZ = ZoneInfo("Europe/Moscow")
+COLLECTION_STYLES_VERSION = "20260728-collection-controls-1"
 
 
 def main():
@@ -147,7 +148,7 @@ def render_screenshots_page(posts, lang="ru"):
     <link rel="icon" href="/assets/favicon.png">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500;700&family=Lora:wght@600&family=Manrope:wght@800&display=swap">
-    <link rel="stylesheet" href="/styles.css?v={shared.asset_version()}">
+    <link rel="stylesheet" href="/styles.css?v={COLLECTION_STYLES_VERSION}">
   </head>
   <body>
     <main class="page screenshots-page" data-page-lang="{lang}">
