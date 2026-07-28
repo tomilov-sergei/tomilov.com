@@ -165,6 +165,8 @@ def check_home_canvas(errors, expected_cards, expected_photos):
         errors.append("Home canvas runtime is not bound to generated data-canvas-card elements")
     if "data-home-node" in feature_runtime:
         errors.append("Home canvas runtime still references the retired data-home-node attribute")
+    if "await Promise.all(visible.map((item) => hydrateHomeCanvasNode(item.node)))" not in feature_runtime:
+        errors.append("Home canvas media loading does not wait for asynchronous card hydration")
     if not asset_version:
         errors.append("JavaScript bootstrap has no assetVersion")
 

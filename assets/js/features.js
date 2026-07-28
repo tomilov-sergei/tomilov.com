@@ -248,7 +248,7 @@ function initHomeCanvasVisibility(viewport, surface) {
   let hydratedForView = 0;
   let mediaForView = 0;
 
-  function hydrateVisible() {
+  async function hydrateVisible() {
     hydrationTimer = 0;
     if (!surface.isConnected || !latestState || latestState.scale < 0.22) return;
 
@@ -289,10 +289,10 @@ function initHomeCanvasVisibility(viewport, surface) {
       .filter((item) => !item.node.classList.contains("is-hydrated"))
       .slice(0, remainingBudget);
 
-    for (const item of visible) {
-      hydrateHomeCanvasNode(item.node);
-    }
     hydratedForView += visible.length;
+    await Promise.all(visible.map((item) => hydrateHomeCanvasNode(item.node)));
+
+    if (!surface.isConnected) return;
 
     for (const item of nearby) {
       if (mediaForView >= homeCanvasHydration.mediaPerView) break;
@@ -304,7 +304,9 @@ function initHomeCanvasVisibility(viewport, surface) {
   function update(state) {
     latestState = { ...state };
     if (hydrationTimer) clearTimeout(hydrationTimer);
-    hydrationTimer = window.setTimeout(hydrateVisible, homeCanvasHydration.delayMs);
+    hydrationTimer = window.setTimeout(() => {
+      hydrateVisible().catch((error) => console.error(error));
+    }, homeCanvasHydration.delayMs);
   }
 
   return { update };

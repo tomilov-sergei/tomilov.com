@@ -6,7 +6,7 @@ const heavyFeatureSelector = [
   "[data-photo-dialog]",
   ".screenshot-media-item.is-image",
 ].join(",");
-const assetVersion = "20260728-canvas-preview-1";
+const assetVersion = "20260728-canvas-images-1";
 
 if (document.querySelector(heavyFeatureSelector)) {
   import(`/assets/js/features.js?v=${assetVersion}`).catch((error) => console.error(error));

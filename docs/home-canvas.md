@@ -138,6 +138,7 @@ Implementation:
 - card bodies live in localized thematic JSON chunks under `assets/canvas/` and are fetched only for nearby placeholders;
 - `tools/check-site.py` verifies that every generated card has the interaction attribute and rejects references to the retired `data-home-node` contract.
 - because JavaScript is cached as `immutable`, the home-page `script.js?v=...` and bootstrap `assetVersion` must change together; the site check rejects a mismatch.
+- initial media activation waits for asynchronous chunk hydration to finish, then assigns `src` to at most eight nearby images without requiring pan or hover.
 
 ## Historical implementation snapshot
 
