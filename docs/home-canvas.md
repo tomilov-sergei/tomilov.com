@@ -137,6 +137,7 @@ Implementation:
 - every generated card link carries `data-canvas-card="<chunk>|<content-key>"`; the interaction runtime uses that same attribute for click, drag and touch handling;
 - card bodies live in localized thematic JSON chunks under `assets/canvas/` and are fetched only for nearby placeholders;
 - `tools/check-site.py` verifies that every generated card has the interaction attribute and rejects references to the retired `data-home-node` contract.
+- because JavaScript is cached as `immutable`, the home-page `script.js?v=...` and bootstrap `assetVersion` must change together; the site check rejects a mismatch.
 
 ## Historical implementation snapshot
 
