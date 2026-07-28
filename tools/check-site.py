@@ -157,9 +157,16 @@ def check_manifests(errors):
 
 def check_home_canvas(errors, expected_cards, expected_photos):
     counts = []
+    feature_runtime = (ROOT / "assets/js/features.js").read_text(encoding="utf-8")
+    if 'const homeCanvasCardSelector = "[data-canvas-card]";' not in feature_runtime:
+        errors.append("Home canvas runtime is not bound to generated data-canvas-card elements")
+    if "data-home-node" in feature_runtime:
+        errors.append("Home canvas runtime still references the retired data-home-node attribute")
+
     for lang, path in (("ru", ROOT / "index.html"), ("en", ROOT / "en/index.html")):
         source = path.read_text(encoding="utf-8")
         count = source.count('class="home-canvas-node ')
+        interactive_count = source.count(" data-canvas-card=")
         chunk_paths = sorted(
             path
             for path in (ROOT / "assets/canvas").glob(f"{lang}-*.json")
@@ -173,6 +180,11 @@ def check_home_canvas(errors, expected_cards, expected_photos):
             errors.append(
                 f"Home canvas card count mismatch in {path.relative_to(ROOT)}: "
                 f"expected {expected_cards}, found {count}"
+            )
+        if interactive_count != expected_cards:
+            errors.append(
+                f"Home canvas interactive card count mismatch in {path.relative_to(ROOT)}: "
+                f"expected {expected_cards}, found {interactive_count}"
             )
         if "<!-- home-canvas-generated:start -->" not in source or "<!-- home-canvas-generated:end -->" not in source:
             errors.append(f"Missing home canvas generation markers in {path.relative_to(ROOT)}")

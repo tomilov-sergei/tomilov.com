@@ -103,7 +103,7 @@ V1 остается в существующем стеке проекта:
 
 - статический HTML;
 - общий `styles.css`;
-- vanilla JavaScript в `script.js`;
+- маленький route-aware bootstrap в `script.js` и vanilla JavaScript runtime в `assets/js/features.js`;
 - без React, build step, canvas bitmap renderer или сторонней библиотеки.
 
 DOM-элементы предпочтительнее настоящего `<canvas>`, потому что карточки остаются ссылками, изображения лениво грузятся, текст индексируем и проще поддерживать адаптив.
@@ -134,6 +134,9 @@ Implementation:
 - multi-image stacks load one image initially and fill the remaining layers on hover or keyboard focus;
 - personal photos use generated 960 px canvas previews with an original-file fallback;
 - preview generation runs during full deploys, photo-only refreshes and new photo uploads without modifying the originals.
+- every generated card link carries `data-canvas-card="<chunk>|<content-key>"`; the interaction runtime uses that same attribute for click, drag and touch handling;
+- card bodies live in localized thematic JSON chunks under `assets/canvas/` and are fetched only for nearby placeholders;
+- `tools/check-site.py` verifies that every generated card has the interaction attribute and rejects references to the retired `data-home-node` contract.
 
 ## Historical implementation snapshot
 
@@ -149,7 +152,7 @@ The current implementation is deliberately static and DOM-based:
 
 - `tools/generate_home_canvas.py` reads `assets/telegram/posts.json` plus `assets/photos/photos.json`, classifies every item, computes deterministic coordinates and rewrites the generated sections of `index.html` and `en/index.html`;
 - `index.html` and `en/index.html` contain `.home-canvas-shell`, `.home-canvas-viewport`, `.home-canvas-surface`, all permanent card links and the toolbar;
-- `script.js` initializes paths and controls, then hydrates card templates and assigns image `src` only near the visible world rectangle;
+- `script.js` loads `assets/js/features.js`, which initializes paths and controls, hydrates nearby card bodies from `assets/canvas/` and assigns image `src` only near the visible world rectangle;
 - `styles.css` owns the grid, card styling, toolbar, post overlay and responsive rules;
 - generated post/photo pages also carry the same asset version so overlay-opened articles get the same CSS and JS cache state.
 
@@ -187,6 +190,7 @@ Canvas 2.0 keeps the existing DOM content model and replaces the viewport contro
 - resizing the viewport preserves the same world point at the center instead of resetting the canvas;
 - card dragging changes compositor transforms rather than layout coordinates;
 - a pan or pinch suppresses the following accidental card click.
+- dragging suppresses only the synthetic click immediately following pointer-up; the next intentional click opens the card normally.
 
 The surface is still one GPU-composited DOM layer. Viewport movement writes one `transform` per rendered frame, the large surface uses CSS containment, and placeholders outside the detail threshold do not instantiate their card content or request media.
 

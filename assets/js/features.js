@@ -76,6 +76,7 @@ const homeCanvasHydration = {
   overscanRatio: 0.3,
   delayMs: 48,
 };
+const homeCanvasCardSelector = "[data-canvas-card]";
 const homeCanvasContentChunks = new Map();
 
 const homeCanvasThemes = [
@@ -651,7 +652,9 @@ function initHomeCanvasInteractions(root, viewport, surface, toolbar, lang, canv
 
   viewport.addEventListener("pointerdown", (event) => {
     const isTouch = event.pointerType === "touch";
-    const isPanButton = event.button === 1 || (event.button === 0 && (spacePanning || !event.target.closest("[data-home-node]")));
+    const isPanButton =
+      event.button === 1
+      || (event.button === 0 && (spacePanning || !event.target.closest(homeCanvasCardSelector)));
 
     if ((!isTouch && !isPanButton) || event.target.closest("[data-canvas-toolbar]")) {
       return;
@@ -691,7 +694,7 @@ function initHomeCanvasInteractions(root, viewport, surface, toolbar, lang, canv
       x: state.x,
       y: state.y,
       moved: false,
-      tapNode: isTouch ? event.target.closest("[data-home-node]") : null,
+      tapNode: isTouch ? event.target.closest(homeCanvasCardSelector) : null,
     };
   });
 
@@ -769,7 +772,7 @@ function initHomeCanvasInteractions(root, viewport, surface, toolbar, lang, canv
   viewport.addEventListener("pointerup", finishPointer);
   viewport.addEventListener("pointercancel", finishPointer);
 
-  for (const node of surface.querySelectorAll("[data-home-node]")) {
+  for (const node of surface.querySelectorAll(homeCanvasCardSelector)) {
     node.addEventListener("pointerdown", (event) => {
       if (event.button !== 0 || event.pointerType === "touch" || spacePanning) return;
 
@@ -802,7 +805,7 @@ function initHomeCanvasInteractions(root, viewport, surface, toolbar, lang, canv
     node.addEventListener("pointerup", (event) => {
       if (!nodeDrag || nodeDrag.id !== event.pointerId || nodeDrag.node !== node) return;
 
-      if (nodeDrag.moved) node.dataset.dragMoved = "true";
+      if (nodeDrag.moved) suppressClickUntil = performance.now() + 250;
       root.classList.remove("is-dragging-node");
       nodeDrag = null;
     });
@@ -813,9 +816,8 @@ function initHomeCanvasInteractions(root, viewport, surface, toolbar, lang, canv
     });
 
     node.addEventListener("click", (event) => {
-      if (node.dataset.dragMoved === "true" || performance.now() < suppressClickUntil) {
+      if (performance.now() < suppressClickUntil) {
         event.preventDefault();
-        delete node.dataset.dragMoved;
         return;
       }
 
