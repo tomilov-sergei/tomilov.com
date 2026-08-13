@@ -16,3 +16,7 @@ assets/photos/feed/
 assets/barcelona-guide/
 # iCloud conflict copies; canonical canvas chunks have no numeric suffix.
 assets/canvas/* [2-9]*.json
+
+# Local-only editorial drafts that must never enter the deploy archive or Git.
+.research-private/
+**/typology_listeners_v*.html
