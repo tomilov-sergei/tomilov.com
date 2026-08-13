@@ -271,6 +271,7 @@ def check_xml(errors):
     required_research_urls = {
         "https://tomilov.com/research/",
         "https://tomilov.com/en/research/",
+        "https://tomilov.com/research/speed-and-business/",
         "https://tomilov.com/research/aesthetics-and-business/",
     }
     for location in sorted(required_research_urls - set(locations)):
@@ -289,13 +290,26 @@ def check_page_contracts(errors, manifest_summary):
         source = path.read_text(encoding="utf-8")
         if source.count("<h1") != 1 or "research-grid" not in source:
             errors.append(f"Research index structure is incomplete: {path.relative_to(ROOT)}")
+        if source.count('<a class="research-card') != 2:
+            errors.append(f"Research index must contain two article cards: {path.relative_to(ROOT)}")
+        for article_path in ("speed-and-business", "aesthetics-and-business"):
+            if f'href="/research/{article_path}/"' not in source:
+                errors.append(f"Research index is missing {article_path}: {path.relative_to(ROOT)}")
 
-    research_article = ROOT / "research/aesthetics-and-business/index.html"
-    research_source = research_article.read_text(encoding="utf-8")
-    if research_source.count("<h1") != 1 or research_source.count('class="research-section"') != 8:
-        errors.append(f"Research article structure is incomplete: {research_article.relative_to(ROOT)}")
-    if research_source.count('class="research-source-list"') != 1:
-        errors.append(f"Research article sources are missing: {research_article.relative_to(ROOT)}")
+    research_articles = (
+        (ROOT / "research/speed-and-business/index.html", "https://tomilov.com/research/speed-and-business/"),
+        (ROOT / "research/aesthetics-and-business/index.html", "https://tomilov.com/research/aesthetics-and-business/"),
+    )
+    for research_article, canonical_url in research_articles:
+        research_source = research_article.read_text(encoding="utf-8")
+        if research_source.count("<h1") != 1 or research_source.count('class="research-section"') != 8:
+            errors.append(f"Research article structure is incomplete: {research_article.relative_to(ROOT)}")
+        if research_source.count('class="research-source-list"') != 1:
+            errors.append(f"Research article sources are missing: {research_article.relative_to(ROOT)}")
+        if f'<link rel="canonical" href="{canonical_url}">' not in research_source:
+            errors.append(f"Research article canonical is missing: {research_article.relative_to(ROOT)}")
+        if '"@type":"Report"' not in research_source or 'href="/research/"' not in research_source:
+            errors.append(f"Research article metadata is incomplete: {research_article.relative_to(ROOT)}")
 
     for path in (ROOT / "about/index.html", ROOT / "en/about/index.html"):
         source = path.read_text(encoding="utf-8")

@@ -1,0 +1,344 @@
+<!doctype html>
+<html lang="ru-RU">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width">
+    <title>Как скорость влияет на восприятие и бизнес — Серёжа Томилов</title>
+    <meta name="description" content="Что данные 2020–2026 годов говорят о скорости интерфейсов, Core Web Vitals, восприятии ожидания и бизнес-метриках — с первоисточниками и оговорками.">
+    <link rel="canonical" href="https://tomilov.com/research/speed-and-business/">
+    <link rel="alternate" hreflang="ru" href="https://tomilov.com/research/speed-and-business/">
+    <link rel="alternate" hreflang="x-default" href="https://tomilov.com/research/speed-and-business/">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Как скорость влияет на восприятие и бизнес">
+    <meta property="og:description" content="Десятые доли секунды связаны с поведением и выручкой, но знаменитые performance-цифры стареют быстрее интерфейсов.">
+    <meta property="og:image" content="https://tomilov.com/assets/research/speed-and-business-og.jpg">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content="Скорость: временная шкала от 0 до 1000 миллисекунд и три растущих показателя">
+    <meta property="og:url" content="https://tomilov.com/research/speed-and-business/">
+    <meta property="article:author" content="Сергей Томилов">
+    <meta property="article:published_time" content="2026-08-13">
+    <meta property="article:modified_time" content="2026-08-13">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Как скорость влияет на восприятие и бизнес">
+    <meta name="twitter:description" content="Core Web Vitals, A/B-кейсы, воспринимаемое ожидание и архив performance-мифов — с источниками и оговорками.">
+    <meta name="twitter:image" content="https://tomilov.com/assets/research/speed-and-business-og.jpg">
+    <meta name="twitter:image:alt" content="Скорость: временная шкала от 0 до 1000 миллисекунд и три растущих показателя">
+    <link rel="icon" href="/assets/favicon.png">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500;700&family=Lora:wght@600&family=Manrope:wght@800&display=swap">
+    <link rel="stylesheet" href="/styles.css?v=20260813-research-2">
+    <link rel="stylesheet" href="/assets/css/research.css?v=20260813-research-2">
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"Report","headline":"Как скорость влияет на восприятие и бизнес","description":"Что данные 2020–2026 годов говорят о скорости интерфейсов, Core Web Vitals, восприятии ожидания и бизнес-метриках — с первоисточниками и оговорками.","url":"https://tomilov.com/research/speed-and-business/","image":"https://tomilov.com/assets/research/speed-and-business-og.jpg","datePublished":"2026-08-13","dateModified":"2026-08-13","inLanguage":"ru-RU","author":{"@type":"Person","name":"Сергей Томилов","url":"https://tomilov.com/about/"},"publisher":{"@type":"Person","name":"Сергей Томилов","url":"https://tomilov.com"},"isPartOf":{"@type":"CollectionPage","name":"Исследования","url":"https://tomilov.com/research/"},"about":["скорость интерфейсов","Core Web Vitals","воспринимаемая производительность","конверсия"]}</script>
+  </head>
+  <body>
+    <main class="page research-page research-article-page research-theme-speed" data-page-lang="ru">
+      <header class="site-header" aria-label="Навигация">
+        <a class="brand" href="/">SS/84</a>
+        <nav class="path" aria-label="Разделы">
+          <a href="/screenshots/">Блог</a>
+          <a href="/photos/">Фото</a>
+          <a href="/places/">Места</a>
+          <a href="/research/" aria-current="page" aria-label="Исследования"><span class="desktop-label">Исследования</span><span class="mobile-label">Иссл.</span></a>
+          <a href="/about/"><span class="desktop-name">Серёжа Томилов</span><span class="mobile-name">about</span></a>
+        </nav>
+        <nav class="language-switcher" aria-label="Language">
+          <a href="/research/speed-and-business/" aria-current="true">рус</a>
+        </nav>
+      </header>
+
+      <nav class="post-breadcrumb" aria-label="Хлебные крошки">
+        <a href="/research/">Исследования</a><span aria-hidden="true">/</span><span>Скорость × бизнес</span>
+      </nav>
+
+      <article class="research-paper">
+        <header class="research-hero">
+          <p class="eyebrow">UX для разработчиков · актуальные данные 2020–2026 · исторический архив</p>
+          <h1>Как скорость влияет на восприятие и бизнес</h1>
+          <p class="research-lead">Скорость действительно связана с поведением, конверсией и выручкой, но знаменитые цифры стареют быстрее интерфейсов. Разбираем Core Web Vitals, A/B-кейсы и воспринимаемое ожидание — <strong>с первоисточниками, датами и оговорками</strong>.</p>
+          <p class="research-byline"><span>Сергей Томилов</span><span>13 августа 2026</span><span>12 минут</span><span>8 разделов</span></p>
+        </header>
+
+        <section class="research-key-findings" aria-label="Коротко">
+          <div class="research-key-finding">
+            <strong>0,1 с</strong>
+            <p>ускорения мобильного сайта коррелировало с +8,4% к retail-конверсии</p>
+            <small>Deloitte Digital · 2020</small>
+          </div>
+          <div class="research-key-finding">
+            <strong>≤ 200 мс</strong>
+            <p>актуальный «хороший» порог INP на 75-м перцентиле реальных пользователей</p>
+            <small>Core Web Vitals · проверено в 2026</small>
+          </div>
+          <div class="research-key-finding">
+            <strong>48%</strong>
+            <p>мобильных сайтов проходили все три Core Web Vitals в срезе 2025 года</p>
+            <small>HTTP Archive · Web Almanac 2025</small>
+          </div>
+        </section>
+
+        <div class="research-reading-layout">
+          <aside class="research-toc" aria-label="Содержание">
+            <p>Содержание</p>
+            <ol>
+              <li><a href="#milliseconds-make-millions">Десятая секунды</a></li>
+              <li><a href="#case-studies">Кейсы</a></li>
+              <li><a href="#core-web-vitals">Пороги</a></li>
+              <li><a href="#three-layers">Три слоя</a></li>
+              <li><a href="#perceived-speed">Восприятие</a></li>
+              <li><a href="#patience">Терпение</a></li>
+              <li><a href="#outdated-numbers">Архив цифр</a></li>
+              <li><a href="#sources">Источники</a></li>
+            </ol>
+          </aside>
+
+          <div class="research-body">
+            <details class="research-mobile-toc">
+              <summary>Содержание</summary>
+              <ol>
+                <li><a href="#milliseconds-make-millions">Десятая секунды</a></li>
+                <li><a href="#case-studies">Кейсы</a></li>
+                <li><a href="#core-web-vitals">Пороги</a></li>
+                <li><a href="#three-layers">Три слоя</a></li>
+                <li><a href="#perceived-speed">Восприятие</a></li>
+                <li><a href="#patience">Терпение</a></li>
+                <li><a href="#outdated-numbers">Архив цифр</a></li>
+                <li><a href="#sources">Источники</a></li>
+              </ol>
+            </details>
+
+            <section class="research-section" id="milliseconds-make-millions">
+              <header class="research-section-heading">
+                <span class="research-section-number">01</span>
+                <h2>Десятая доля секунды и бизнес</h2>
+                <span class="research-section-period">Google · Deloitte · fifty-five, 2020</span>
+              </header>
+              <figure class="research-figure research-speed-figure">
+                <div class="research-speed-equation">
+                  <strong>−0,1 с</strong><span aria-hidden="true">→</span><b>рост метрик</b>
+                </div>
+                <p class="research-speed-figure-meta">корреляция · 30+ млн мобильных сессий · 37 брендов · Европа и США</p>
+                <div class="research-stat-grid">
+                  <div class="research-stat">
+                    <strong class="research-stat-value is-positive">+8,4%</strong>
+                    <p class="research-stat-description">Конверсия мобильных пользователей в ретейле.</p>
+                    <span class="research-stat-source">Deloitte Digital · 2020</span>
+                  </div>
+                  <div class="research-stat">
+                    <strong class="research-stat-value is-positive">+9,2%</strong>
+                    <p class="research-stat-description">Средний чек мобильных пользователей в ретейле.</p>
+                    <span class="research-stat-source">Deloitte Digital · 2020</span>
+                  </div>
+                  <div class="research-stat">
+                    <strong class="research-stat-value is-positive">+10,1%</strong>
+                    <p class="research-stat-description">Конверсия мобильных пользователей в тревеле.</p>
+                    <span class="research-stat-source">Deloitte Digital · 2020</span>
+                  </div>
+                </div>
+                <figcaption>Фигура 1. «Milliseconds Make Millions» нашёл устойчивую связь между естественным ускорением сайта и бизнес-метриками. Это большой полевой корреляционный анализ, а не рандомизированный эксперимент и не обещание одинакового эффекта каждому продукту.</figcaption>
+              </figure>
+              <p class="research-caveat"><strong>Оговорка.</strong> Отчёт заказан Google и подготовлен Deloitte на данных fifty-five. В зависимости от отрасли и показателя использовались уровни статистической уверенности 90% или 95%; исходы и стартовая скорость брендов различались.</p>
+            </section>
+
+            <section class="research-section" id="case-studies">
+              <header class="research-section-heading">
+                <span class="research-section-number">02</span>
+                <h2>Кейсы, где эффект скорости удалось изолировать</h2>
+                <span class="research-section-period">A/B и before/after</span>
+              </header>
+              <div class="research-stat-grid">
+                <a class="research-stat is-link" href="https://web.dev/case-studies/vodafone" target="_blank" rel="noopener">
+                  <strong class="research-stat-value is-positive">+8%</strong>
+                  <p class="research-stat-description"><strong>Vodafone Italy:</strong> продажи после улучшения LCP на 31%. В A/B-тесте страницы были визуально и функционально одинаковыми.</p>
+                  <span class="research-stat-source">A/B · web.dev · 2021</span>
+                </a>
+                <a class="research-stat is-link" href="https://web.dev/case-studies/rakuten" target="_blank" rel="noopener">
+                  <strong class="research-stat-value is-positive">+33,13%</strong>
+                  <p class="research-stat-description"><strong>Rakuten 24:</strong> конверсия; выручка на посетителя выросла на 53,37% в месячном 50/50-тесте.</p>
+                  <span class="research-stat-source">A/B · web.dev · 2022</span>
+                </a>
+                <a class="research-stat is-link" href="https://web.dev/case-studies/redbus-inp" target="_blank" rel="noopener">
+                  <strong class="research-stat-value is-positive">+7%</strong>
+                  <p class="research-stat-description"><strong>redBus:</strong> продажи после снижения диапазона INP примерно с 870–900 до 350–370 мс на одном из сценариев.</p>
+                  <span class="research-stat-source">before/after · web.dev · 2023</span>
+                </a>
+              </div>
+              <p class="research-caveat"><strong>Как читать.</strong> Vodafone и Rakuten проводили контролируемые A/B-тесты; redBus описывает изменение «до/после». Крупные относительные эффекты отражают и слабую стартовую точку. Кейсы отобраны для публикации и не показывают неудачные эксперименты.</p>
+            </section>
+
+            <section class="research-section" id="core-web-vitals">
+              <header class="research-section-heading">
+                <span class="research-section-number">03</span>
+                <h2>Современные инженерные пороги</h2>
+                <span class="research-section-period">75-й перцентиль полевых данных</span>
+              </header>
+              <div class="research-stat-grid">
+                <div class="research-stat">
+                  <strong class="research-stat-value">≤ 2,5 с</strong>
+                  <p class="research-stat-description"><strong>LCP · загрузка.</strong> Когда, вероятнее всего, появился главный контент экрана.</p>
+                  <span class="research-stat-source">Largest Contentful Paint</span>
+                </div>
+                <div class="research-stat">
+                  <strong class="research-stat-value">≤ 200 мс</strong>
+                  <p class="research-stat-description"><strong>INP · отзывчивость.</strong> Как страница реагирует на взаимодействия в течение всей сессии.</p>
+                  <span class="research-stat-source">Interaction to Next Paint</span>
+                </div>
+                <div class="research-stat">
+                  <strong class="research-stat-value">≤ 0,1</strong>
+                  <p class="research-stat-description"><strong>CLS · стабильность.</strong> Насколько неожиданно смещается видимый контент.</p>
+                  <span class="research-stat-source">Cumulative Layout Shift</span>
+                </div>
+              </div>
+              <p>Метрика INP заменила FID 12 марта 2024 года: теперь оценивается отзывчивость всей сессии, а не только задержка первого взаимодействия. Порог 200 мс — компромисс между качеством восприятия и достижимостью на реальных устройствах.</p>
+              <p class="research-conclusion">В 2025 году все три «хороших» порога проходили 48% мобильных сайтов в выборке HTTP Archive. Зелёные CWV — сильная инженерная цель, но не гарантия роста выручки.</p>
+            </section>
+
+            <section class="research-section" id="three-layers">
+              <header class="research-section-heading">
+                <span class="research-section-number">04</span>
+                <h2>Три слоя разговора о скорости</h2>
+                <span class="research-section-period">их нельзя смешивать</span>
+              </header>
+              <ol class="research-principles">
+                <li>
+                  <h3>Восприятие: 0,1 / 1 / 10 секунд</h3>
+                  <p>Классические ориентиры Нильсена различают мгновенный отклик, непрерывность потока мысли и предел удержания внимания. RAIL уточняет контекст: до 100 мс реакция ощущается непосредственной, после секунды внимание начинает рассеиваться.</p>
+                </li>
+                <li>
+                  <h3>Инженерия: LCP / INP / CLS</h3>
+                  <p>Полевые метрики отвечают, какой опыт реально получает большинство пользователей. Они меняются вместе с браузерами и методологией: поэтому значения всегда нужны с датой и перцентилем.</p>
+                </li>
+                <li>
+                  <h3>Бизнес: конверсия и выручка</h3>
+                  <p>Эксперимент продукта отвечает, окупается ли ускорение именно здесь. CWV помогает найти проблему, но размер денежного эффекта измеряется только на собственной аудитории.</p>
+                </li>
+              </ol>
+              <p class="research-caveat"><strong>Практическое правило.</strong> Не превращайте 100 мс из модели восприятия в обязательный LCP и не выдавайте отраслевую корреляцию за прогноз ROI. У каждого слоя свой вопрос и свой метод измерения.</p>
+            </section>
+
+            <section class="research-section" id="perceived-speed">
+              <header class="research-section-heading">
+                <span class="research-section-number">05</span>
+                <h2>Как интерфейс меняет воспринимаемое ожидание</h2>
+              </header>
+              <ol class="research-principles">
+                <li>
+                  <h3>Оптимистичный UI даёт результат сразу</h3>
+                  <p>Интерфейс показывает ожидаемый исход до ответа сервера и откатывает его при ошибке. React закрепил паттерн хуком <strong>useOptimistic</strong>. Это уместно для частых обратимых действий — и опасно как безусловный шаблон для платежей или необратимых операций.</p>
+                </li>
+                <li>
+                  <h3>Skeleton screens — не серебряная пуля</h3>
+                  <p>В тесте Viget на 136 участниках skeleton проиграл spinner по всем измеренным показателям. Исследование ECCE’18 получило частично обратное направление, но без статистически значимых различий. Вывод: тестировать конкретный интерфейс, длительность и знакомство пользователя с ним.</p>
+                </li>
+                <li>
+                  <h3>Анимация может сжимать субъективное время</h3>
+                  <p>Harrison, Yeo &amp; Hudson на CHI 2010 показали: вариант progress bar с движением назад и замедлением воспринимался примерно на <strong>11% быстрее</strong> обычного — без сокращения фактического ожидания.</p>
+                </li>
+                <li>
+                  <h3>Предзагрузка экономит реальные миллисекунды</h3>
+                  <p>В кейсе eBay из отчёта Deloitte предиктивная загрузка следующей вероятной страницы связывала каждые 0,1 с ускорения поиска с <strong>+0,5% к добавлениям в корзину</strong>. Это продуктовый кейс, а не универсальная формула.</p>
+                </li>
+              </ol>
+            </section>
+
+            <section class="research-section" id="patience">
+              <header class="research-section-heading">
+                <span class="research-section-number">06</span>
+                <h2>Что известно о терпении пользователей</h2>
+                <span class="research-section-period">поле ≠ самоотчёт</span>
+              </header>
+              <div class="research-trust-list">
+                <div class="research-trust-row"><span>Мобильных визитов прекращались при загрузке дольше трёх секунд в агрегированных данных 2016 года</span><strong>53%</strong></div>
+                <div class="research-trust-row"><span>Среднее заявленное терпение в опросе OnePoll для Forbes Advisor, 2000 взрослых в США, 2024 год</span><strong>≈ 8 с</strong></div>
+                <div class="research-trust-row"><span>Респондентов того же опроса сказали, что при медленной или неотзывчивой странице перейдут к следующему результату поиска</span><strong>48%</strong></div>
+              </div>
+              <p class="research-caveat"><strong>Не прямое сравнение.</strong> Полевой отвал 2016 года и ответы анкеты 2024-го различаются годом, выборкой, сайтом и определением ожидания. Они показывают два способа измерения, а не чистый разрыв между словами и действиями.</p>
+            </section>
+
+            <section class="research-section" id="outdated-numbers">
+              <header class="research-section-heading">
+                <span class="research-section-number">07</span>
+                <h2>Зал славы устаревших performance-цифр</h2>
+                <span class="research-section-period">проверяйте метод и дату</span>
+              </header>
+              <p class="research-swipe-hint">Таблица листается вбок →</p>
+              <div class="research-table-scroll" tabindex="0" role="region" aria-label="Разбор устаревших performance-цифр">
+                <table class="research-myths">
+                  <thead>
+                    <tr><th>Знаменитая цифра</th><th>Происхождение</th><th>Что можно говорить сегодня</th></tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td><s>«Amazon: +100 мс = −1% выручки»</s></td>
+                      <td>Внутренний эксперимент, известный из публичного пересказа Грега Линдена и докладов 2006 года; сырых данных и современной репликации нет.</td>
+                      <td><strong class="research-verdict">Исторический сигнал.</strong> Для актуального аргумента используйте Deloitte 2020; Akamai 2017 связывал +100 мс с падением конверсии до 7%, но это наблюдательный отраслевой анализ.</td>
+                    </tr>
+                    <tr>
+                      <td><s>«Google: +500 мс = −20% трафика»</s></td>
+                      <td>Эксперимент 2006 года одновременно менял скорость и число результатов, поэтому эффект нельзя приписать одной задержке.</td>
+                      <td><strong class="research-verdict">Есть строгая замена.</strong> В официальном delay-injection experiment 2009 года +400 мс дали −0,59% поисков на пользователя и остаточный эффект после окончания теста.</td>
+                    </tr>
+                    <tr>
+                      <td><s>«Bing: +2 с = −4,3% выручки»</s></td>
+                      <td>Результат контролируемого эксперимента из совместного доклада Bing и Google на Velocity 2009; сохранился в обзорах, но не как современный публичный датасет.</td>
+                      <td><strong class="research-verdict">Не универсальная константа.</strong> Это сильное историческое свидетельство чувствительности поиска к задержке, а не калькулятор для любого продукта.</td>
+                    </tr>
+                    <tr>
+                      <td><s>«40% бросают сайт после трёх секунд»</s></td>
+                      <td>Akamai / Gomez, около 2009 года; формулировка десятилетиями кочует между презентациями без контекста.</td>
+                      <td><strong class="research-verdict">Заменяйте датированным источником.</strong> Google 2016: 53% мобильных визитов при загрузке дольше трёх секунд. Но и эту цифру нельзя называть свежей в 2026-м.</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <blockquote class="research-quote">
+                <p>Самое медленное в перформансе — скорость обновления цифр в презентациях: данные 2006 года всё ещё выступают со сцены в 2026-м.</p>
+                <footer>Мораль этой таблицы</footer>
+              </blockquote>
+            </section>
+
+            <section class="research-section" id="sources">
+              <header class="research-section-heading">
+                <span class="research-section-number">08</span>
+                <h2>Первоисточники и методология</h2>
+              </header>
+              <ul class="research-source-list">
+                <li><a href="https://www.deloitte.com/ie/en/services/consulting/research/milliseconds-make-millions.html" target="_blank" rel="noopener"><strong>Milliseconds Make Millions — Deloitte Digital, 2020 ↗</strong><span>30+ млн мобильных сессий, 37 брендов, отраслевые метрики и кейс eBay.</span><small>Deloitte · исследование заказано Google</small></a></li>
+                <li><a href="https://www.thinkwithgoogle.com/_qs/documents/9382/Milliseconds_Make_Millions_report.pdf" target="_blank" rel="noopener"><strong>Milliseconds Make Millions — полный отчёт ↗</strong><span>Методология, уровни статистической уверенности и подробные результаты.</span><small>Think with Google · PDF</small></a></li>
+                <li><a href="https://web.dev/case-studies/vodafone" target="_blank" rel="noopener"><strong>Vodafone: 31% better LCP, 8% more sales ↗</strong><span>Контролируемый 50/50 A/B-тест визуально одинаковых страниц.</span><small>web.dev · 2021</small></a></li>
+                <li><a href="https://web.dev/case-studies/rakuten" target="_blank" rel="noopener"><strong>Rakuten 24 and Core Web Vitals ↗</strong><span>Месячный A/B-тест: +33,13% к конверсии и +53,37% к выручке на посетителя.</span><small>web.dev · 2022</small></a></li>
+                <li><a href="https://web.dev/case-studies/redbus-inp" target="_blank" rel="noopener"><strong>How redBus improved INP ↗</strong><span>Оптимизации взаимодействий, изменение диапазона INP и +7% к продажам.</span><small>web.dev · 2023 · before/after</small></a></li>
+                <li><a href="https://web.dev/articles/vitals" target="_blank" rel="noopener"><strong>Web Vitals — актуальный состав метрик ↗</strong><span>LCP, INP, CLS, полевые измерения и 75-й перцентиль.</span><small>web.dev · проверено 13 августа 2026</small></a></li>
+                <li><a href="https://web.dev/articles/defining-core-web-vitals-thresholds" target="_blank" rel="noopener"><strong>Как определены пороги Core Web Vitals ↗</strong><span>Почему пороги одновременно учитывают качество восприятия и достижимость.</span><small>web.dev · обновлено в 2025</small></a></li>
+                <li><a href="https://almanac.httparchive.org/en/2025/performance" target="_blank" rel="noopener"><strong>Web Almanac 2025 · Performance ↗</strong><span>Полевой срез CrUX: 48% мобильных сайтов с хорошими CWV.</span><small>HTTP Archive · 2025</small></a></li>
+                <li><a href="https://www.nngroup.com/articles/response-times-3-important-limits/" target="_blank" rel="noopener"><strong>Response Times: The 3 Important Limits ↗</strong><span>Классическая рамка 0,1 / 1 / 10 секунд и её область применения.</span><small>Nielsen Norman Group</small></a></li>
+                <li><a href="https://web.dev/articles/rail" target="_blank" rel="noopener"><strong>Measure performance with the RAIL model ↗</strong><span>Пользовательская модель скорости и её связь с более новым подходом Core Web Vitals.</span><small>web.dev · 2020</small></a></li>
+                <li><a href="https://react.dev/reference/react/useOptimistic" target="_blank" rel="noopener"><strong>useOptimistic — React ↗</strong><span>Официальная документация optimistic state и rollback через подтверждённое состояние.</span><small>react.dev · проверено 13 августа 2026</small></a></li>
+                <li><a href="https://www.viget.com/articles/a-bone-to-pick-with-skeleton-screens" target="_blank" rel="noopener"><strong>A Bone to Pick with Skeleton Screens ↗</strong><span>Тест на 136 участниках, в котором skeleton screen проиграл spinner.</span><small>Viget · 2017</small></a></li>
+                <li><a href="https://dl.acm.org/doi/10.1145/3232078.3232086" target="_blank" rel="noopener"><strong>The Effect of Skeleton Screens ↗</strong><span>Частично обратное направление результатов без статистически значимых различий.</span><small>ACM · ECCE ’18 · DOI 10.1145/3232078.3232086</small></a></li>
+                <li><a href="https://dl.acm.org/doi/10.1145/1753326.1753556" target="_blank" rel="noopener"><strong>Faster Progress Bars ↗</strong><span>Эксперименты с визуальными дополнениями и воспринимаемой длительностью.</span><small>ACM · CHI ’10 · DOI 10.1145/1753326.1753556</small></a></li>
+                <li><a href="https://www.thinkwithgoogle.com/_qs/documents/57/mobile-page-speed-new-industry-benchmarks.pdf" target="_blank" rel="noopener"><strong>Mobile Page Speed: New Industry Benchmarks ↗</strong><span>Происхождение цифры 53% и данные о мобильной загрузке.</span><small>Think with Google · 2017 · данные 2016 · PDF</small></a></li>
+                <li><a href="https://searchengineland.com/people-wait-website-load-2024-stat-445223" target="_blank" rel="noopener"><strong>How long will people wait in 2024? ↗</strong><span>Редакционный разбор опроса OnePoll для Forbes Advisor: 2000 взрослых в США.</span><small>Search Engine Land · 2024 · самоотчёт</small></a></li>
+                <li><a href="https://www.ir.akamai.com/node/12716" target="_blank" rel="noopener"><strong>Akamai Online Retail Performance Report ↗</strong><span>Около 10 млрд визитов; связь +100 мс с падением конверсии до 7%.</span><small>Akamai · 2017 · наблюдательные данные</small></a></li>
+                <li><a href="https://services.google.com/fh/files/blogs/google_delayexp.pdf" target="_blank" rel="noopener"><strong>Speed Matters for Google Web Search ↗</strong><span>Контролируемое добавление задержки 100–400 мс и долгосрочный эффект на число поисков.</span><small>Google · 2009 · PDF</small></a></li>
+                <li><a href="https://glinden.blogspot.com/2006/11/marissa-mayer-at-web-20.html" target="_blank" rel="noopener"><strong>Marissa Mayer at Web 2.0 ↗</strong><span>Публичный пересказ исторических экспериментов Amazon и Google — важен именно как архив.</span><small>Greg Linden · 2006</small></a></li>
+              </ul>
+              <p class="research-method-note">Собрано для лекции «UX для разработчиков» · Сергей Томилов, 2026. Корпоративные кейсы подвержены publication bias; относительные улучшения зависят от исходной скорости, аудитории и метрики. Не сравнивайте напрямую конверсию, продажи, средний чек, выручку на посетителя и отказы. Core Web Vitals и React — изменяемые технологии; ссылки и актуальные пороги проверены 13 августа 2026 года.</p>
+            </section>
+
+            <nav class="research-pagination" aria-label="Навигация по исследованиям">
+              <a class="research-next" href="/research/">
+                <span>Коллекция</span>
+                <strong>Все исследования →</strong>
+              </a>
+              <a class="research-next" href="/research/aesthetics-and-business/">
+                <span>Парное исследование</span>
+                <strong>Как красота влияет на восприятие и бизнес →</strong>
+              </a>
+            </nav>
+          </div>
+        </div>
+      </article>
+    </main>
+  </body>
+</html>

@@ -683,7 +683,10 @@ def render_sitemap(posts, photos):
     photo_urls = []
     static_urls.extend([
         {"loc": shared.localized_url("/barcelona-guide/", "ru")},
-        {"loc": shared.localized_url("/research/aesthetics-and-business/", "ru")},
+        *[
+            {"loc": shared.localized_url(article["path"], "ru"), "lastmod": article["lastmod"]}
+            for article in shared.RESEARCH_ARTICLES
+        ],
     ])
     for lang in shared.LANGUAGES:
         static_urls.extend([

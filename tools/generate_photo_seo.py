@@ -42,6 +42,10 @@ LANGUAGES = ("ru", "en")
 PHOTO_FILTER_VALUES = ("film", "iphone")
 PHOTO_FILTER_DIRS = {"film", "iphone"}
 TELEGRAM_EXPORT_TZ = ZoneInfo("Europe/Moscow")
+RESEARCH_ARTICLES = (
+    {"path": "/research/speed-and-business/", "lastmod": "2026-08-13"},
+    {"path": "/research/aesthetics-and-business/", "lastmod": "2026-08-13"},
+)
 
 STRINGS = {
     "ru": {
@@ -605,7 +609,10 @@ def render_sitemap(posts, photos):
     latest_photo = sitemap_date(photos[0].get("uploadedAt") or photos[0].get("date")) if photos else None
     static_urls = [
         {"loc": localized_url("/barcelona-guide/", "ru")},
-        {"loc": localized_url("/research/aesthetics-and-business/", "ru")},
+        *[
+            {"loc": localized_url(article["path"], "ru"), "lastmod": article["lastmod"]}
+            for article in RESEARCH_ARTICLES
+        ],
     ]
     post_urls = []
     photo_urls = []
