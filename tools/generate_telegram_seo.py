@@ -23,7 +23,7 @@ EN_FEED_PATH = ROOT_DIR / "en/feed.xml"
 SCREENSHOTS_FEED_PATH = SCREENSHOTS_DIR / "feed.xml"
 EN_SCREENSHOTS_FEED_PATH = EN_SCREENSHOTS_DIR / "feed.xml"
 DISPLAY_TZ = ZoneInfo("Europe/Moscow")
-COLLECTION_STYLES_VERSION = "20260728-collection-controls-1"
+COLLECTION_STYLES_VERSION = "20260813-research-1"
 
 
 def main():
@@ -681,7 +681,10 @@ def render_sitemap(posts, photos):
     static_urls = []
     post_urls = []
     photo_urls = []
-    static_urls.append({"loc": shared.localized_url("/barcelona-guide/", "ru")})
+    static_urls.extend([
+        {"loc": shared.localized_url("/barcelona-guide/", "ru")},
+        {"loc": shared.localized_url("/research/aesthetics-and-business/", "ru")},
+    ])
     for lang in shared.LANGUAGES:
         static_urls.extend([
             {"loc": shared.localized_url("/", lang)},
@@ -689,6 +692,7 @@ def render_sitemap(posts, photos):
             {"loc": shared.localized_url("/screenshots/", lang)},
             {"loc": shared.localized_url("/photos/", lang), "lastmod": latest_photo},
             {"loc": shared.localized_url("/places/", lang)},
+            {"loc": shared.localized_url("/research/", lang)},
             {"loc": shared.localized_url("/photos/film/", lang), "lastmod": latest_photo},
             {"loc": shared.localized_url("/photos/iphone/", lang), "lastmod": latest_photo},
             {"loc": shared.localized_url("/photos/archive/", lang), "lastmod": latest_photo},

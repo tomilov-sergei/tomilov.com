@@ -9,11 +9,13 @@
 - `/photos/film/` и `/photos/iphone/` — тематические срезы фотоленты.
 - `/places/` — карта/индекс мест из личных маршрутов и фотографий.
 - `/barcelona-guide/` — личный гайд по местам в Барселоне.
+- `/research/` — авторские исследования о дизайне, продуктах, восприятии и поведении людей.
 - `/en/` — английская версия сайта с теми же разделами и URL под префиксом `/en`.
 
 Главные файлы:
 
-- `index.html`, `about/index.html`, `photos/index.html`, `photos/film/index.html`, `photos/iphone/index.html`, `places/index.html`, `barcelona-guide/index.html` — структура страниц.
+- `index.html`, `about/index.html`, `photos/index.html`, `photos/film/index.html`, `photos/iphone/index.html`, `places/index.html`, `barcelona-guide/index.html`, `research/index.html` — структура страниц.
+- `research/*/index.html` и `assets/css/research.css` — вручную арт-директируемые исследовательские лонгриды и их общий редакционный слой.
 - `screenshots/index.html` — коллекция наблюдений с поиском и тематическими фильтрами.
 - `styles.css` — общий дизайн, сетки, адаптив и темы.
 - `script.js` — маленький загрузчик; полный native-web runtime находится в `assets/js/features.js` и подключается только на интерактивных страницах.
@@ -115,7 +117,7 @@ PULL_REMOTE_POSTS=0 PUSH_LOCAL_TELEGRAM=1 ./tools/deploy-site.sh
 
 Для `tomilov.com`:
 
-После деплоя проверить `https://tomilov.com/`, `https://tomilov.com/about/`, `https://tomilov.com/screenshots/`, `https://tomilov.com/photos/`, `https://tomilov.com/places/` и `https://tomilov.com/barcelona-guide/`.
+После деплоя проверить `https://tomilov.com/`, `https://tomilov.com/about/`, `https://tomilov.com/screenshots/`, `https://tomilov.com/photos/`, `https://tomilov.com/places/`, `https://tomilov.com/barcelona-guide/`, `https://tomilov.com/research/` и опубликованные страницы исследований.
 
 ## Фото
 

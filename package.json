@@ -10,8 +10,8 @@
     "generate": "node tools/generate-seo-pages.mjs",
     "check:site": "python3 tools/check-site.py",
     "check:secrets": "python3 tools/check-secrets.py",
-    "lint:css": "stylelint styles.css",
-    "check:css": "postcss styles.css --no-map --output /tmp/tomilov-postcss.css",
+    "lint:css": "stylelint styles.css assets/css/research.css",
+    "check:css": "postcss styles.css --no-map --output /tmp/tomilov-postcss.css && postcss assets/css/research.css --no-map --output /tmp/tomilov-research-postcss.css",
     "check:size": "size-limit",
     "test:telegram": "python3 -m unittest tools/test_telegram_live_importer.py",
     "check:prod": "python3 tools/check-production.py",
@@ -23,6 +23,11 @@
       "name": "CSS",
       "path": "styles.css",
       "limit": "16 KB"
+    },
+    {
+      "name": "Research CSS",
+      "path": "assets/css/research.css",
+      "limit": "8 KB"
     },
     {
       "name": "JavaScript bootstrap",

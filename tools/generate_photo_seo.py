@@ -54,6 +54,8 @@ STRINGS = {
         "blog": "Блог",
         "photos": PHOTOS_TITLE,
         "places": "Места",
+        "research": "Исследования",
+        "research_mobile": "Иссл.",
         "about_desktop": SITE_NAME,
         "about_mobile": "about",
         "photos_description": PHOTOS_DESCRIPTION,
@@ -104,6 +106,8 @@ STRINGS = {
         "blog": "Blog",
         "photos": PHOTOS_TITLE_EN,
         "places": "Places",
+        "research": "Research",
+        "research_mobile": "Res.",
         "about_desktop": SITE_NAME_EN,
         "about_mobile": "about",
         "photos_description": PHOTOS_DESCRIPTION_EN,
@@ -599,7 +603,10 @@ def photo_json_ld(photo, url, description, lang="ru"):
 def render_sitemap(posts, photos):
     latest_post = sitemap_date(posts[0].get("edited") or posts[0].get("date")) if posts else None
     latest_photo = sitemap_date(photos[0].get("uploadedAt") or photos[0].get("date")) if photos else None
-    static_urls = [{"loc": localized_url("/barcelona-guide/", "ru")}]
+    static_urls = [
+        {"loc": localized_url("/barcelona-guide/", "ru")},
+        {"loc": localized_url("/research/aesthetics-and-business/", "ru")},
+    ]
     post_urls = []
     photo_urls = []
     for lang in LANGUAGES:
@@ -609,6 +616,7 @@ def render_sitemap(posts, photos):
             {"loc": localized_url("/screenshots/", lang)},
             {"loc": localized_url("/photos/", lang), "lastmod": latest_photo},
             {"loc": localized_url("/places/", lang)},
+            {"loc": localized_url("/research/", lang)},
             {"loc": localized_url("/photos/film/", lang), "lastmod": latest_photo},
             {"loc": localized_url("/photos/iphone/", lang), "lastmod": latest_photo},
             {"loc": localized_url("/photos/archive/", lang), "lastmod": latest_photo},
@@ -761,6 +769,7 @@ def render_header(current_path, lang="ru"):
     is_screenshots = current_path.startswith("/screenshots/")
     is_photos = current_path.startswith("/photos/")
     is_places = current_path.startswith("/places/")
+    is_research = current_path.startswith("/research/")
     is_about = current_path.startswith("/about/")
     return f"""<header class="site-header" aria-label="{tr(lang, 'nav_aria')}">
         <a class="brand" href="{localized_path("/", lang)}">SS/84</a>
@@ -768,6 +777,7 @@ def render_header(current_path, lang="ru"):
           <a href="{localized_path("/screenshots/", lang)}"{' aria-current="page"' if is_screenshots else ''}>{tr(lang, 'blog')}</a>
           <a href="{localized_path("/photos/", lang)}"{' aria-current="page"' if is_photos else ''}>{tr(lang, 'photos')}</a>
           <a href="{localized_path("/places/", lang)}"{' aria-current="page"' if is_places else ''}>{tr(lang, 'places')}</a>
+          <a href="{localized_path("/research/", lang)}"{' aria-current="page"' if is_research else ''} aria-label="{tr(lang, 'research')}"><span class="desktop-label">{tr(lang, 'research')}</span><span class="mobile-label">{tr(lang, 'research_mobile')}</span></a>
           <a href="{localized_path("/about/", lang)}"{' aria-current="page"' if is_about else ''}><span class="desktop-name">{tr(lang, 'about_desktop')}</span><span class="mobile-name">{tr(lang, 'about_mobile')}</span></a>
         </nav>
         {render_language_switcher(current_path, lang)}

@@ -189,6 +189,7 @@ git archive --format=tar.gz --output="$ARCHIVE" HEAD \
   about \
   barcelona-guide \
   places \
+  research \
   en \
   photos \
   ops \

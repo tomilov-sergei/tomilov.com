@@ -13,6 +13,7 @@ This file is the project map for future Codex chats.
 - `/photos/film/` and `/photos/iphone/` - thematic photo feed slices.
 - `/places/` - places index for personal routes and photo contexts.
 - `/barcelona-guide/` - curated Barcelona places and routes.
+- `/research/` - editorial index of public research reports and evidence-led essays.
 - `/en/**` - English mirrors of the public pages, posts, photo pages, feeds, and indexes.
 
 Product direction for `/screenshots/`: a public collection of observations about digital products, design, interfaces, technology, and beautiful things. Telegram is the publishing source; the site should be the durable, searchable, indexable, and navigable version of that thinking. See `docs/product.md`.
@@ -34,6 +35,10 @@ Product direction for `/screenshots/`: a public collection of observations about
 - `photos/film/index.html`, `photos/iphone/index.html` - curated photo subsets.
 - `places/index.html` - places index.
 - `barcelona-guide/index.html` - curated Barcelona guide.
+- `research/index.html`, `en/research/index.html` - localized research indexes.
+- `research/*/index.html` - manually art-directed public research reports.
+- `assets/css/research.css` - namespaced editorial styles shared by research indexes and reports.
+- `assets/research/**` - social-preview assets for the research collection.
 - `assets/barcelona-guide/**` - local working mirror of guide images; ignored by Git and stored in production shared storage.
 - `styles.css` - shared styles.
 - `script.js` - small route-aware bootstrap; it loads `assets/js/features.js` only on pages that need the full interactive runtime.
@@ -75,6 +80,8 @@ Apple Photos share sheet -> Apple Shortcut -> `/photos/upload` -> Python service
 Photo originals are intentionally stored without canvas processing, resizing, or transcoding so HDR/Ultra HDR metadata and gain maps can survive. The Shortcut must not use image transform actions. The upload service validates the token and file signature, detects embedded Apple/ISO 21496 HDR gain maps, then stores the original bytes. Deploys backfill missing HDR flags from shared originals before generating previews and pages. The browser is responsible for actual HDR display support.
 
 Static SEO pages, sitemap, and RSS are generated from `assets/telegram/posts.json` and `assets/photos/photos.json`. The full deploy path uses `tools/generate-seo-pages.mjs`. The production Telegram webhook path uses `tools/generate_telegram_seo.py` so new posts update `/screenshots/<id>/`, `/screenshots/feed.xml`, `/feed.xml`, and `sitemap.xml` immediately. The production photo upload path uses `tools/generate_photo_seo.py` so new photos update `/photos/**`, `/photos/feed.xml`, `/feed.xml`, and `sitemap.xml` immediately. Both production refresh generators are Python-only, so they do not require Node.js on the VPS.
+
+Research reports are curated static pages rather than manifest-generated content. Both sitemap generators must list the research indexes and each published report explicitly so live Telegram or photo refreshes cannot remove them. Internal or third-party-confidential research must not enter the public tree; `noindex` is not an access-control mechanism.
 
 Both production refresh generators also call `tools/generate_home_canvas.py`. The home page therefore contains static lightweight links for every post and photo and does not download either full manifest at runtime. Card bodies live in thematic JSON chunks and are hydrated only near the visible canvas viewport.
 

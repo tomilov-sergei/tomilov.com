@@ -45,7 +45,7 @@ class ReferenceParser(HTMLParser):
 
 def public_html_files():
     files = [ROOT / "index.html"]
-    for directory in ("about", "barcelona-guide", "en", "photos", "screenshots"):
+    for directory in ("about", "barcelona-guide", "en", "photos", "places", "research", "screenshots"):
         files.extend(sorted((ROOT / directory).rglob("*.html")))
     return files
 
@@ -268,6 +268,14 @@ def check_xml(errors):
     for location in sorted(required_photo_indexes - set(locations)):
         errors.append(f"Sitemap is missing photo index: {location}")
 
+    required_research_urls = {
+        "https://tomilov.com/research/",
+        "https://tomilov.com/en/research/",
+        "https://tomilov.com/research/aesthetics-and-business/",
+    }
+    for location in sorted(required_research_urls - set(locations)):
+        errors.append(f"Sitemap is missing research page: {location}")
+
     for location in locations:
         target = local_target(location, ROOT / "sitemap.xml")
         if target is not None and not target.exists():
@@ -277,6 +285,18 @@ def check_xml(errors):
 
 
 def check_page_contracts(errors, manifest_summary):
+    for path in (ROOT / "research/index.html", ROOT / "en/research/index.html"):
+        source = path.read_text(encoding="utf-8")
+        if source.count("<h1") != 1 or "research-grid" not in source:
+            errors.append(f"Research index structure is incomplete: {path.relative_to(ROOT)}")
+
+    research_article = ROOT / "research/aesthetics-and-business/index.html"
+    research_source = research_article.read_text(encoding="utf-8")
+    if research_source.count("<h1") != 1 or research_source.count('class="research-section"') != 8:
+        errors.append(f"Research article structure is incomplete: {research_article.relative_to(ROOT)}")
+    if research_source.count('class="research-source-list"') != 1:
+        errors.append(f"Research article sources are missing: {research_article.relative_to(ROOT)}")
+
     for path in (ROOT / "about/index.html", ROOT / "en/about/index.html"):
         source = path.read_text(encoding="utf-8")
         if source.count("<h1") != 1:

@@ -153,6 +153,7 @@ a {
   align-items: center;
 }
 
+.mobile-label,
 .mobile-name {
   display: none;
 }
@@ -2520,6 +2521,7 @@ a {
     display: none;
   }
 
+  .mobile-label,
   .mobile-name {
     display: inline;
   }
