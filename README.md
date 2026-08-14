@@ -15,7 +15,7 @@
 Главные файлы:
 
 - `index.html`, `about/index.html`, `photos/index.html`, `photos/film/index.html`, `photos/iphone/index.html`, `places/index.html`, `barcelona-guide/index.html`, `research/index.html` — структура страниц.
-- `research/*/index.html` и `assets/css/research.css` — вручную арт-директируемые исследовательские лонгриды и их общий редакционный слой.
+- `research/*/index.html` — вручную арт-директируемые исследовательские лонгриды с автономными inline-стилями; `assets/css/research.css` обслуживает индексы и карточки исследований.
 - `screenshots/index.html` — коллекция наблюдений с поиском и тематическими фильтрами.
 - `styles.css` — общий дизайн, сетки, адаптив и темы.
 - `script.js` — маленький загрузчик; полный native-web runtime находится в `assets/js/features.js` и подключается только на интерактивных страницах.

@@ -302,9 +302,14 @@ def check_page_contracts(errors, manifest_summary):
     )
     for research_article, canonical_url in research_articles:
         research_source = research_article.read_text(encoding="utf-8")
-        if research_source.count("<h1") != 1 or research_source.count('class="research-section"') != 8:
+        if (
+            research_source.count("<h1") != 1
+            or research_source.count('<article class="paper">') != 1
+            or research_source.count('class="a-intro"') != 1
+            or research_source.count('class="a-appendix"') != 1
+        ):
             errors.append(f"Research article structure is incomplete: {research_article.relative_to(ROOT)}")
-        if research_source.count('class="research-source-list"') != 1:
+        if research_source.count('<ol class="bib">') != 1 or "Первоисточники" not in research_source:
             errors.append(f"Research article sources are missing: {research_article.relative_to(ROOT)}")
         if f'<link rel="canonical" href="{canonical_url}">' not in research_source:
             errors.append(f"Research article canonical is missing: {research_article.relative_to(ROOT)}")

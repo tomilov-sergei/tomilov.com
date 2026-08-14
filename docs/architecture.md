@@ -37,7 +37,7 @@ Product direction for `/screenshots/`: a public collection of observations about
 - `barcelona-guide/index.html` - curated Barcelona guide.
 - `research/index.html`, `en/research/index.html` - localized research indexes.
 - `research/*/index.html` - manually art-directed public research reports.
-- `assets/css/research.css` - namespaced editorial styles shared by research indexes and reports.
+- `assets/css/research.css` - namespaced editorial styles for research indexes and cards; individual reports keep their art-directed CSS inline for exact layout fidelity.
 - `assets/research/**` - social-preview assets for the research collection.
 - `assets/barcelona-guide/**` - local working mirror of guide images; ignored by Git and stored in production shared storage.
 - `styles.css` - shared styles.
