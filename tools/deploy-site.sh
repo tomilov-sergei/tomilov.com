@@ -219,6 +219,15 @@ telegram_shared='$REMOTE_STORAGE_ROOT/shared/assets/telegram'
 ln -sfn \"\$telegram_shared\" '$REMOTE_STORAGE_ROOT/releases/'\$stamp'/assets/telegram'
 ln -sfn '$REMOTE_STORAGE_ROOT/shared/assets/photos' '$REMOTE_STORAGE_ROOT/releases/'\$stamp'/assets/photos'
 ln -sfn '$REMOTE_STORAGE_ROOT/shared/assets/barcelona-guide' '$REMOTE_STORAGE_ROOT/releases/'\$stamp'/assets/barcelona-guide'
+# Collector downloads are published independently of the website release.
+# Preserve their stable URLs without archiving binaries or changing appcast.
+if [ -d '$REMOTE_STORAGE_ROOT/shared/collector' ]; then
+  if [ -e '$REMOTE_STORAGE_ROOT/releases/'\$stamp'/collector' ] || [ -L '$REMOTE_STORAGE_ROOT/releases/'\$stamp'/collector' ]; then
+    printf 'Collector release path already exists; refusing to replace it\n' >&2
+    exit 1
+  fi
+  ln -s '$REMOTE_STORAGE_ROOT/shared/collector' '$REMOTE_STORAGE_ROOT/releases/'\$stamp'/collector'
+fi
 cd '$REMOTE_STORAGE_ROOT/releases/'\$stamp
 python3 tools/backfill_photo_hdr.py --strict
 python3 tools/generate_photo_previews.py --strict
