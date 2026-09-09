@@ -53,6 +53,7 @@
 
 .research-card {
   display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
   overflow: hidden;
   border: 1px solid var(--line);
   border-radius: var(--radius-card);
@@ -61,157 +62,29 @@
   transition: transform 160ms ease, box-shadow 160ms ease;
 }
 
+@supports (grid-template-rows: subgrid) {
+  .research-card {
+    grid-row: span 2;
+    grid-template-rows: subgrid;
+  }
+}
+
 .research-card:hover {
   transform: translateY(-2px);
 }
 
+/* Handmade plasticine illustrations, shown in their original 3:2 framing. */
 .research-cover {
-  position: relative;
-  display: grid;
+  display: block;
   overflow: hidden;
-  min-height: 240px;
-  aspect-ratio: 16 / 9;
-  background-color: var(--canvas-bg);
-  background-image:
-    linear-gradient(var(--canvas-grid-strong) 1px, transparent 1px),
-    linear-gradient(90deg, var(--canvas-grid-strong) 1px, transparent 1px);
-  background-size: 28px 28px;
-  place-items: center;
+  aspect-ratio: 3 / 2;
+  background: var(--canvas-bg);
 }
 
-.research-cover::after {
-  position: absolute;
-  inset: 0;
-  border-bottom: 1px solid var(--line);
-  content: "";
-  pointer-events: none;
-}
-
-.research-cover-arrows {
-  position: absolute;
-  inset: 18% auto auto 8%;
-  display: grid;
-  gap: 18px;
-  width: 38%;
-}
-
-.research-cover-arrow {
-  position: relative;
-  height: 18px;
-  background: var(--research-accent);
-}
-
-.research-cover-arrow::after {
-  position: absolute;
-  inset: 50% -18px auto auto;
-  width: 34px;
-  height: 34px;
-  border-top: 18px solid var(--research-accent);
-  border-right: 18px solid var(--research-accent);
-  content: "";
-  transform: translateY(-50%) rotate(45deg);
-}
-
-.research-cover-arrow.is-return {
-  background: var(--research-coral);
-}
-
-.research-cover-arrow.is-return::after {
-  inset: 50% auto auto -18px;
-  border-color: transparent transparent var(--research-coral) var(--research-coral);
-}
-
-.research-cover-stats {
-  position: absolute;
-  inset: auto 7% 12% auto;
-  display: grid;
-  grid-template-columns: repeat(3, 16px);
-  gap: 7px;
-}
-
-.research-cover-stats i {
-  width: 16px;
-  height: 16px;
-  background: var(--research-accent-soft);
-}
-
-.research-cover-stats i:nth-child(2),
-.research-cover-stats i:nth-child(6) {
-  background: var(--research-coral);
-}
-
-.research-cover-stats i:nth-child(4) {
-  background: var(--research-signal);
-}
-
-.research-speed-cover {
-  align-items: stretch;
-  justify-items: stretch;
-}
-
-.research-speed-scale {
-  position: absolute;
-  inset: 28% 8% auto;
-  height: 3px;
-  background: linear-gradient(90deg, var(--research-accent) 0 20%, var(--text) 20% 100%);
-}
-
-.research-speed-scale::before,
-.research-speed-scale::after,
-.research-speed-marker {
-  position: absolute;
-  top: 50%;
-  width: 9px;
-  height: 9px;
-  background: var(--text);
-  content: "";
-  transform: translate(-50%, -50%);
-}
-
-.research-speed-scale::before {
-  left: 0;
-}
-
-.research-speed-scale::after {
-  left: 100%;
-}
-
-.research-speed-marker {
-  left: 20%;
-  background: var(--research-signal);
-}
-
-.research-speed-ticks {
-  position: absolute;
-  inset: -7px 0 auto;
-  height: 17px;
-  background: repeating-linear-gradient(90deg, transparent 0 8%, var(--text) 8% calc(8% + 1px));
-  opacity: 0.56;
-}
-
-.research-speed-cover-bars {
-  position: absolute;
-  inset: 48% 9% 12% 28%;
-  display: grid;
-  gap: 10px;
-  align-content: end;
-}
-
-.research-speed-cover-bars i {
-  height: 13px;
-  background: var(--research-positive);
-}
-
-.research-speed-cover-bars i:nth-child(1) {
-  width: 38%;
-}
-
-.research-speed-cover-bars i:nth-child(2) {
-  width: 68%;
-}
-
-.research-speed-cover-bars i:nth-child(3) {
+.research-cover img {
+  display: block;
   width: 100%;
+  height: auto;
 }
 
 .research-card-body {
@@ -937,6 +810,10 @@
 }
 
 @media (prefers-color-scheme: dark) {
+  .research-page {
+    --research-accent: oklch(74% 0.12 296);
+  }
+
   .research-theme-speed {
     --research-accent: oklch(78% 0.12 245);
     --research-positive: oklch(76% 0.14 150);
@@ -987,10 +864,6 @@
   .research-grid {
     grid-template-columns: 1fr;
     padding-bottom: 24px;
-  }
-
-  .research-cover {
-    min-height: 210px;
   }
 
   .research-index-note {

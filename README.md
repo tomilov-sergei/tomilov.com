@@ -25,6 +25,7 @@
 - `assets/photos/photos.json` — манифест личных фото; оригиналы лежат в `assets/photos/originals/**`, игнорируются git и живут в shared storage.
 - `assets/telegram/posts.json` и `assets/telegram/**` — импортированные посты и медиа из Telegram.
 - `feed.xml`, `screenshots/feed.xml`, `photos/feed.xml` — RSS-фиды сайта, блога и фотоленты.
+- `docs/research-illustrations.md` — пластилиновая стилистика обложек исследований и правила подготовки изображений.
 - `docs/ops-runbook.md` — production-проверки, логи, сервисы и ручной refresh.
 - `tools/photo_upload_server.py` — upload-endpoint для Apple Shortcut.
 - `tools/import-telegram-export.mjs` — повторяемый импорт Telegram Desktop export.
