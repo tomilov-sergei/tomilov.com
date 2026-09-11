@@ -1603,6 +1603,12 @@ function createMedia(mediaItems, post, lang) {
 }
 
 function createVideoPreview(media, lang) {
+  const video = document.createElement("video");
+  video.preload = "metadata";
+  video.playsInline = true;
+  const source = getTelegramAssetUrl(media.src);
+  // A nonzero media fragment asks Safari to decode the opening frame while paused.
+  const previewSource = `${source.split("#")[0]}#t=0.001`;
   const trigger = document.createElement("button");
   trigger.className = "screenshot-video-preview";
   trigger.type = "button";
@@ -1616,6 +1622,31 @@ function createVideoPreview(media, lang) {
     poster.decoding = "async";
     poster.alt = "";
     trigger.append(poster);
+  } else {
+    video.className = "screenshot-video-poster";
+    video.setAttribute("aria-hidden", "true");
+    video.muted = true;
+    video.autoplay = true;
+    video.addEventListener("loadeddata", () => {
+      video.pause();
+      try {
+        video.currentTime = 0;
+      } catch {}
+    }, { once: true });
+    trigger.append(video);
+    // Only fetch opening frames near the viewport, not the entire archive.
+    if ("IntersectionObserver" in window) {
+      const observer = new IntersectionObserver((entries) => {
+        if (entries.some((entry) => entry.isIntersecting)) {
+          video.src = previewSource;
+          observer.disconnect();
+        }
+      }, { rootMargin: "300px" });
+      observer.observe(trigger);
+      trigger.addEventListener("click", () => observer.disconnect(), { once: true });
+    } else {
+      video.src = previewSource;
+    }
   }
 
   const play = document.createElement("span");
@@ -1624,10 +1655,12 @@ function createVideoPreview(media, lang) {
   trigger.append(play);
 
   trigger.addEventListener("click", () => {
-    const video = document.createElement("video");
-    video.src = getTelegramAssetUrl(media.src);
+    video.src = source;
+    video.className = "";
+    video.removeAttribute("aria-hidden");
     video.controls = true;
     video.autoplay = true;
+    video.muted = false;
     video.preload = "metadata";
     video.playsInline = true;
 
@@ -1641,6 +1674,7 @@ function createVideoPreview(media, lang) {
     }
 
     trigger.replaceWith(video);
+    if (video.readyState >= 1) video.currentTime = 0;
     video.play?.().catch(() => {});
   });
 

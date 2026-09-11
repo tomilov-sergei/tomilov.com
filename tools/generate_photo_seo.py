@@ -1085,13 +1085,7 @@ def read_json(path, fallback):
 
 
 def asset_version():
-    for source in [ROOT_DIR / "index.html", ROOT_DIR / "photos/index.html", ROOT_DIR / "screenshots/index.html"]:
-        if not source.exists():
-            continue
-        match = re.search(r"/styles\.css\?v=([^\"]+)", source.read_text(encoding="utf-8"))
-        if match:
-            return match.group(1)
-    return "20260531-photo-info"
+    return "20260911-video-first-frame-1"
 
 
 def clean_text(value):

@@ -402,6 +402,8 @@ def render_media_item(media, post, index, lang="ru", eager_first=True):
           </div>"""
 
     if media.get("type") in {"video", "animation"}:
+        if not media.get("poster"):
+            src = f'{src.split("#")[0]}#t=0.001'
         poster = f' poster="{shared.escape_attr(shared.telegram_asset_url(media.get("poster")))}"' if media.get("poster") else ""
         loop = " loop muted" if media.get("type") == "animation" else ""
         return f"""<div class="screenshot-media-item is-video"{aspect}>
