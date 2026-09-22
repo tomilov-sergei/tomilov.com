@@ -824,7 +824,7 @@ function updateBoxes(){
 }
 
 /* ═══════ управление ═══════ */
-let fold=1, playing=false, cycling=false, dir=1, autorot=false, showRt=true;
+let fold=1, playing=false, cycling=false, dir=1, autorot=false, showRt=false;
 // wipePosition — точка, от которой растёт размытие (в ней картинка резкая).
 // У Apple дефолт поля 0, но ось X нашего экранного UV зеркальна относительно их,
 // поэтому чёрная зона максимального блюра уезжала на неподвижную половину.
