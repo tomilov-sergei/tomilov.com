@@ -53,7 +53,6 @@
 
 .research-card {
   display: grid;
-  grid-template-rows: auto minmax(0, 1fr);
   overflow: hidden;
   border: 1px solid var(--line);
   border-radius: var(--radius-card);
@@ -62,29 +61,8 @@
   transition: transform 160ms ease, box-shadow 160ms ease;
 }
 
-@supports (grid-template-rows: subgrid) {
-  .research-card {
-    grid-row: span 2;
-    grid-template-rows: subgrid;
-  }
-}
-
 .research-card:hover {
   transform: translateY(-2px);
-}
-
-/* Handmade plasticine illustrations, shown in their original 3:2 framing. */
-.research-cover {
-  display: block;
-  overflow: hidden;
-  aspect-ratio: 3 / 2;
-  background: var(--canvas-bg);
-}
-
-.research-cover img {
-  display: block;
-  width: 100%;
-  height: auto;
 }
 
 .research-card-body {
