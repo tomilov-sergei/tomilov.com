@@ -763,7 +763,7 @@ function inspectionView(){
 }
 function requestExplode(value){
   if(value>0 && explodeTarget===0 && explodeAmount===0){
-    playing=cycling=false;releaseTourCamera();prepareLayerLayout();inspectionView();
+    playing=false;releaseTourCamera();prepareLayerLayout();inspectionView();
   }
   explodeTarget=THREE.MathUtils.clamp(value,0,1);
   $('#explode').value=Math.round(explodeTarget*1000);
@@ -812,7 +812,13 @@ function setMode(mode){
           roughness: src.roughness ?? 0.25, metalness: src.metalness ?? 1.0});
       } else {
         const tex = src[MAP_OF[mode]] || null;
-        m = new THREE.MeshBasicMaterial({map: tex, color: tex ? 0xffffff : 0x1b1b1f});
+        m = new THREE.MeshBasicMaterial({map:tex,color:tex?0xffffff:0x1b1b1f,toneMapped:false});
+        const channel={rough:'g',metal:'b',ao:'r'}[mode];
+        if(channel){
+          m.onBeforeCompile=shader=>{shader.fragmentShader=shader.fragmentShader.replace(
+            '#include <map_fragment>',`#include <map_fragment>\n#ifdef USE_MAP\ndiffuseColor.rgb=vec3(diffuseColor.${channel});\n#endif`);};
+          m.customProgramCacheKey=()=>`inspect-channel-${channel}`;
+        }
       }
       debugMats.set(key, m);
     }
@@ -820,16 +826,14 @@ function setMode(mode){
     p.mesh.material = m;
   }
 
-  const info = $('#modeinfo');
-  if (MAP_OF[mode]) info.textContent = `есть карта: ${total-missing} из ${total} мешей`;
-  else if (mode === 'none') info.textContent = '';
-  else info.textContent = `частей: ${parts.length}`;
+  const explanations={none:'Материал целиком: цвет, микрорельеф, отражения и тени.',wire:'Треугольники показывают плотность геометрии и границы отдельных поверхностей.',normals:'Цвет кодирует направление нормали поверхности относительно камеры.',uv:'Ровные квадраты — равномерная развёртка. Растянутые показывают искажение UV.',albedo:'Базовый цвет без освещения.',rough:'Канал G: светлое — шероховатость, тёмное — гладкая поверхность.',metal:'Канал B: светлое — металл, тёмное — диэлектрик.',ao:'Канал R: тёмное — окклюзия, светлое — открытая поверхность.',nmap:'RGB кодирует микрорельеф в касательной системе поверхности.',emissive:'Карта собственного свечения.',env:'Отражения окружения без цветной текстуры и карты микрорельефа.'};
+  $('#modeinfo').textContent=explanations[mode]+(MAP_OF[mode]?` Карта есть у ${total-missing} из ${total} поверхностей; тёмно-серым показаны поверхности без карты.`:'');
 }
 
 function toggleSkeleton(on){
   if (on && !skelHelper){
     skelHelper = new THREE.SkeletonHelper(phone);
-    skelHelper.material.linewidth = 2; scene.add(skelHelper);
+    skelHelper.material.linewidth = 2; skelHelper.material.depthTest=false; skelHelper.renderOrder=100; scene.add(skelHelper);
   }
   if (skelHelper) skelHelper.visible = on;
 }
@@ -873,7 +877,7 @@ function updatePoseUi(){
 for(const [label,name] of [['','Вручную'],...Object.entries(poseNames)]){
   const button=document.createElement('button');button.className='chip';button.textContent=name;button.dataset.pose=label;
   button.onclick=()=>{
-    playing=cycling=autorot=false;$('#tRot').checked=false;phone.rotation.set(0,0,0);
+    playing=autorot=false;$('#tRot').checked=false;phone.rotation.set(0,0,0);
     if(explodeAmount===0&&explodeTarget===0){
       if(!$('#tTourCamera').checked)updateTourCamera?.begin();
       $('#tTourCamera').checked=true;
@@ -903,11 +907,18 @@ window.addEventListener('pointerup',()=>{hingePointer=false;});
 window.addEventListener('pointercancel',()=>{hingePointer=false;});
 window.addEventListener('blur',()=>{hingePointer=false;});
 foldEl.oninput=()=>{
-  playing=cycling=false;hingeTarget=Number(foldEl.value)/1000;hingeClick=!hingePointer;
+  playing=false;hingeTarget=Number(foldEl.value)/1000;hingeClick=!hingePointer;
   if(tourState.label)tourState.setFold(fold);
 };
-$('#play').onclick=()=>{if(tourState.label)setFold(fold);cycling=false; playing=!playing; if(playing&&fold>=0.999) setFold(0); dir=1;};
-$('#cyc').onclick =()=>{if(tourState.label)setFold(fold);playing=false; cycling=!cycling;};
+$('#play').onclick=()=>{
+  if(tourState.label)setFold(fold);
+  playing=!playing;
+  if(playing){
+    if(fold>=.999){if(cycling)dir=-1;else{setFold(0);dir=1;}}
+    else if(fold<=.001 || !cycling)dir=1;
+  }
+};
+$('#cyc').onchange=e=>{cycling=e.target.checked;if(!cycling)dir=1;};
 const bind=(id,out,fn,scale=1000,dec=2)=>{const e=$(id);e.oninput=()=>{const v=e.value/scale;$(out).textContent=v.toFixed(dec);fn(v);};};
 bind('#unlock','#unlockv',v=>wpUniforms.uUnlockProgress.value=v);
 bind('#dim','#dimv',     v=>wpUniforms.uDimmingAmount.value=v);
@@ -957,8 +968,8 @@ const VIEWS = [
   ['¾',       [0.6, 0.72, -0.5], [0, 0,-1]],
 ];
 function viewerFrame(){
-  const mobile=innerWidth<720,left=mobile?0:410,top=mobile?155:70;
-  return {left,top,width:Math.max(48,innerWidth-left),height:mobile?Math.max(120,innerHeight*.29):Math.max(160,innerHeight-125)};
+  const mobile=innerWidth<720,left=mobile?0:410,top=mobile?200:70;
+  return {left,top,width:Math.max(48,innerWidth-left),height:mobile?Math.max(120,Math.max(100,innerHeight*.29-45)):Math.max(160,innerHeight-125)};
 }
 function viewerViewport(){
   const {left,top,width,height}=viewerFrame();
@@ -1054,8 +1065,14 @@ for(const button of document.querySelectorAll('[data-gesture]'))button.onclick=(
 };
 $('#zoomIn').onclick=()=>controls.zoom(.85);
 $('#zoomOut').onclick=()=>controls.zoom(1/.85);
-$('#stageReset').onclick=()=>$('#reframe').click();
-controls.addEventListener('start',()=>{playing=cycling=false;autorot=false;$('#tRot').checked=false;});
+$('#stageReset').onclick=()=>{
+  playing=false;autorot=false;$('#tRot').checked=false;
+  phone.rotation.set(0,0,0);
+  inspectionCamera.cancel();
+  if(explodeAmount || explodeTarget){releaseTourCamera();inspectionView();}
+  else{updateTourCamera.begin();$('#tTourCamera').checked=true;updateTourCamera(fold);}
+};
+controls.addEventListener('start',()=>{playing=false;autorot=false;$('#tRot').checked=false;});
 $('#tSkel').onchange = e => toggleSkeleton(e.target.checked);
 $('#tBox').onchange  = e => toggleBoxes(e.target.checked);
 
@@ -1090,7 +1107,7 @@ renderer.setAnimationLoop(()=>{
   const dt=clock.getDelta();
   if (!sceneReady) return;
   $('#play').textContent=playing?'Пауза':'Раскрыть ↗';
-  $('#cyc').setAttribute('aria-pressed',String(cycling));
+
   if(explodeAmount!==explodeTarget || explodeVelocity!==0){
     const next=reduceMotion.matches?{value:explodeTarget,velocity:0}:explodeSpring.update(explodeAmount,explodeTarget,explodeVelocity,Math.min(dt,.1));
     explodeAmount=next.value;explodeVelocity=next.velocity;applyExplode();
@@ -1105,7 +1122,7 @@ renderer.setAnimationLoop(()=>{
     setFold(hingePosition,true);
   }
   showcaseScreens.update(tourState.screenLabel,dt);
-  if(playing||cycling){
+  if(playing){
     let f=fold+dir*dt*0.45;
     if(cycling){ if(f>1){f=1;dir=-1;} else if(f<0){f=0;dir=1;} }
     else if(f>=1){ f=1; playing=false; }
@@ -1118,7 +1135,12 @@ renderer.setAnimationLoop(()=>{
   // Debug clones must follow updated maps, especially the recycled dynamic RT.
   for (const part of parts) {
     const material=part.mesh.material, source=part.origMat;
-    if (material === source || !material.isMeshStandardMaterial) continue;
+    if(material===source)continue;
+    if(MAP_OF[debugMode] && material.isMeshBasicMaterial){
+      const map=source[MAP_OF[debugMode]]||null;
+      if(material.map!==map){material.map=map;material.needsUpdate=true;}
+    }
+    if(!material.isMeshStandardMaterial)continue;
     if (Boolean(material.envMap) !== Boolean(source.envMap)) material.needsUpdate=true;
     material.envMap=source.envMap;
     material.envMapRotation.copy(source.envMapRotation);
@@ -1211,7 +1233,6 @@ $('#reframe').onclick=()=>{
 };
 $('#disassemble').onclick=()=>requestExplode(1);
 $('#assemble').onclick=()=>requestExplode(0);
-const cycleClick=$('#cyc').onclick;$('#cyc').onclick=()=>{cycleClick();$('#cyc').setAttribute('aria-pressed',String(cycling));};
 
 build().catch(e=>{ boot.hidden=true; const el=$('#err');
   el.textContent='Ошибка сборки:\n'+(e.message || failedAsset || 'не удалось декодировать ресурс'); el.style.display='block'; console.error(e); });
