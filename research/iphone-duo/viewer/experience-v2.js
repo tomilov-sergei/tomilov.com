@@ -4,7 +4,7 @@ import {TourSpring} from './tour-spring.js';
 import {CameraHandoff} from './camera-handoff.js';
 import {GLTFLoader}    from './vendor/examples/jsm/loaders/GLTFLoader.js';
 import {EXRLoader}     from './vendor/examples/jsm/loaders/EXRLoader.js';
-import {OrbitControls} from './vendor/examples/jsm/controls/OrbitControls.js';
+import {InspectionControls} from './inspection-controls.js';
 import {createReflectionTour, createTourCamera, worldToModel} from './tour-fidelity.js';
 import {createAoTour, createScreenTour} from './material-fidelity.js';
 import {WallpaperState} from './wallpaper-motion.js';
@@ -154,30 +154,13 @@ document.body.appendChild(renderer.domElement);
 const scene = new THREE.Scene();
 scene.background = new THREE.Color(0xbbbbbb);
 const camera = new THREE.PerspectiveCamera(32, innerWidth/innerHeight, 0.05, 500);
-const controls = new OrbitControls(camera, renderer.domElement);
-controls.enableDamping = true;
-controls.dampingFactor = 0.08;
-controls.screenSpacePanning = true;        // сдвиг идёт по плоскости экрана, а не по «полу»
-controls.panSpeed = 1.1;
-controls.rotateSpeed = 0.9;
-controls.zoomSpeed = 0.9;
-controls.minDistance = 2;
-controls.maxDistance = 400;
-controls.mouseButtons = {LEFT: THREE.MOUSE.ROTATE, MIDDLE: THREE.MOUSE.DOLLY, RIGHT: THREE.MOUSE.PAN};
-controls.touches    = {ONE: THREE.TOUCH.ROTATE, TWO: THREE.TOUCH.DOLLY_PAN};
-// Shift на тачпаде переводит перетаскивание в сдвиг — правой кнопкой там неудобно
-addEventListener('keydown', e=>{ if(e.key === 'Shift') controls.mouseButtons.LEFT = THREE.MOUSE.PAN; });
-addEventListener('keyup',   e=>{ if(e.key === 'Shift') controls.mouseButtons.LEFT = THREE.MOUSE.ROTATE; });
-addEventListener('blur',    ()=>{ controls.mouseButtons.LEFT = THREE.MOUSE.ROTATE; });
-// горизонтальный скролл двумя пальцами — панорама (OrbitControls читает только deltaY)
-renderer.domElement.addEventListener('wheel', e=>{
-  if (Math.abs(e.deltaX) <= Math.abs(e.deltaY)) return;
-  e.preventDefault();
-  const d = camera.position.distanceTo(controls.target);
-  const k = d * 0.0016;
-  const right = new THREE.Vector3().setFromMatrixColumn(camera.matrix, 0).multiplyScalar(-e.deltaX * k);
-  camera.position.add(right); controls.target.add(right);
-}, {passive:false});
+const controls = new InspectionControls(camera,renderer.domElement,()=>{
+  if(!phone)return {center:new THREE.Vector3(),radius:10};
+  phone.updateMatrixWorld(true);
+  phone.traverse(node=>{if(node.isSkinnedMesh)node.computeBoundingBox();});
+  const bounds=new THREE.Box3().setFromObject(phone);
+  return {center:bounds.getCenter(new THREE.Vector3()),radius:bounds.getSize(new THREE.Vector3()).length()/2};
+},viewerFrame);
 addEventListener('resize',()=>{camera.aspect=innerWidth/innerHeight;camera.updateProjectionMatrix();
   renderer.setSize(innerWidth,innerHeight);});
 
@@ -968,7 +951,7 @@ const VIEWS = [
 ];
 function viewerFrame(){
   const mobile=innerWidth<720,left=mobile?0:410,top=mobile?155:70;
-  return {left,top,width:Math.max(48,innerWidth-left),height:mobile?Math.max(120,innerHeight*.36):Math.max(160,innerHeight-125)};
+  return {left,top,width:Math.max(48,innerWidth-left),height:mobile?Math.max(120,innerHeight*.29):Math.max(160,innerHeight-125)};
 }
 function viewerViewport(){
   const {left,top,width,height}=viewerFrame();
@@ -993,7 +976,7 @@ function viewFrom(v, up){
   }
   camera.up.copy(vertical);
   camera.position.copy(center).addScaledVector(direction,distance);
-  controls.target.copy(center); controls.update();
+  controls.target.copy(center); camera.lookAt(center); controls.update();
 }
 
 VIEWS.forEach(([label,v,up])=>{
@@ -1040,7 +1023,7 @@ $('#reset').onclick = ()=>{resetAll();selectChapter('motion');setFold(1/3);};
 const releaseTourCamera = () => {
   updateTourCamera?.cancel();
   $('#tTourCamera').checked=false;
-  // Keep the reserved inspector area when switching to OrbitControls.
+  // Preserve the stage framing when taking over an authored camera.
   viewerViewport();
 };
 controls.addEventListener('start',releaseTourCamera);
@@ -1048,12 +1031,17 @@ $('#tTourCamera').onchange=e=>{if(e.target.checked){updateTourCamera?.begin();up
 $('#views').addEventListener('click',releaseTourCamera,{capture:true});
 addEventListener('resize',()=>{if($('#tTourCamera').checked) updateTourCamera?.(fold);else viewerViewport();});
 
-// двойной клик — вернуть модель в центр, не трогая ракурс
-renderer.domElement.addEventListener('dblclick', ()=>{
-  const c=new THREE.Box3().setFromObject(phone).getCenter(new THREE.Vector3());
-  const shift=c.clone().sub(controls.target);
-  camera.position.add(shift); controls.target.copy(c); controls.update();
-});
+// The same predictable recovery action is available on stage and in the inspector.
+renderer.domElement.addEventListener('dblclick',()=>$('#reframe').click());
+for(const button of document.querySelectorAll('[data-gesture]'))button.onclick=()=>{
+  controls.mode=button.dataset.gesture;
+  renderer.domElement.style.cursor=controls.mode==='pan'?'move':'grab';
+  for(const other of document.querySelectorAll('[data-gesture]'))other.setAttribute('aria-pressed',String(other===button));
+};
+$('#zoomIn').onclick=()=>controls.zoom(.85);
+$('#zoomOut').onclick=()=>controls.zoom(1/.85);
+$('#stageReset').onclick=()=>$('#reframe').click();
+controls.addEventListener('start',()=>{playing=cycling=false;autorot=false;$('#tRot').checked=false;});
 $('#tSkel').onchange = e => toggleSkeleton(e.target.checked);
 $('#tBox').onchange  = e => toggleBoxes(e.target.checked);
 

@@ -1,0 +1,18 @@
+import assert from 'node:assert/strict';
+import {PerspectiveCamera,Vector3} from '../research/iphone-duo/viewer/vendor/build/three.module.js';
+const {InspectionControls}=await import('../research/iphone-duo/viewer/inspection-controls.js');
+const listeners={};const element={style:{},addEventListener:(n,f)=>listeners[n]=f,setPointerCapture(){}};
+const camera=new PerspectiveCamera(32,1.5,2,10000);camera.position.set(4,25,15);camera.up.set(0,0,-1);camera.lookAt(2,0,0);
+const center=new Vector3(1,2,3);const control=new InspectionControls(camera,element,()=>({center:center.clone(),radius:5}),()=>({height:600}));
+control.target.set(2,0,0);
+const snapshot=()=>({p:camera.position.clone(),q:camera.quaternion.clone()});
+const original=snapshot();control.begin();control.update();assert(camera.position.equals(original.p));assert(camera.quaternion.equals(original.q));
+camera.updateMatrixWorld();const projected=center.clone().project(camera);const distance=camera.position.distanceTo(center);
+control.rotate(160,75);camera.updateMatrixWorld();assert(projected.distanceTo(center.clone().project(camera))<1e-12);assert(Math.abs(camera.position.distanceTo(center)-distance)<1e-12);
+control.rotate(-160,-75);assert(camera.position.distanceTo(original.p)<1e-10);assert(camera.quaternion.angleTo(original.q)<1e-7);
+const rotated=snapshot();control.pan(100,-50);assert(camera.quaternion.angleTo(rotated.q)<1e-7);assert(camera.position.distanceTo(rotated.p)>0);
+control.begin();for(let i=0;i<100;i++)control.dolly(.5);assert(camera.position.distanceTo(center)>=7-1e-9);for(let i=0;i<100;i++)control.dolly(2);assert(camera.position.distanceTo(center)<=175+1e-9);
+const event=(id,x,y,buttons=1)=>({pointerId:id,clientX:x,clientY:y,button:0,buttons,preventDefault(){}});
+listeners.pointerdown(event(1,100,100));listeners.pointerdown(event(2,200,100));const q=camera.quaternion.clone();listeners.pointermove(event(2,220,120));assert(camera.quaternion.angleTo(q)<1e-7);listeners.pointerup(event(2,220,120));const p=camera.position.clone();listeners.pointermove(event(1,100,100));assert(camera.position.distanceTo(p)<1e-12);listeners.pointercancel(event(1,100,100));assert.equal(control.points.size,0);
+const before=snapshot();listeners.wheel({deltaX:100,deltaY:0,deltaMode:0,preventDefault(){}});assert(camera.position.distanceTo(before.p)<1e-12);assert(camera.quaternion.angleTo(before.q)<1e-7);
+console.log('PASS: takeover continuity, screen-relative orbit, fixed pivot projection, inverse drag, pan orientation, zoom bounds, two-touch isolation, pointer cancellation, horizontal scroll isolation');

@@ -6,7 +6,7 @@
 <link rel="canonical" href="https://tomilov.com/research/iphone-duo/">
 <meta property="og:title" content="iPhone Duo — анатомия движения"><meta property="og:description" content="Согните, разберите на слои и измените свет."><meta property="og:type" content="website"><meta property="og:url" content="https://tomilov.com/research/iphone-duo/"><meta property="og:image" content="https://tomilov.com/assets/research/iphone-duo-fold.svg">
 <link rel="icon" href="/assets/favicon.png"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;700&family=Lora:wght@500;600&family=Manrope:wght@800&display=swap">
-<link rel="stylesheet" href="/research/iphone-duo/viewer/experience-v2.css">
+<link rel="stylesheet" href="/research/iphone-duo/viewer/experience-v2.css?v=gestures-1">
 </head><body>
 <header class="site-nav"><a class="brand" href="/">SS/84</a><a href="/research/">← Исследования</a><span>3D / 2026</span></header>
 <div id="boot" role="status">Собираем сцену…</div><div id="err" role="alert"></div>
@@ -44,7 +44,7 @@
   <hr>
   <p class="hd">Вид</p>
   <div class="chips" id="views"></div>
-  <p class="hint">Перетаскивание — поворот. С зажатым <b>Shift</b> или правой кнопкой — сдвиг по экрану. Колесо — приближение. Двойной клик — вернуть в центр.</p>
+  <p class="hint">Поворот следует за рукой. Shift или правая кнопка — сдвиг. Колесо и щипок — масштаб. На сенсорном экране: один палец — поворот, два — сдвиг и масштаб.</p>
   <hr>
   <p class="hd">Размытие (BlurPass)</p>
   <label class="chk"><input type="checkbox" id="tBlur" checked> включить</label>
@@ -75,6 +75,6 @@
   </details>
 
 <details class="credits"><summary>Об этом разборе</summary><p>Независимая реконструкция по модели, текстурам и анимации страницы Apple. Свободная камера и расслоение — инструменты этого исследования. Исходные изображения принадлежат их правообладателям. <a href="/research/iphone-duo/viewer/vendor/LICENSE">Three.js · MIT</a>.</p></details>
-</section></main><p class="stage-hint">Перетащите, чтобы повернуть <span>·</span> Колесо — приблизить</p>
+</section></main><div class="stage-tools" aria-label="Управление моделью"><div class="gesture-switch"><button data-gesture="rotate" aria-pressed="true">Повернуть</button><button data-gesture="pan" aria-pressed="false">Сдвинуть</button></div><button id="zoomOut" aria-label="Отдалить">−</button><button id="zoomIn" aria-label="Приблизить">+</button><button id="stageReset" aria-label="Вернуть ракурс">↺</button></div><p class="stage-hint">Тяните модель · Колесо или щипок — масштаб</p>
 <noscript>Для интерактивной сцены нужен JavaScript.</noscript>
-<script type="module" src="/research/iphone-duo/viewer/experience-v2.js"></script></body></html>
+<script type="module" src="/research/iphone-duo/viewer/experience-v2.js?v=gestures-1"></script></body></html>
