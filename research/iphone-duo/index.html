@@ -6,7 +6,7 @@
 <link rel="canonical" href="https://tomilov.com/research/iphone-duo/">
 <meta property="og:title" content="iPhone Duo — анатомия объекта"><meta property="og:description" content="Согните, разберите на слои и измените свет."><meta property="og:type" content="website"><meta property="og:url" content="https://tomilov.com/research/iphone-duo/"><meta property="og:image" content="https://tomilov.com/assets/research/iphone-duo-fold.svg">
 <link rel="icon" href="/assets/favicon.png"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;700&family=Lora:wght@500;600&family=Manrope:wght@800&display=swap">
-<link rel="stylesheet" href="/research/iphone-duo/viewer/experience-v2.css?v=object-1">
+<link rel="stylesheet" href="/research/iphone-duo/viewer/experience-v2.css?v=studio-1">
 </head><body>
 <header class="site-nav"><a class="brand" href="/">SS/84</a><a href="/research/">← Лаборатория</a><span>3D / 2026</span></header>
 <div id="boot" role="status">Собираем сцену…</div><div id="err" role="alert"></div>
@@ -32,7 +32,8 @@
 <p class="lab-note">Разборка показывает структуру рендера: два экрана, металлические и остальные поверхности. Слои расходятся с небольшой задержкой — так глаз успевает прочитать их порядок. Это графические поверхности, а не комплект физических запчастей.</p><p class="lab-note">Логотип построен геометрией: его контур держится при приближении, а не зависит от разрешения картинки. Каркас показывает, куда потрачены треугольники. Особенно полезно сравнить плотность сетки на плоских участках, скруглениях и мелких деталях.</p>
 </section>
 <section class="lab-section" aria-labelledby="section-03"><h2 id="section-03"><span>03</span>Свет и материал</h2>
-<p class="lab-note">Форму металла рисуют отражения светлых и тёмных карт. Их расположение меняется между постановочными ракурсами. В реализации используются три группы окружения: две смешивают заранее рассчитанные состояния, третья обновляет карту отражений по движущимся источникам.</p><label class="chk"><input type="checkbox" id="tIbl" checked> окружение: отражения и EXR</label><div class="chips" id="modes"></div>
+<div id="lightingPresets" class="chips lighting-presets" role="group" aria-label="Световые постановки"></div><p id="lightingInfo" class="mode-readout" role="status">Исходный свет меняется вместе с раскрытием и готовыми позами.</p><p class="lab-note">Постановки меняют отражаемое окружение, а не цвет материала. Металл, стекло и матовые поверхности реагируют на одни и те же источники по-разному. Изображение на дисплее сохраняет собственные цвета.</p>
+<p class="lab-note">Форму металла рисуют отражения светлых и тёмных карт. Их расположение меняется между постановочными ракурсами. В исходной постановке используются три группы окружения: две смешивают заранее рассчитанные состояния, третья обновляет карту отражений по движущимся источникам.</p><label class="chk"><input type="checkbox" id="tIbl" checked> окружение: отражения и EXR</label><div class="chips" id="modes"></div>
 
 
   <p id="modeinfo" class="mode-readout" role="status"></p>
@@ -70,4 +71,4 @@
 </section>
 </section></main><div class="stage-tools" aria-label="Управление моделью"><div class="gesture-switch"><button data-gesture="rotate" aria-pressed="true">Повернуть</button><button data-gesture="pan" aria-pressed="false">Сдвинуть</button></div><button id="zoomOut" aria-label="Отдалить">−</button><button id="zoomIn" aria-label="Приблизить">+</button><button id="stageReset" title="Сбросить положение" aria-label="Сбросить положение">↺ Сброс</button></div>
 <noscript>Для интерактивной сцены нужен JavaScript.</noscript>
-<script type="module" src="/research/iphone-duo/viewer/experience-v2.js?v=object-1"></script></body></html>
+<script type="module" src="/research/iphone-duo/viewer/experience-v2.js?v=studio-1"></script></body></html>

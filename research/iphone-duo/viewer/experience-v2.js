@@ -1,5 +1,6 @@
 
 import * as THREE from './vendor/build/three.module.js';
+import {createStudioLighting,lightPresets} from './studio-lighting.js';
 import {TourSpring} from './tour-spring.js';
 import {CameraHandoff} from './camera-handoff.js';
 import {GLTFLoader}    from './vendor/examples/jsm/loaders/GLTFLoader.js';
@@ -151,6 +152,7 @@ renderer.toneMapping = THREE.ACESFilmicToneMapping;
 renderer.outputColorSpace = THREE.SRGBColorSpace;
 document.body.appendChild(renderer.domElement);
 
+const studioLighting=createStudioLighting(renderer);
 const scene = new THREE.Scene();
 scene.background = new THREE.Color(0xbbbbbb);
 const camera = new THREE.PerspectiveCamera(32, innerWidth/innerHeight, 0.05, 500);
@@ -1006,6 +1008,7 @@ VIEWS.forEach(([label,v,up])=>{
 // Полный сброс: свёрнутый телефон, фронтальный взгляд на экран,
 // все режимы разбора и входы шейдера — в исходные значения.
 function resetAll(){
+  selectLighting('original');
   updateTourCamera?.begin();
   updateTourCamera?.cancel();
   $('#tTourCamera').checked = true;
@@ -1132,6 +1135,7 @@ renderer.setAnimationLoop(()=>{
 
   reflectionTour?.update(fold, $('#tIbl').checked);
   aoTour?.update(fold);
+  const restoreLighting=studioLighting.apply(scene,[...new Set(parts.map(p=>p.origMat))],$('#tIbl').checked);
   // Debug clones must follow updated maps, especially the recycled dynamic RT.
   for (const part of parts) {
     const material=part.mesh.material, source=part.origMat;
@@ -1211,6 +1215,7 @@ renderer.setAnimationLoop(()=>{
   else if(!inspectionCamera.active)controls.update();
   showcaseMasks.render(camera,debugMode==='none' && explodeAmount===0);
   drawRtOverlay();
+  restoreLighting();
 });
 
 const bb=o=>{const b=new THREE.Box3().setFromObject(o);return{size:b.getSize(new THREE.Vector3()).toArray().map(v=>+v.toFixed(2))};};
@@ -1228,6 +1233,20 @@ for(const b of document.querySelectorAll('[data-layout]'))b.onclick=()=>{
  explodeLayout=b.dataset.layout;prepareLayerLayout();applyExplode();
  for(const other of document.querySelectorAll('[data-layout]'))other.setAttribute('aria-pressed',String(b===other));
 };
+function selectLighting(id){
+  const preset=studioLighting.select(id);
+  scene.background.set(preset.background);
+  document.body.style.setProperty('--stage-background',preset.background);
+  document.body.dataset.studioTone=preset.dark?'dark':'light';
+  for(const button of document.querySelectorAll('[data-lighting]'))button.setAttribute('aria-pressed',String(button.dataset.lighting===id));
+  $('#lightingInfo').textContent=preset.note;
+}
+for(const preset of lightPresets){
+  const button=document.createElement('button');button.className='chip';button.dataset.lighting=preset.id;
+  button.textContent=preset.name;button.setAttribute('aria-pressed',String(preset.id==='original'));
+  button.onclick=()=>{selectLighting(preset.id);if(!$('#tIbl').checked){$('#tIbl').checked=true;$('#tIbl').dispatchEvent(new Event('change'));}};
+  $('#lightingPresets').appendChild(button);
+}
 $('#reframe').onclick=()=>{
  releaseTourCamera();inspectionCamera.cancel();frameOn(phone);
 };

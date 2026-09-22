@@ -36,3 +36,11 @@ Looping is now a checkbox preference under the play button, not a separate playb
 Visualization fixes: scalar texture debug views extract roughness G, metalness B and AO R instead of showing packed RGB; texture inspections bypass filmic tone mapping; live debug texture references track the current source material. Every mode explains its encoding and missing maps. Skeleton inspection renders above surfaces. The raw wallpaper preview remains accessible on both viewport sizes.
 
 Validation: combined loop/start/pause, position-reset/material preservation, all three scalar debug shader compilations and animated AO, reset, desktop/mobile layout; browser console clean. Existing layer/skinning/control regressions pass. No pixel-identical fidelity claim is made.
+
+## Lighting studio
+
+Five options in the existing light/material section: authored presentation plus neutral studio, warm/cool fill, red studio and blue/pink rim lighting. Each custom environment is generated from HDR-valued emissive area cards and an ambient background through Three.js PMREM, cached on first use (at most four environments). Visible backdrops are coordinated with the environment, and dark presets adapt the page chrome for contrast. These are environment reflections/IBL, not screen tint filters or ray-traced area lights. Material base colors, metalness, roughness, normal maps and screen imagery are retained.
+
+Custom maps, rotations and intensities temporarily override the authored environment during rendering; after each frame the source values are restored so pose animation and switching back remain intact. Material debug copies receive the selected lighting. The environment toggle disables IBL; selecting a preset enables it explicitly. Full reset returns to the authored lighting.
+
+Validation: all presets rendered in browser, warm/red/night checked on the rear-facing Durability pose, original restoration and mobile dark chrome checked, no console errors. Source-level tests cover cache reuse, exact map/rotation/intensity restoration, preservation of material properties and disabled IBL.
