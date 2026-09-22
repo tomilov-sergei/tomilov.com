@@ -6,75 +6,68 @@
 <link rel="canonical" href="https://tomilov.com/research/iphone-duo/">
 <meta property="og:title" content="iPhone Duo — анатомия движения"><meta property="og:description" content="Согните, разберите на слои и измените свет."><meta property="og:type" content="website"><meta property="og:url" content="https://tomilov.com/research/iphone-duo/"><meta property="og:image" content="https://tomilov.com/assets/research/iphone-duo-fold.svg">
 <link rel="icon" href="/assets/favicon.png"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;700&family=Lora:wght@500;600&family=Manrope:wght@800&display=swap">
-<link rel="stylesheet" href="/research/iphone-duo/viewer/experience-v2.css?v=gestures-1">
+<link rel="stylesheet" href="/research/iphone-duo/viewer/experience-v2.css?v=lab-1">
 </head><body>
 <header class="site-nav"><a class="brand" href="/">SS/84</a><a href="/research/">← Исследования</a><span>3D / 2026</span></header>
 <div id="boot" role="status">Собираем сцену…</div><div id="err" role="alert"></div>
 <main id="ui" hidden>
-<div class="intro"><p class="eyebrow">Интерактивный разбор</p><h1 aria-label="Анатомия движения">Анатомия<br> <em>движения.</em></h1><p class="model-name">iPhone Duo <span>↗</span> <a href="https://www.apple.com/iphone-duo/" target="_blank" rel="noopener">Оригинал Apple</a></p></div>
-<section class="control-card" aria-label="Исследовать модель">
-<nav class="chapters" aria-label="Что исследовать"><button data-chapter="motion" aria-pressed="true"><span>01</span> Согнуть</button><button data-chapter="assembly" aria-pressed="false"><span>02</span> Разобрать</button><button data-chapter="light" aria-pressed="false"><span>03</span> Свет</button></nav>
-<div class="chapter-copy"><h2 id="chapterTitle">Движение с характером</h2><p id="chapterText">Потяните ползунок. Шарнир догоняет движение и притягивается к краям, а обои меняют глубину и резкость.</p></div>
-<div class="chapter-panel" data-panel="motion">
+<div class="intro"><p class="eyebrow">Лаборатория 3D</p><h1 aria-label="Анатомия движения">Анатомия<br> <em>движения.</em></h1><p class="model-name">iPhone Duo <span>↗</span> <a href="https://www.apple.com/iphone-duo/" target="_blank" rel="noopener">Оригинал Apple</a></p></div>
+<section class="control-card" aria-label="Лаборатория модели">
+<div class="utility"><button class="text-button" id="reframe">Вписать модель ↗</button><button class="text-button" id="reset">Сбросить всё ↺</button></div>
+<section class="lab-section" aria-labelledby="section-01"><h2 id="section-01"><span>01</span>Согнуть</h2>
+
 <div class="range-heading"><label for="fold">Раскрытие</label><output id="foldv">0.33</output></div><input type="range" id="fold" min="0" max="1000" value="333" aria-label="Раскрытие телефона">
 <div class="range-ends"><span>Закрыт</span><span>Раскрыт</span></div>
 <div class="chips" id="showcase" role="group" aria-label="Положение телефона"></div><p class="hint" id="poseStatus" role="status"></p>
 <div class="play-row"><button class="btn" id="play">Раскрыть ↗</button><button class="btn ghost" id="cyc" aria-pressed="false">По кругу</button></div>
-</div>
-<div class="chapter-panel" data-panel="assembly" hidden>
+<p class="lab-note">Корпус деформируется на общем скелете: связанные детали следуют за костями. Включите скелет и потяните раскрытие, чтобы увидеть, как устроен сгиб. <a class="source-link" href="https://x.com/hybridherbst/status/2098814263884214417" target="_blank" rel="noopener">herbst · 9/12 ↗</a></p>  <label class="chk"><input type="checkbox" id="tSkel"> скелет (кости)</label>
+</section>
+<section class="lab-section" aria-labelledby="section-02"><h2 id="section-02"><span>02</span>Разобрать</h2>
+
 <div class="range-heading"><label for="explode">Расстояние между слоями</label><output id="explodev">0%</output></div><input type="range" id="explode" min="0" max="1000" value="0">
 <div class="range-ends"><span>Вместе</span><span>По отдельности</span></div>
 <div class="play-row"><button class="btn" id="disassemble">Разобрать ↗</button><button class="btn ghost" id="assemble">Собрать ↙</button></div>
-<div class="layout-switch" role="group" aria-label="Способ разборки"><button data-layout="layers" aria-pressed="true">Слоями</button><button data-layout="radial" aria-pressed="false">От центра</button><button id="explodedWire" aria-pressed="false">Каркас</button></div>
-<p class="hint">62 объекта модели · 4 группы поверхностей.</p>
-</div>
-<div class="chapter-panel" data-panel="light" hidden>
-<div class="light-options"><button data-look="none" aria-pressed="true"><b>Материал целиком</b><span>Блики, цвет, тени и микрорельеф вместе.</span></button><button data-look="env" aria-pressed="false"><b>Только отражения</b><span>Именно свет делает металл похожим на металл.</span></button><button data-look="wire" aria-pressed="false"><b>Каркас</b><span>Грани, из которых складывается гладкая поверхность.</span></button><button data-look="ao" aria-pressed="false"><b>Контактные тени</b><span>Мягкие затемнения помогают прочитать стыки.</span></button></div>
-</div>
-<div class="utility"><button class="text-button" id="reframe">Вернуть ракурс ↗</button><button class="text-button" id="reset">Сначала ↺</button></div>
+<div class="layout-switch" role="group" aria-label="Способ разборки"><button data-layout="layers" aria-pressed="true">Слоями</button><button data-layout="radial" aria-pressed="false">От центра</button></div>
+<p class="hint">62 объекта модели · 4 группы поверхностей.</p><label class="chk"><input type="checkbox" id="tBox"> габариты частей</label>
+<p class="lab-note">Разнесение поверхностей — инструмент этой лаборатории: оно показывает устройство 3D-сцены, а не порядок разборки настоящего телефона.</p><p class="lab-note">Логотип построен геометрией. Поэтому при приближении его контур не превращается в пиксели текстуры. По предположению herbst, CAD-сетку дополнительно подготовили художники, в том числе её UV-развёртку. <a class="source-link" href="https://x.com/hybridherbst/status/2098814241272664344" target="_blank" rel="noopener">herbst · 3/12 ↗</a></p>
+</section>
+<section class="lab-section" aria-labelledby="section-03"><h2 id="section-03"><span>03</span>Свет и материал</h2>
+<p class="lab-note">Блики поставлены как в студии: светлые и тёмные карты окружения перемещаются вместе с презентацией. Меняйте раскрытие и готовые положения, затем сравните результат без окружения. <a class="source-link" href="https://x.com/hybridherbst/status/2098814245416669230" target="_blank" rel="noopener">herbst · 4/12 ↗</a></p><label class="chk"><input type="checkbox" id="tIbl" checked> окружение: отражения и EXR</label><div class="chips" id="modes"></div>
 
-<details id="advanced"><summary>Лаборатория <span>Все инструменты</span></summary><label class="chk"><input type="checkbox" id="tTourCamera" checked> Ракурс сцены</label>
-  <hr>
-  <p class="hd">Разбор</p>
 
-  <div class="chips" id="modes"></div>
-  <label class="chk"><input type="checkbox" id="tSkel"> скелет (кости)</label>
-  <label class="chk"><input type="checkbox" id="tBox"> габариты частей</label>
   <div id="modeinfo" style="font:11px/1.5 ui-monospace,Menlo,monospace;color:var(--dim);margin:4px 0 0 2px"></div>
-  <hr>
-  <p class="hd">Вид</p>
+<p class="lab-note">Даже у вспышки есть отдельные карты окклюзии, шероховатости и металличности. Переключайте карты выше: каждая отвечает за свою часть изображения. <a class="source-link" href="https://x.com/hybridherbst/status/2098814252710494343" target="_blank" rel="noopener">herbst · 6/12 ↗</a></p><p class="lab-note">Некоторые резкие отражения в линзах сделаны дубликатами геометрии с изменённым материалом. Это специально построенная иллюзия отражения. <a class="source-link" href="https://x.com/hybridherbst/status/2098814256372154702" target="_blank" rel="noopener">herbst · 7/12 ↗</a></p>
+</section>
+<section class="lab-section" aria-labelledby="section-04"><h2 id="section-04"><span>04</span>Обои — ещё одна сцена</h2>
+<p class="lab-note">Пейзаж собран из нескольких слоёв с параллаксом и фрагмента объёмного горного хребта. Выключайте слои по одному и сгибайте телефон, чтобы увидеть их вклад. <a class="source-link" href="https://x.com/hybridherbst/status/2098814270758613063" target="_blank" rel="noopener">herbst · 11/12 ↗</a></p><label class="chk"><input type="checkbox" id="tWp" checked> обои живьём на экране</label><label class="chk"><input type="checkbox" id="tUi" checked> UI-плашка поверх обоев</label><div id="wpLayers"></div>
+</section>
+<section class="lab-section" aria-labelledby="section-05"><h2 id="section-05"><span>05</span>Проекция и размытие</h2>
+<p class="lab-note">Обои сначала рисуются отдельно, размываются с одной стороны и проецируются на экран. herbst описывает это как художественный эффект для выбранной камеры, а не точную симуляцию настоящего дисплея. <a class="source-link" href="https://x.com/hybridherbst/status/2098814259874374108" target="_blank" rel="noopener">herbst · 8/12 ↗</a></p>
+  <label class="chk"><input type="checkbox" id="tBlur" checked> Размытие</label>
+  <label class="chk"><input type="checkbox" id="tProj" checked> Проекция обоев</label>
+  <label class="chk"><input type="checkbox" id="tWipeAuto" checked> Связать с раскрытием</label>
+  <div class="row"><label for="wipe">Сила размытия</label><input type="range" id="wipe" min="0" max="1000" value="0"><output id="wipev">0.00</output></div>
+  <div class="row"><label for="wipePos">Граница</label><input type="range" id="wipePos" min="0" max="1000" value="1000"><output id="wipePosv">1.00</output></div>
+
+</section>
+<section class="lab-section" aria-labelledby="section-06"><h2 id="section-06"><span>06</span>Параметры обоев</h2>
+<p class="lab-note">Меняйте разблокировку, яркость и смещение взгляда независимо от корпуса. Наклон поворачивает камеру внутри пейзажа.</p>
+  <div class="row"><label for="unlock">Разблокировка</label><input type="range" id="unlock" min="0" max="1000" value="0"><output id="unlockv">0.00</output></div>
+  <div class="row"><label for="dim">Яркость</label><input type="range" id="dim" min="0" max="1000" value="1000"><output id="dimv">1.00</output></div>
+  <div class="row"><label for="gx">Взгляд X</label><input type="range" id="gx" min="-100" max="100" value="0"><output id="gxv">0.000</output></div>
+  <div class="row"><label for="gy">Взгляд Y</label><input type="range" id="gy" min="-100" max="100" value="0"><output id="gyv">0.000</output></div>
+  <div class="row"><label for="tilt">Наклон, °</label><input type="range" id="tilt" min="-40" max="40" value="0"><output id="tiltv">0</output></div>
+
+</section>
+<section class="lab-section" aria-labelledby="section-07"><h2 id="section-07"><span>07</span>Камера</h2>
+<label class="chk"><input type="checkbox" id="tTourCamera" checked> Ракурс сцены</label>
   <div class="chips" id="views"></div>
   <p class="hint">Поворот следует за рукой. Shift или правая кнопка — сдвиг. Колесо и щипок — масштаб. На сенсорном экране: один палец — поворот, два — сдвиг и масштаб.</p>
-  <hr>
-  <p class="hd">Размытие (BlurPass)</p>
-  <label class="chk"><input type="checkbox" id="tBlur" checked> включить</label>
-  <label class="chk"><input type="checkbox" id="tProj" checked> проекция обоев (Wipe)</label>
-  <label class="chk"><input type="checkbox" id="tWipeAuto" checked> вести от раскрытия</label>
-  <div class="row"><label>wipe</label><input type="range" id="wipe" min="0" max="1000" value="0"><output id="wipev">0.00</output></div>
-  <div class="row"><label>позиция</label><input type="range" id="wipePos" min="0" max="1000" value="1000"><output id="wipePosv">1.00</output></div>
-  <hr>
-  <p class="hd">Обои — входы шейдера</p>
-  <div class="row"><label>unlock</label><input type="range" id="unlock" min="0" max="1000" value="0"><output id="unlockv">0.00</output></div>
-  <div class="row"><label>dimming</label><input type="range" id="dim" min="0" max="1000" value="1000"><output id="dimv">1.00</output></div>
-  <div class="row"><label>gyro X</label><input type="range" id="gx" min="-100" max="100" value="0"><output id="gxv">0.000</output></div>
-  <div class="row"><label>gyro Y</label><input type="range" id="gy" min="-100" max="100" value="0"><output id="gyv">0.000</output></div>
-  <div class="row"><label>наклон°</label><input type="range" id="tilt" min="-40" max="40" value="0"><output id="tiltv">0</output></div>
-  <hr>
-  <p class="hd">Слои</p>
-  <label class="chk"><input type="checkbox" id="tIbl" checked> окружение: отражения и EXR</label>
-  <label class="chk"><input type="checkbox" id="tWp" checked> обои живьём на экране</label>
-  <label class="chk"><input type="checkbox" id="tUi" checked> UI-плашка поверх обоев</label>
-  <label class="chk"><input type="checkbox" id="tLut" checked> перевернуть LUT по Y</label>
-  <label class="chk"><input type="checkbox" id="tRig"> камера в системе assetRoot</label>
-  <p class="hd" style="margin-top:11px">Слои обоев</p>
-  <div id="wpLayers"></div>
-  <label class="chk"><input type="checkbox" id="tRt"> проход обоев (сырой RT)</label>
-  <label class="chk"><input type="checkbox" id="tRot"> автоповорот</label>
-  <hr>
-  <div id="stat">—</div>
-  </details>
-
-<details class="credits"><summary>Об этом разборе</summary><p>Независимая реконструкция по модели, текстурам и анимации страницы Apple. Свободная камера и расслоение — инструменты этого исследования. Исходные изображения принадлежат их правообладателям. <a href="/research/iphone-duo/viewer/vendor/LICENSE">Three.js · MIT</a>.</p></details>
-</section></main><div class="stage-tools" aria-label="Управление моделью"><div class="gesture-switch"><button data-gesture="rotate" aria-pressed="true">Повернуть</button><button data-gesture="pan" aria-pressed="false">Сдвинуть</button></div><button id="zoomOut" aria-label="Отдалить">−</button><button id="zoomIn" aria-label="Приблизить">+</button><button id="stageReset" aria-label="Вернуть ракурс">↺</button></div><p class="stage-hint">Тяните модель · Колесо или щипок — масштаб</p>
+<label class="chk"><input type="checkbox" id="tRot"> автоповорот</label>
+</section>
+<section class="lab-section" aria-labelledby="section-08"><h2 id="section-08"><span>08</span>Рендер и диагностика</h2>
+<p class="lab-note">Экран проходит через промежуточную текстуру. Это позволяет погасить прежнее изображение, заменить его и плавно включить новое. Посмотрите отдельный проход обоев и смените положение телефона. <a class="source-link" href="https://x.com/hybridherbst/status/2098814266828583063" target="_blank" rel="noopener">herbst · 10/12 ↗</a></p><label class="chk"><input type="checkbox" id="tRt"> Показать проход обоев поверх модели</label><label class="chk"><input type="checkbox" id="tLut" checked> перевернуть LUT по Y</label><label class="chk"><input type="checkbox" id="tRig"> камера в системе assetRoot</label><div id="stat">—</div>
+</section>
+<footer class="credits"><h2>Об исследовании</h2><p>Пояснения адаптированы по <a href="https://x.com/hybridherbst/status/2098814234922455043" target="_blank" rel="noopener">разбору herbst в X</a>, выполненному с Needle Inspector. Ссылки возле инструментов ведут к отдельным наблюдениям автора.</p><p>Независимая реконструкция по модели, текстурам и анимации страницы Apple. Свободная камера и расслоение добавлены здесь. Исходные изображения принадлежат их правообладателям. <a href="/research/iphone-duo/viewer/vendor/LICENSE">Three.js · MIT</a>.</p></footer></section></main><div class="stage-tools" aria-label="Управление моделью"><div class="gesture-switch"><button data-gesture="rotate" aria-pressed="true">Повернуть</button><button data-gesture="pan" aria-pressed="false">Сдвинуть</button></div><button id="zoomOut" aria-label="Отдалить">−</button><button id="zoomIn" aria-label="Приблизить">+</button><button id="stageReset" aria-label="Вписать модель">↺</button></div><p class="stage-hint">Тяните модель · Колесо или щипок — масштаб</p>
 <noscript>Для интерактивной сцены нужен JavaScript.</noscript>
-<script type="module" src="/research/iphone-duo/viewer/experience-v2.js?v=gestures-1"></script></body></html>
+<script type="module" src="/research/iphone-duo/viewer/experience-v2.js?v=lab-1"></script></body></html>

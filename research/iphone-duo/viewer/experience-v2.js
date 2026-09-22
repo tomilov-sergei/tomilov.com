@@ -288,7 +288,8 @@ async function buildWallpaper(){
   PASSES.forEach(p=>{
     if(!p.node) return;
     const l=document.createElement('label'); l.className='chk';
-    l.innerHTML=`<input type="checkbox" checked> ${p.key}`;
+    const names={sky:'Небо',stars:'Звёзды',hills:'Горный хребет',duneBack:'Дальняя дюна',duneFront:'Ближняя дюна'};
+    l.innerHTML=`<input type="checkbox" checked> ${names[p.key]||p.key}`;
     l.firstChild.onchange=e=>p.node.visible=e.target.checked;
     box.appendChild(l);
   });
@@ -761,6 +762,9 @@ function inspectionView(){
   camera.copy(from);controls.target.copy(target);inspectionCamera.cancel();inspectionCamera.begin();
 }
 function requestExplode(value){
+  if(value>0 && explodeTarget===0 && explodeAmount===0){
+    playing=cycling=false;releaseTourCamera();prepareLayerLayout();inspectionView();
+  }
   explodeTarget=THREE.MathUtils.clamp(value,0,1);
   $('#explode').value=Math.round(explodeTarget*1000);
   $('#explodev').textContent=Math.round(explodeTarget*100)+'%';
@@ -870,8 +874,10 @@ for(const [label,name] of [['','Вручную'],...Object.entries(poseNames)]){
   const button=document.createElement('button');button.className='chip';button.textContent=name;button.dataset.pose=label;
   button.onclick=()=>{
     playing=cycling=autorot=false;$('#tRot').checked=false;phone.rotation.set(0,0,0);
-    if(!$('#tTourCamera').checked)updateTourCamera?.begin();
-    $('#tTourCamera').checked=true;
+    if(explodeAmount===0&&explodeTarget===0){
+      if(!$('#tTourCamera').checked)updateTourCamera?.begin();
+      $('#tTourCamera').checked=true;
+    }
     if(label){tourState.select(label);updatePoseUi();}else setFold(fold);
   };$('#showcase').appendChild(button);
 }
@@ -883,6 +889,7 @@ function setFold(f,preservePose=false){
   if(!hingePointer)foldEl.value=Math.round(fold*1000);
   $('#foldv').textContent=Math.round(fold*180)+'°';
   if(foldAction){ foldAction.paused=true; foldAction.time=fold*foldClip.duration; mixer.update(0); }
+  if(explodeAmount || explodeTarget){prepareLayerLayout();applyExplode();}
   tourLighting?.update(fold, $('#tIbl').checked);
   updateScreenTour?.(fold);
   if ($('#tTourCamera').checked) updateTourCamera?.(fold);
@@ -1012,14 +1019,21 @@ function resetAll(){
   $('#gy').value=0;        $('#gyv').textContent='0.000';    wpUniforms.uGyro.value.y=0;
   $('#tilt').value=0;      $('#tiltv').textContent='0';      wpTilt=0;
 
+  for(const input of document.querySelectorAll('.control-card input[type="checkbox"]')){
+    if(input.checked!==input.defaultChecked){input.checked=input.defaultChecked;input.dispatchEvent(new Event('change'));}
+  }
   wipeAuto = true; $('#tWipeAuto').checked = true;
+  wipePosition=1;$('#wipePos').value=1000;$('#wipePosv').textContent='1.00';
+  explodeLayout='layers';
+  for(const b of document.querySelectorAll('[data-layout]'))b.setAttribute('aria-pressed',String(b.dataset.layout==='layers'));
+  document.querySelector('[data-gesture="rotate"]').click();
   showcaseScreens?.reset();
   wallpaperState.reset(0);
   setFold(0);                                     // исходное состояние — свёрнутый
   if ($('#tTourCamera').checked) updateTourCamera?.(fold);
   else viewFrom([0,1,0], [0,0,-1]);                    // и смотрим прямо на экран
 }
-$('#reset').onclick = ()=>{resetAll();selectChapter('motion');setFold(1/3);};
+$('#reset').onclick = ()=>{resetAll();setFold(1/3);};
 const releaseTourCamera = () => {
   updateTourCamera?.cancel();
   $('#tTourCamera').checked=false;
@@ -1055,11 +1069,13 @@ ovScene.add(ovMesh);
 function drawRtOverlay(){
   if(!showRt) return;
   // setViewport/setScissor принимают CSS-пиксели: three сам умножит на pixelRatio
-  const h=Math.round(Math.min(200,innerHeight*0.26)), w=Math.round(h*ASPECT.inner);
-  const x=innerWidth-w-18, y=18;
+  const frame=viewerFrame();
+  const h=Math.round(Math.min(300,frame.height*.82,frame.width*.9/ASPECT.inner)),w=Math.round(h*ASPECT.inner);
+  const x=frame.left+(frame.width-w)/2,y=innerHeight-frame.top-(frame.height+h)/2;
   renderer.autoClear=false; renderer.setScissorTest(true);
   renderer.setViewport(x,y,w,h);
   renderer.setScissor (x,y,w,h);
+  renderer.clearDepth();
   renderer.render(ovScene, orthoCam);
   renderer.setScissorTest(false);
   renderer.setViewport(0,0,innerWidth,innerHeight);
@@ -1185,43 +1201,16 @@ window.__dbg=()=>({fold,playing,cycling,wpFov:+wpCam.fov.toFixed(2),
   frame:renderer.info.render.frame, tris:renderer.info.render.triangles});
 
 
-const chapters={
- motion:['Движение с характером','Потяните ползунок. Шарнир догоняет движение и притягивается к краям, а обои меняют глубину и резкость.'],
- assembly:['Целое — из отдельных слоёв','Изображение экрана — отдельная поверхность. Отведите её от корпуса: под ней останется геометрия, которая ловит свет.'],
- light:['Металл рисует свет','Поверните модель и сравните режимы. Геометрия остаётся прежней, но без отражений и контактных теней предмет читается совсем иначе.']
-};
-function selectChapter(chapter){
-  if(!sceneReady)return;
-  playing=cycling=false;$('#cyc').setAttribute('aria-pressed','false');
-  inspectionCamera.cancel();
-  for(const button of document.querySelectorAll('[data-chapter]'))button.setAttribute('aria-pressed',String(button.dataset.chapter===chapter));
-  for(const panel of document.querySelectorAll('[data-panel]'))panel.hidden=panel.dataset.panel!==chapter;
-  $('#chapterTitle').textContent=chapters[chapter][0];$('#chapterText').textContent=chapters[chapter][1];
-  setMode('none');$('#explodedWire').setAttribute('aria-pressed','false');for(const b of document.querySelectorAll('[data-look]'))b.setAttribute('aria-pressed',String(b.dataset.look==='none'));
-  explodeAmount=explodeTarget=explodeVelocity=0;applyExplode();requestExplode(0);
-  if(chapter==='assembly'){
-    setFold(1);releaseTourCamera();prepareLayerLayout();inspectionView();requestExplode(.8);
-  }else{
-    $('#tTourCamera').checked=true;setFold(chapter==='motion'?1/3:1);
-    if(chapter==='light'){releaseTourCamera();viewFrom([.5,.85,-.3],[0,0,-1]);}
-  }
-}
-for(const b of document.querySelectorAll('[data-chapter]'))b.onclick=()=>selectChapter(b.dataset.chapter);
-for(const b of document.querySelectorAll('[data-look]'))b.onclick=()=>{
- setMode(b.dataset.look);for(const other of document.querySelectorAll('[data-look]'))other.setAttribute('aria-pressed',String(b===other));
-};
+// All controls share one scene; changing a material never resets pose or disassembly.
 for(const b of document.querySelectorAll('[data-layout]'))b.onclick=()=>{
- explodeLayout=b.dataset.layout;applyExplode();inspectionView();
+ explodeLayout=b.dataset.layout;prepareLayerLayout();applyExplode();
  for(const other of document.querySelectorAll('[data-layout]'))other.setAttribute('aria-pressed',String(b===other));
 };
-$('#explodedWire').onclick=()=>{const on=$('#explodedWire').getAttribute('aria-pressed')!=='true';setMode(on?'wire':'none');$('#explodedWire').setAttribute('aria-pressed',String(on));};
 $('#reframe').onclick=()=>{
- const chapter=document.querySelector('[data-chapter][aria-pressed="true"]').dataset.chapter;
- if(chapter==='assembly'){inspectionView();return;}
- if(chapter==='light'){viewFrom([.5,.85,-.3],[0,0,-1]);return;}
- updateTourCamera.begin();$('#tTourCamera').checked=true;updateTourCamera(fold);
+ releaseTourCamera();inspectionCamera.cancel();frameOn(phone);
 };
-$('#disassemble').onclick=()=>requestExplode(1);$('#assemble').onclick=()=>requestExplode(0);
+$('#disassemble').onclick=()=>requestExplode(1);
+$('#assemble').onclick=()=>requestExplode(0);
 const cycleClick=$('#cyc').onclick;$('#cyc').onclick=()=>{cycleClick();$('#cyc').setAttribute('aria-pressed',String(cycling));};
 
 build().catch(e=>{ boot.hidden=true; const el=$('#err');
