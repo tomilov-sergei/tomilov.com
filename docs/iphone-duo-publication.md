@@ -44,3 +44,9 @@ Five options in the existing light/material section: authored presentation plus 
 Custom maps, rotations and intensities temporarily override the authored environment during rendering; after each frame the source values are restored so pose animation and switching back remain intact. Material debug copies receive the selected lighting. The environment toggle disables IBL; selecting a preset enables it explicitly. Full reset returns to the authored lighting.
 
 Validation: all presets rendered in browser, warm/red/night checked on the rear-facing Durability pose, original restoration and mobile dark chrome checked, no console errors. Source-level tests cover cache reuse, exact map/rotation/intensity restoration, preservation of material properties and disabled IBL.
+
+### Softer studio light and strength control
+
+Studio environments default to 50% chroma, mixed toward equal-luminance neutral light in linear RGB. The 0–100 strength control adjusts environment intensity (0.5–1.5 with neutral fill retained) and environment/background chroma together. Base color, metalness and roughness remain untouched. At 50%, the presentation preset retains its original brightness. Re-bakes are throttled to 100 ms; at most one PMREM target per custom preset is retained, and replaced targets are disposed. Full reset restores 50%.
+
+Validation: source material restoration, strength endpoints, neutral background and clamping checks; browser checks at 0/50/100 and reset.

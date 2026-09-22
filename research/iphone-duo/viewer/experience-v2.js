@@ -1,6 +1,6 @@
 
 import * as THREE from './vendor/build/three.module.js';
-import {createStudioLighting,lightPresets} from './studio-lighting.js';
+import {createStudioLighting,lightPresets} from './studio-lighting.js?v=soft-2';
 import {TourSpring} from './tour-spring.js';
 import {CameraHandoff} from './camera-handoff.js';
 import {GLTFLoader}    from './vendor/examples/jsm/loaders/GLTFLoader.js';
@@ -1008,6 +1008,8 @@ VIEWS.forEach(([label,v,up])=>{
 // Полный сброс: свёрнутый телефон, фронтальный взгляд на экран,
 // все режимы разбора и входы шейдера — в исходные значения.
 function resetAll(){
+  studioLighting.setStrength(.5);
+  $('#lightingStrength').value=50;
   selectLighting('original');
   updateTourCamera?.begin();
   updateTourCamera?.cancel();
@@ -1235,8 +1237,10 @@ for(const b of document.querySelectorAll('[data-layout]'))b.onclick=()=>{
 };
 function selectLighting(id){
   const preset=studioLighting.select(id);
-  scene.background.set(preset.background);
-  document.body.style.setProperty('--stage-background',preset.background);
+  const background=studioLighting.background;
+  scene.background.set(background);
+  $('#lightingStrengthValue').textContent=Math.round(studioLighting.strength*100)+'%';
+  document.body.style.setProperty('--stage-background',background);
   document.body.dataset.studioTone=preset.dark?'dark':'light';
   for(const button of document.querySelectorAll('[data-lighting]'))button.setAttribute('aria-pressed',String(button.dataset.lighting===id));
   $('#lightingInfo').textContent=preset.note;
@@ -1247,6 +1251,17 @@ for(const preset of lightPresets){
   button.onclick=()=>{selectLighting(preset.id);if(!$('#tIbl').checked){$('#tIbl').checked=true;$('#tIbl').dispatchEvent(new Event('change'));}};
   $('#lightingPresets').appendChild(button);
 }
+let lightingStrengthTimer=0;
+function commitLightingStrength(){
+  clearTimeout(lightingStrengthTimer);lightingStrengthTimer=0;
+  studioLighting.setStrength(Number($('#lightingStrength').value)/100);
+  selectLighting(studioLighting.selected.id);
+}
+$('#lightingStrength').oninput=()=>{
+  $('#lightingStrengthValue').textContent=$('#lightingStrength').value+'%';
+  if(!lightingStrengthTimer)lightingStrengthTimer=setTimeout(commitLightingStrength,100);
+};
+$('#lightingStrength').onchange=commitLightingStrength;
 $('#reframe').onclick=()=>{
  releaseTourCamera();inspectionCamera.cancel();frameOn(phone);
 };
