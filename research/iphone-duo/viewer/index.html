@@ -1,69 +1,42 @@
 <!doctype html>
-<meta charset="utf-8">
-<link rel="icon" href="/assets/favicon.png">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>iPhone Duo — интерактивный разбор · Серёжа Томилов</title>
-<meta name="robots" content="noindex">
-<style>
-  :root{--ink:#1d1d1f;--dim:#6e6e73;--line:#d2d2d7;--accent:#0071e3}
-  html,body{margin:0;height:100%;background:#f5f5f7;overflow:hidden}
-  body{font:13px/1.45 -apple-system,BlinkMacSystemFont,system-ui,sans-serif;color:var(--ink)}
-  canvas{display:block}
-  .panel{position:fixed;background:rgba(255,255,255,.74);backdrop-filter:blur(20px) saturate(180%);
-    -webkit-backdrop-filter:blur(20px) saturate(180%);border:1px solid rgba(0,0,0,.07);
-    border-radius:14px;box-shadow:0 6px 24px rgba(0,0,0,.08)}
-  #ui{left:16px;top:16px;width:252px;padding:13px;max-height:calc(100vh - 32px);overflow:auto}
-  .hd{font-size:11px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--dim);margin:0 0 9px 2px}
-  .row{display:flex;align-items:center;gap:8px;margin:7px 0}
-  .row label{flex:0 0 74px;color:var(--dim);font-size:12px}
-  .row input[type=range]{flex:1;accent-color:var(--accent);min-width:0}
-  .row output{flex:0 0 42px;text-align:right;font:11px ui-monospace,Menlo,monospace;color:var(--dim)}
-  .chk{display:flex;align-items:center;gap:7px;margin:6px 0;font-size:12px;cursor:pointer}
-  .chk input{accent-color:var(--accent)}
-  .btn{border:0;border-radius:8px;background:var(--accent);color:#fff;padding:7px 13px;cursor:pointer;font:inherit}
-  .btn.ghost{background:transparent;color:var(--accent);border:1px solid var(--line)}
-  hr{border:0;border-top:1px solid var(--line);margin:11px 0}
-  .chips{display:flex;flex-wrap:wrap;gap:4px;margin:2px 0 4px}
-  .chip{border:1px solid var(--line);background:#fff;border-radius:7px;padding:4px 8px;
-        cursor:pointer;font:12px/1.2 inherit;color:var(--ink);white-space:nowrap}
-  .chip:hover{border-color:#b6b6bd}
-  .chip[aria-pressed="true"],.chip[aria-current="true"]{background:var(--ink);color:#fff;border-color:var(--ink)}
-  .hint{font:11px/1.45 -apple-system,system-ui,sans-serif;color:var(--dim);margin:2px 0 0 2px}
-  #stat{font:11px/1.6 ui-monospace,Menlo,monospace;color:var(--dim);white-space:pre}
-  #boot{position:fixed;inset:0;display:grid;place-items:center;font-size:13px;color:var(--dim);
-        background:#f5f5f7;z-index:9;text-align:center;white-space:pre-line}
-  #boot[hidden]{display:none}      /* иначе display:grid перебивает атрибут hidden */
-  #err{position:fixed;left:50%;top:50%;transform:translate(-50%,-50%);color:#b00;max-width:60ch;
-       white-space:pre-line;text-align:center;display:none;z-index:10}
-  summary{cursor:pointer;padding:12px 0 4px;color:var(--dim)}
-  a{color:inherit} button:focus-visible,a:focus-visible,summary:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
-  @media(max-width:719px){
-    #ui{left:10px;right:10px;top:auto;bottom:10px;width:auto;max-height:42vh;padding:12px;box-sizing:border-box}
-    .chip{padding:7px 10px}.chips{gap:5px}
-    #err{max-width:calc(100vw - 40px);width:100%;box-sizing:border-box}
-  }
-</style>
+<html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<base href="/research/iphone-duo/viewer/">
+<title>iPhone Duo — анатомия движения · Серёжа Томилов</title>
+<meta name="description" content="Согните, разберите на слои и измените свет. Интерактивное исследование 3D-модели iPhone Duo.">
+<link rel="canonical" href="https://tomilov.com/research/iphone-duo/">
+<meta property="og:title" content="iPhone Duo — анатомия движения"><meta property="og:description" content="Согните, разберите на слои и измените свет."><meta property="og:type" content="website"><meta property="og:url" content="https://tomilov.com/research/iphone-duo/"><meta property="og:image" content="https://tomilov.com/assets/research/iphone-duo-fold.svg">
+<link rel="icon" href="/assets/favicon.png"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;700&family=Lora:wght@500;600&family=Manrope:wght@800&display=swap">
+<link rel="stylesheet" href="/research/iphone-duo/viewer/experience-v2.css">
+</head><body>
+<header class="site-nav"><a class="brand" href="/">SS/84</a><a href="/research/">← Исследования</a><span>3D / 2026</span></header>
+<div id="boot" role="status">Собираем сцену…</div><div id="err" role="alert"></div>
+<main id="ui" hidden>
+<div class="intro"><p class="eyebrow">Интерактивный разбор</p><h1 aria-label="Анатомия движения">Анатомия<br> <em>движения.</em></h1><p class="model-name">iPhone Duo <span>↗</span> <a href="https://www.apple.com/iphone-duo/" target="_blank" rel="noopener">Оригинал Apple</a></p></div>
+<section class="control-card" aria-label="Исследовать модель">
+<nav class="chapters" aria-label="Что исследовать"><button data-chapter="motion" aria-pressed="true"><span>01</span> Согнуть</button><button data-chapter="assembly" aria-pressed="false"><span>02</span> Разобрать</button><button data-chapter="light" aria-pressed="false"><span>03</span> Свет</button></nav>
+<div class="chapter-copy"><h2 id="chapterTitle">Движение с характером</h2><p id="chapterText">Потяните ползунок. Шарнир догоняет движение и притягивается к краям, а обои меняют глубину и резкость.</p></div>
+<div class="chapter-panel" data-panel="motion">
+<div class="range-heading"><label for="fold">Раскрытие</label><output id="foldv">0.33</output></div><input type="range" id="fold" min="0" max="1000" value="333" aria-label="Раскрытие телефона">
+<div class="range-ends"><span>Закрыт</span><span>Раскрыт</span></div>
+<div class="chips" id="showcase" role="group" aria-label="Положение телефона"></div><p class="hint" id="poseStatus" role="status"></p>
+<div class="play-row"><button class="btn" id="play">Раскрыть ↗</button><button class="btn ghost" id="cyc" aria-pressed="false">По кругу</button></div>
+</div>
+<div class="chapter-panel" data-panel="assembly" hidden>
+<div class="range-heading"><label for="explode">Расстояние между слоями</label><output id="explodev">0%</output></div><input type="range" id="explode" min="0" max="1000" value="0">
+<div class="range-ends"><span>Вместе</span><span>По отдельности</span></div>
+<div class="play-row"><button class="btn" id="disassemble">Разобрать ↗</button><button class="btn ghost" id="assemble">Собрать ↙</button></div>
+<div class="layout-switch" role="group" aria-label="Способ разборки"><button data-layout="layers" aria-pressed="true">Слоями</button><button data-layout="radial" aria-pressed="false">От центра</button><button id="explodedWire" aria-pressed="false">Каркас</button></div>
+<p class="hint">62 объекта модели · 4 группы поверхностей.</p>
+</div>
+<div class="chapter-panel" data-panel="light" hidden>
+<div class="light-options"><button data-look="none" aria-pressed="true"><b>Материал целиком</b><span>Блики, цвет, тени и микрорельеф вместе.</span></button><button data-look="env" aria-pressed="false"><b>Только отражения</b><span>Именно свет делает металл похожим на металл.</span></button><button data-look="wire" aria-pressed="false"><b>Каркас</b><span>Грани, из которых складывается гладкая поверхность.</span></button><button data-look="ao" aria-pressed="false"><b>Контактные тени</b><span>Мягкие затемнения помогают прочитать стыки.</span></button></div>
+</div>
+<div class="utility"><button class="text-button" id="reframe">Вернуть ракурс ↗</button><button class="text-button" id="reset">Сначала ↺</button></div>
 
-<div id="boot">сборка сцены…</div>
-<div id="err"></div>
-
-<div class="panel" id="ui" hidden>
-  <p class="hint"><a href="../">← К исследованию</a></p><hr><p class="hd">Сценарии Apple</p>
-  <div class="chips" id="showcase" role="group" aria-label="Сценарии Apple"></div>
-  <p class="hint" id="poseStatus" role="status">Свободное раскрытие</p>
-  <hr>
-  <p class="hd">Раскрытие</p>
-  <label class="chk"><input type="checkbox" id="tTourCamera" checked> камера Apple</label>
-  <div class="row"><label for="fold">раскрытие</label><input type="range" id="fold" min="0" max="1000" value="1000"><output id="foldv">1.00</output></div>
-  <div class="row">
-    <button class="btn" id="play">Проиграть</button>
-    <button class="btn ghost" id="cyc">Туда-обратно</button>
-    <button class="btn ghost" id="reset">Сброс</button>
-  </div>
-  <details id="advanced"><summary>Разбор сцены и настройки</summary>
+<details id="advanced"><summary>Лаборатория <span>Все инструменты</span></summary><label class="chk"><input type="checkbox" id="tTourCamera" checked> Ракурс сцены</label>
   <hr>
   <p class="hd">Разбор</p>
-  <div class="row"><label>разлёт</label><input type="range" id="explode" min="0" max="1000" value="0"><output id="explodev">0.00</output></div>
+  
   <div class="chips" id="modes"></div>
   <label class="chk"><input type="checkbox" id="tSkel"> скелет (кости)</label>
   <label class="chk"><input type="checkbox" id="tBox"> габариты частей</label>
@@ -100,6 +73,8 @@
   <hr>
   <div id="stat">—</div>
   </details>
-</div>
 
-<script type="module" src="./app.js?v=20260922-2"></script>
+<details class="credits"><summary>Об этом разборе</summary><p>Независимая реконструкция по модели, текстурам и анимации страницы Apple. Свободная камера и расслоение — инструменты этого исследования. Исходные изображения принадлежат их правообладателям. <a href="/research/iphone-duo/viewer/vendor/LICENSE">Three.js · MIT</a>.</p></details>
+</section></main><p class="stage-hint">Перетащите, чтобы повернуть <span>·</span> Колесо — приблизить</p>
+<noscript>Для интерактивной сцены нужен JavaScript.</noscript>
+<script type="module" src="/research/iphone-duo/viewer/experience-v2.js"></script></body></html>

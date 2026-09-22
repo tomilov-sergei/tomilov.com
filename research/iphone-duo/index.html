@@ -1,31 +1,80 @@
 <!doctype html>
 <html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>iPhone Duo: как устроена 3D-анимация — Серёжа Томилов</title><meta name="description" content="Интерактивный разбор: геометрия, шарнир, материалы, отражения, живые обои и камера. Реконструкция анимации со страницы Apple.">
+<base href="/research/iphone-duo/viewer/">
+<title>iPhone Duo — анатомия движения · Серёжа Томилов</title>
+<meta name="description" content="Согните, разберите на слои и измените свет. Интерактивное исследование 3D-модели iPhone Duo.">
 <link rel="canonical" href="https://tomilov.com/research/iphone-duo/">
-<meta property="og:type" content="article"><meta property="og:title" content="iPhone Duo: как устроена 3D-анимация"><meta property="og:description" content="Интерактивный разбор: геометрия, шарнир, материалы, отражения, живые обои и камера. Реконструкция анимации со страницы Apple."><meta property="og:url" content="https://tomilov.com/research/iphone-duo/">
-<meta property="og:image" content="https://tomilov.com/assets/research/iphone-duo-fold.svg">
-<link rel="icon" href="/assets/favicon.png"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500;700&family=Lora:wght@600&family=Manrope:wght@800&display=swap">
-<link rel="stylesheet" href="/styles.css?v=20260813-research-2"><link rel="stylesheet" href="/assets/css/research.css?v=20260909-plasticine-1">
-<style>.duo-hero{display:block;width:100%;height:auto;border-radius:20px}.duo-copy{padding:24px 8px;max-width:760px;line-height:1.7}.duo-copy h2{font-family:var(--font-display);font-size:32px;line-height:1.15;margin-top:36px}.duo-launch{display:inline-block;background:#222;color:#fff;padding:16px 24px;border-radius:10px;text-decoration:none;font:700 14px var(--font-mono)}.duo-copy a:not(.duo-launch){text-decoration:underline}.duo-copy li{margin:10px 0}.duo-note{color:var(--muted);font-size:14px}a:focus-visible{outline:2px solid currentColor;outline-offset:4px}</style>
-<script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "iPhone Duo: как устроена 3D-анимация", "description": "Интерактивный разбор: геометрия, шарнир, материалы, отражения, живые обои и камера. Реконструкция анимации со страницы Apple.", "url": "https://tomilov.com/research/iphone-duo/", "datePublished": "2026-09-22", "inLanguage": "ru", "author": {"@type": "Person", "name": "Серёжа Томилов", "url": "https://tomilov.com"}}</script>
-</head><body><main class="page research-page research-article-page" data-page-lang="ru"><header class="site-header" aria-label="Навигация">
-        <a class="brand" href="/">SS/84</a>
-        <nav class="path" aria-label="Разделы">
-          <a href="/screenshots/">Блог</a>
-          <a href="/photos/">Фото</a>
-          <a href="/places/">Места</a>
-          <a href="/research/" aria-current="page" aria-label="Исследования"><span class="desktop-label">Исследования</span><span class="mobile-label">Иссл.</span></a>
-          <a href="/about/"><span class="desktop-name">Серёжа Томилов</span><span class="mobile-name">about</span></a>
-        </nav>
+<meta property="og:title" content="iPhone Duo — анатомия движения"><meta property="og:description" content="Согните, разберите на слои и измените свет."><meta property="og:type" content="website"><meta property="og:url" content="https://tomilov.com/research/iphone-duo/"><meta property="og:image" content="https://tomilov.com/assets/research/iphone-duo-fold.svg">
+<link rel="icon" href="/assets/favicon.png"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;700&family=Lora:wght@500;600&family=Manrope:wght@800&display=swap">
+<link rel="stylesheet" href="/research/iphone-duo/viewer/experience-v2.css">
+</head><body>
+<header class="site-nav"><a class="brand" href="/">SS/84</a><a href="/research/">← Исследования</a><span>3D / 2026</span></header>
+<div id="boot" role="status">Собираем сцену…</div><div id="err" role="alert"></div>
+<main id="ui" hidden>
+<div class="intro"><p class="eyebrow">Интерактивный разбор</p><h1 aria-label="Анатомия движения">Анатомия<br> <em>движения.</em></h1><p class="model-name">iPhone Duo <span>↗</span> <a href="https://www.apple.com/iphone-duo/" target="_blank" rel="noopener">Оригинал Apple</a></p></div>
+<section class="control-card" aria-label="Исследовать модель">
+<nav class="chapters" aria-label="Что исследовать"><button data-chapter="motion" aria-pressed="true"><span>01</span> Согнуть</button><button data-chapter="assembly" aria-pressed="false"><span>02</span> Разобрать</button><button data-chapter="light" aria-pressed="false"><span>03</span> Свет</button></nav>
+<div class="chapter-copy"><h2 id="chapterTitle">Движение с характером</h2><p id="chapterText">Потяните ползунок. Шарнир догоняет движение и притягивается к краям, а обои меняют глубину и резкость.</p></div>
+<div class="chapter-panel" data-panel="motion">
+<div class="range-heading"><label for="fold">Раскрытие</label><output id="foldv">0.33</output></div><input type="range" id="fold" min="0" max="1000" value="333" aria-label="Раскрытие телефона">
+<div class="range-ends"><span>Закрыт</span><span>Раскрыт</span></div>
+<div class="chips" id="showcase" role="group" aria-label="Положение телефона"></div><p class="hint" id="poseStatus" role="status"></p>
+<div class="play-row"><button class="btn" id="play">Раскрыть ↗</button><button class="btn ghost" id="cyc" aria-pressed="false">По кругу</button></div>
+</div>
+<div class="chapter-panel" data-panel="assembly" hidden>
+<div class="range-heading"><label for="explode">Расстояние между слоями</label><output id="explodev">0%</output></div><input type="range" id="explode" min="0" max="1000" value="0">
+<div class="range-ends"><span>Вместе</span><span>По отдельности</span></div>
+<div class="play-row"><button class="btn" id="disassemble">Разобрать ↗</button><button class="btn ghost" id="assemble">Собрать ↙</button></div>
+<div class="layout-switch" role="group" aria-label="Способ разборки"><button data-layout="layers" aria-pressed="true">Слоями</button><button data-layout="radial" aria-pressed="false">От центра</button><button id="explodedWire" aria-pressed="false">Каркас</button></div>
+<p class="hint">62 объекта модели · 4 группы поверхностей.</p>
+</div>
+<div class="chapter-panel" data-panel="light" hidden>
+<div class="light-options"><button data-look="none" aria-pressed="true"><b>Материал целиком</b><span>Блики, цвет, тени и микрорельеф вместе.</span></button><button data-look="env" aria-pressed="false"><b>Только отражения</b><span>Именно свет делает металл похожим на металл.</span></button><button data-look="wire" aria-pressed="false"><b>Каркас</b><span>Грани, из которых складывается гладкая поверхность.</span></button><button data-look="ao" aria-pressed="false"><b>Контактные тени</b><span>Мягкие затемнения помогают прочитать стыки.</span></button></div>
+</div>
+<div class="utility"><button class="text-button" id="reframe">Вернуть ракурс ↗</button><button class="text-button" id="reset">Сначала ↺</button></div>
 
-      </header>
-<section class="research-intro"><p class="eyebrow">3D × взаимодействие · 22 сентября 2026</p><h1>iPhone Duo: как устроена 3D-анимация</h1><p>Интерактивный разбор: геометрия, шарнир, материалы, отражения, живые обои и камера. Реконструкция анимации со страницы Apple.</p><p><a class="duo-launch" href="./viewer/">Открыть интерактивную сцену →</a></p></section>
-<img class="duo-hero" src="/assets/research/iphone-duo-fold.svg" width="1200" height="800" alt="Схема складного телефона: геометрия, шарнир и освещение">
-<div class="duo-copy"><p class="duo-note">Сцена загружается отдельно. Нужен браузер с WebGL 2; первая загрузка включает 3D-модель и текстуры. Управление и описание — на русском.</p>
-<h2>Разобрать движение на части</h2><p>За простым движением складного телефона работает несколько независимых систем. Геометрия следует за костями, шарнир притягивается к крайним положениям, отражения меняются вместе с позой, а обои рисуются отдельным проходом.</p>
-<p>Здесь эти системы можно рассмотреть по отдельности и снова собрать вместе. Это рабочее техническое исследование, сделанное по модели, текстурам и данным анимации со <a href="https://www.apple.com/iphone-duo/">страницы Apple</a>.</p>
-<h2>Что попробовать</h2><ol><li><strong>Раскрытие.</strong> Двигайте ползунок: у шарнира собственная пружина и магнитные фиксаторы.</li><li><strong>Готовые позы.</strong> Сравните Landscape, Portrait, Closed, Seated, Standing и Durability — с разными экранами, светом и камерой.</li><li><strong>Свободный ракурс.</strong> Перетащите модель. Включите «камера Apple», чтобы плавно вернуться к ракурсу сценария.</li><li><strong>Разбор сцены.</strong> Раскройте настройки: раздвиньте детали, включите каркас, нормали, AO или отдельные слои обоев.</li></ol>
-<h2>Что удалось восстановить</h2><p>Исходная геометрия и скелет, шесть демонстрационных поз, смена экранов, отражения и контактное затенение, проекция и размытие живых обоев. Пружины переходов и физика шарнира проверены численно по сохранённому коду исходной страницы.</p>
-<h2>Где реконструкция отличается</h2><p>Это самостоятельный просмотрщик на Three.js, а не точная копия страницы Apple. Свободное вращение использует OrbitControls; переход камеры адаптирован к этому управлению. Интерфейс, мобильное кадрирование и растяжение ползунка отличаются от оригинала. Совпадение отдельных расчётов не означает полного визуального совпадения всей анимации.</p>
-<p class="duo-note">Модель, текстуры и изображения экранов происходят со страницы Apple и принадлежат их правообладателям. Реализация исследования независимая и не является официальным продуктом Apple. Three.js 0.165.0 распространяется по <a href="./viewer/vendor/LICENSE">лицензии MIT</a>.</p>
-<p><a href="/research/">← Все исследования</a></p></div></main></body></html>
+<details id="advanced"><summary>Лаборатория <span>Все инструменты</span></summary><label class="chk"><input type="checkbox" id="tTourCamera" checked> Ракурс сцены</label>
+  <hr>
+  <p class="hd">Разбор</p>
+  
+  <div class="chips" id="modes"></div>
+  <label class="chk"><input type="checkbox" id="tSkel"> скелет (кости)</label>
+  <label class="chk"><input type="checkbox" id="tBox"> габариты частей</label>
+  <div id="modeinfo" style="font:11px/1.5 ui-monospace,Menlo,monospace;color:var(--dim);margin:4px 0 0 2px"></div>
+  <hr>
+  <p class="hd">Вид</p>
+  <div class="chips" id="views"></div>
+  <p class="hint">Перетаскивание — поворот. С зажатым <b>Shift</b> или правой кнопкой — сдвиг по экрану. Колесо — приближение. Двойной клик — вернуть в центр.</p>
+  <hr>
+  <p class="hd">Размытие (BlurPass)</p>
+  <label class="chk"><input type="checkbox" id="tBlur" checked> включить</label>
+  <label class="chk"><input type="checkbox" id="tProj" checked> проекция обоев (Wipe)</label>
+  <label class="chk"><input type="checkbox" id="tWipeAuto" checked> вести от раскрытия</label>
+  <div class="row"><label>wipe</label><input type="range" id="wipe" min="0" max="1000" value="0"><output id="wipev">0.00</output></div>
+  <div class="row"><label>позиция</label><input type="range" id="wipePos" min="0" max="1000" value="1000"><output id="wipePosv">1.00</output></div>
+  <hr>
+  <p class="hd">Обои — входы шейдера</p>
+  <div class="row"><label>unlock</label><input type="range" id="unlock" min="0" max="1000" value="0"><output id="unlockv">0.00</output></div>
+  <div class="row"><label>dimming</label><input type="range" id="dim" min="0" max="1000" value="1000"><output id="dimv">1.00</output></div>
+  <div class="row"><label>gyro X</label><input type="range" id="gx" min="-100" max="100" value="0"><output id="gxv">0.000</output></div>
+  <div class="row"><label>gyro Y</label><input type="range" id="gy" min="-100" max="100" value="0"><output id="gyv">0.000</output></div>
+  <div class="row"><label>наклон°</label><input type="range" id="tilt" min="-40" max="40" value="0"><output id="tiltv">0</output></div>
+  <hr>
+  <p class="hd">Слои</p>
+  <label class="chk"><input type="checkbox" id="tIbl" checked> окружение: отражения и EXR</label>
+  <label class="chk"><input type="checkbox" id="tWp" checked> обои живьём на экране</label>
+  <label class="chk"><input type="checkbox" id="tUi" checked> UI-плашка поверх обоев</label>
+  <label class="chk"><input type="checkbox" id="tLut" checked> перевернуть LUT по Y</label>
+  <label class="chk"><input type="checkbox" id="tRig"> камера в системе assetRoot</label>
+  <p class="hd" style="margin-top:11px">Слои обоев</p>
+  <div id="wpLayers"></div>
+  <label class="chk"><input type="checkbox" id="tRt"> проход обоев (сырой RT)</label>
+  <label class="chk"><input type="checkbox" id="tRot"> автоповорот</label>
+  <hr>
+  <div id="stat">—</div>
+  </details>
+
+<details class="credits"><summary>Об этом разборе</summary><p>Независимая реконструкция по модели, текстурам и анимации страницы Apple. Свободная камера и расслоение — инструменты этого исследования. Исходные изображения принадлежат их правообладателям. <a href="/research/iphone-duo/viewer/vendor/LICENSE">Three.js · MIT</a>.</p></details>
+</section></main><p class="stage-hint">Перетащите, чтобы повернуть <span>·</span> Колесо — приблизить</p>
+<noscript>Для интерактивной сцены нужен JavaScript.</noscript>
+<script type="module" src="/research/iphone-duo/viewer/experience-v2.js"></script></body></html>

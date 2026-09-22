@@ -1,13 +1,15 @@
-# iPhone Duo research
+# iPhone Duo: anatomy of motion
 
-Public article: `/research/iphone-duo/`. Interactive scene: `/research/iphone-duo/viewer/`.
+`/research/iphone-duo/` opens the live scene immediately. `/research/iphone-duo/viewer/` is a compatible entry point with the same UI and canonical URL. Both documents use a same-origin base URL for existing model resources. Fallback texture URLs resolve against `document.baseURI`.
 
-The viewer is a static publication of the independent reconstruction. The article links to it rather than embedding it, so opening the research index/article does not allocate WebGL or download model resources. Mobile controls sit below the scene; advanced inspection controls are collapsed initially.
+Active UI: `viewer/experience-v2.js` and `viewer/experience-v2.css`. The previous `app.js` stays available for old cached documents. Three.js 0.165.0 and add-ons are same-origin under `vendor/`, with their MIT license. No CSP changes, inline executable scripts or iframe are required.
 
-All runtime dependencies are same-origin. `app.js` is the extracted module from the source viewer; local `.mjs` modules use `.js` names for production MIME compatibility. Three.js 0.165.0 and reachable add-on modules are in `vendor/` with their MIT license. Bare module imports are rewritten to relative paths. The site CSP is unchanged: no external script CDN, inline executable script, import map or iframe is required.
+Three guided controls replace the previous article: fold physics and changing wallpaper; assembly inspection; reflections, wireframe and contact shadows. The visual system uses the site's gray background, white panels, Lora headings and IBM Plex Mono controls. All advanced controls remain in the Laboratory disclosure. Mobile keeps the stage above a scrollable control panel.
 
-Asset provenance is recorded in `viewer/provenance.json` and `viewer/reference/PROVENANCE.json`. Apple source extraction bundles, scratch files and the private local project documentation are not part of the published package. Shader whitespace is normalized; model and texture bytes are preserved.
+Layer inspection separates the two screen surfaces, nonmetal surfaces and metallic surfaces. Groups move at staggered thresholds along the inspection normal, using inverse parent transforms to preserve world-space spacing. This is an illustrative decomposition of render objects, not a claim about manufacturing or repair order. Original radial explosion remains selectable. Both layouts restore exact base positions. A separate critically damped spring controls assembly progress, and an interruptible camera handoff frames the fully separated model. Reduced motion snaps assembly progress.
 
-For future updates, mirror source changes into the publication, preserve the relative-import mapping, bump URLs for changed cacheable scripts/assets, run `tools/check-site.py`, `tools/check-secrets.py`, JavaScript syntax checks and `git diff --check`. Verify a clean browser tab with the production CSP and mobile viewport before deploying. The standard deployment archives HEAD; commit publication files first. Verify public article, viewer, resource hashes, both research indexes and sitemap afterwards.
+Validation: source-level transform test covers rotated/scaled parents, delayed layer movement and 20 exact reassembly cycles in both layouts. Desktop/mobile browser checks cover direct startup, chapter switching, layered/radial views, wireframe, reflections and reset. The source project's assembly.html mirrors this experience with a local import map.
 
-Known boundaries: OrbitControls still implements free camera movement, the handoff trajectory is adapted to the viewer, and source slider stretching is not reproduced. These limitations are stated in the article.
+For updates, version changed cacheable modules/styles, run site/secrets/syntax/diff checks, commit only intended files, deploy through tools/deploy-site.sh and verify public bytes plus a fresh browser load. Generated posts/photos files refreshed by the deploy script are independent of this UI change.
+
+Asset provenance remains in viewer/provenance.json and viewer/reference/PROVENANCE.json. Apple source geometry/textures are unchanged. Free-camera behavior remains an adaptation using OrbitControls.
