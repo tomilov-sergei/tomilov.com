@@ -1,0 +1,15 @@
+{
+  "source": "https://www.apple.com/iphone-duo/",
+  "published": "2026-09-22",
+  "renderer": "Three.js 0.165.0 (MIT)",
+  "note": "Independent technical reconstruction; Apple models, textures and screen imagery remain attributed to their source. Not an official Apple page.",
+  "modules": [
+    "LICENSE",
+    "build/three.module.js",
+    "examples/jsm/controls/OrbitControls.js",
+    "examples/jsm/libs/fflate.module.js",
+    "examples/jsm/loaders/EXRLoader.js",
+    "examples/jsm/loaders/GLTFLoader.js",
+    "examples/jsm/utils/BufferGeometryUtils.js"
+  ]
+}

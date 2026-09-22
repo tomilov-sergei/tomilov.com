@@ -269,6 +269,7 @@ def check_xml(errors):
         errors.append(f"Sitemap is missing photo index: {location}")
 
     required_research_urls = {
+        "https://tomilov.com/research/iphone-duo/",
         "https://tomilov.com/research/",
         "https://tomilov.com/en/research/",
         "https://tomilov.com/research/speed-and-business/",
@@ -290,9 +291,9 @@ def check_page_contracts(errors, manifest_summary):
         source = path.read_text(encoding="utf-8")
         if source.count("<h1") != 1 or "research-grid" not in source:
             errors.append(f"Research index structure is incomplete: {path.relative_to(ROOT)}")
-        if source.count('<a class="research-card') != 2:
-            errors.append(f"Research index must contain two article cards: {path.relative_to(ROOT)}")
-        for article_path in ("speed-and-business", "aesthetics-and-business"):
+        if source.count('<a class="research-card') != 3:
+            errors.append(f"Research index must contain three article cards: {path.relative_to(ROOT)}")
+        for article_path in ("speed-and-business", "aesthetics-and-business", "iphone-duo"):
             if f'href="/research/{article_path}/"' not in source:
                 errors.append(f"Research index is missing {article_path}: {path.relative_to(ROOT)}")
 

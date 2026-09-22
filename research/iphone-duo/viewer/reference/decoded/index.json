@@ -1,0 +1,37 @@
+[
+  {
+    "original": "mARRttLqqfJHFpf.avif",
+    "file": "mARRttLqqfJHFpf.png",
+    "source": "iPhoneDuo.glb",
+    "bufferView": 576,
+    "sha256": "1297f80c942a6c4786100681e8544cd362bb83199fd070b6ed685e80a435858b"
+  },
+  {
+    "original": "fXGvurhcBURdqoM.avif",
+    "file": "fXGvurhcBURdqoM.png",
+    "source": "iPhoneDuo.glb",
+    "bufferView": 578,
+    "sha256": "249cd8ec226d43f91e3a04463adfcd48ec4adff9751fab06072871eb61971a6b"
+  },
+  {
+    "original": "dHwNQrnkkKzcHjm.avif",
+    "file": "dHwNQrnkkKzcHjm.png",
+    "source": "iPhoneDuo.glb",
+    "bufferView": 577,
+    "sha256": "f3a39c0ab963b1acffa92e2fa5268a6145e9dbf2d9c5996899b6b9251ae005f5"
+  },
+  {
+    "original": "sfpLTMUCoToMbsj.avif",
+    "file": "sfpLTMUCoToMbsj.png",
+    "source": "iPhoneDuo.glb",
+    "bufferView": 586,
+    "sha256": "c30817b92f71aac193c5876b476a43c71ee2ae864ba11800aa3d3ba8494e6112"
+  },
+  {
+    "original": "VjCYdKmBbyYRHDT.avif",
+    "file": "VjCYdKmBbyYRHDT.png",
+    "source": "iPhoneDuo.glb",
+    "bufferView": 568,
+    "sha256": "0af34b2d52369105d3feb6d08c6d7b67bf9107e5005f31b04685ce4f490ac015"
+  }
+]

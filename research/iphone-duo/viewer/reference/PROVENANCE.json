@@ -1,0 +1,37 @@
+[
+  {
+    "file": "ODTNJCwCikFLGgN.json",
+    "source": "https://www.apple.com/v/iphone-duo/b/static/uploads/dIFKSKvliUSYOBw/MszYeqEKDgnBqxc/gVFBvbhWgzeMQqC/nlwxXusRyVVeHtf/DJEsvUqtHjBowCG.lsd",
+    "saved_sha256": "936879fb411ae89eca37dbe1b0640dfb508c8dc2087a947ec6612f3601e56a38"
+  },
+  {
+    "file": "cwDtHJuxXgkrfwd.json",
+    "source": "https://www.apple.com/v/iphone-duo/b/static/uploads/dIFKSKvliUSYOBw/MszYeqEKDgnBqxc/gVFBvbhWgzeMQqC/nlwxXusRyVVeHtf/cwDtHJuxXgkrfwd.lsd",
+    "saved_sha256": "d9a40ccaf94321730491b108b589dea2768a836cd26924740fc049c354ea683c"
+  },
+  {
+    "file": "env-0.json",
+    "source": "https://www.apple.com/v/iphone-duo/b/static/uploads/dIFKSKvliUSYOBw/MszYeqEKDgnBqxc/gVFBvbhWgzeMQqC/tJqCxWnWEQvHeHP/EiQJJOWWiRyvPQA.lsd",
+    "saved_sha256": "52e69cabe40fee3151d204c595025a06f03a4e49f34b68008060660ea46021ec"
+  },
+  {
+    "file": "env-1.json",
+    "source": "https://www.apple.com/v/iphone-duo/b/static/uploads/dIFKSKvliUSYOBw/MszYeqEKDgnBqxc/gVFBvbhWgzeMQqC/tJqCxWnWEQvHeHP/QNpouDPhjifWoVJ.lsd",
+    "saved_sha256": "0203767f55ff649fbbf082b3753a7025130e8da4eb933edb20d08947ddc4a797"
+  },
+  {
+    "file": "env-2.json",
+    "source": "https://www.apple.com/v/iphone-duo/b/static/uploads/dIFKSKvliUSYOBw/MszYeqEKDgnBqxc/gVFBvbhWgzeMQqC/tJqCxWnWEQvHeHP/cegZRPVOZLfnvlZ.lsd",
+    "saved_sha256": "c0ac329def223da38a3d25e3f5db98162b1c56b7aa0d146c4c5ddafd7ded5033"
+  },
+  {
+    "file": "JcvKFcEkqQvxADI.json",
+    "source": "https://www.apple.com/v/iphone-duo/b/static/uploads/dIFKSKvliUSYOBw/MszYeqEKDgnBqxc/gVFBvbhWgzeMQqC/megyEIopJyvbcOt/hWLllVgYfyjRkBR.lsd",
+    "saved_sha256": "1234d9fc8720083c7481a028c956d0f60d59fbbc68a575b8fb3663d8cc69fe98"
+  },
+  {
+    "file": "MBakxdQZGJCEMAv.json",
+    "source": "https://www.apple.com/v/iphone-duo/b/static/uploads/dIFKSKvliUSYOBw/MszYeqEKDgnBqxc/gVFBvbhWgzeMQqC/CPsrYKEncFxmcrI/QUYwYucFDmDJOZo.lsd",
+    "saved_sha256": "4d812277babb3c49493c7852b0cabbc4ced82a67b791a6828a45e6b13142f44b"
+  }
+]

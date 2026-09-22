@@ -1,0 +1,105 @@
+<!doctype html>
+<meta charset="utf-8">
+<link rel="icon" href="/assets/favicon.png">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>iPhone Duo — интерактивный разбор · Серёжа Томилов</title>
+<meta name="robots" content="noindex">
+<style>
+  :root{--ink:#1d1d1f;--dim:#6e6e73;--line:#d2d2d7;--accent:#0071e3}
+  html,body{margin:0;height:100%;background:#f5f5f7;overflow:hidden}
+  body{font:13px/1.45 -apple-system,BlinkMacSystemFont,system-ui,sans-serif;color:var(--ink)}
+  canvas{display:block}
+  .panel{position:fixed;background:rgba(255,255,255,.74);backdrop-filter:blur(20px) saturate(180%);
+    -webkit-backdrop-filter:blur(20px) saturate(180%);border:1px solid rgba(0,0,0,.07);
+    border-radius:14px;box-shadow:0 6px 24px rgba(0,0,0,.08)}
+  #ui{left:16px;top:16px;width:252px;padding:13px;max-height:calc(100vh - 32px);overflow:auto}
+  .hd{font-size:11px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--dim);margin:0 0 9px 2px}
+  .row{display:flex;align-items:center;gap:8px;margin:7px 0}
+  .row label{flex:0 0 74px;color:var(--dim);font-size:12px}
+  .row input[type=range]{flex:1;accent-color:var(--accent);min-width:0}
+  .row output{flex:0 0 42px;text-align:right;font:11px ui-monospace,Menlo,monospace;color:var(--dim)}
+  .chk{display:flex;align-items:center;gap:7px;margin:6px 0;font-size:12px;cursor:pointer}
+  .chk input{accent-color:var(--accent)}
+  .btn{border:0;border-radius:8px;background:var(--accent);color:#fff;padding:7px 13px;cursor:pointer;font:inherit}
+  .btn.ghost{background:transparent;color:var(--accent);border:1px solid var(--line)}
+  hr{border:0;border-top:1px solid var(--line);margin:11px 0}
+  .chips{display:flex;flex-wrap:wrap;gap:4px;margin:2px 0 4px}
+  .chip{border:1px solid var(--line);background:#fff;border-radius:7px;padding:4px 8px;
+        cursor:pointer;font:12px/1.2 inherit;color:var(--ink);white-space:nowrap}
+  .chip:hover{border-color:#b6b6bd}
+  .chip[aria-pressed="true"],.chip[aria-current="true"]{background:var(--ink);color:#fff;border-color:var(--ink)}
+  .hint{font:11px/1.45 -apple-system,system-ui,sans-serif;color:var(--dim);margin:2px 0 0 2px}
+  #stat{font:11px/1.6 ui-monospace,Menlo,monospace;color:var(--dim);white-space:pre}
+  #boot{position:fixed;inset:0;display:grid;place-items:center;font-size:13px;color:var(--dim);
+        background:#f5f5f7;z-index:9;text-align:center;white-space:pre-line}
+  #boot[hidden]{display:none}      /* иначе display:grid перебивает атрибут hidden */
+  #err{position:fixed;left:50%;top:50%;transform:translate(-50%,-50%);color:#b00;max-width:60ch;
+       white-space:pre-line;text-align:center;display:none;z-index:10}
+  summary{cursor:pointer;padding:12px 0 4px;color:var(--dim)}
+  a{color:inherit} button:focus-visible,a:focus-visible,summary:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+  @media(max-width:719px){
+    #ui{left:10px;right:10px;top:auto;bottom:10px;width:auto;max-height:42vh;padding:12px;box-sizing:border-box}
+    .chip{padding:7px 10px}.chips{gap:5px}
+    #err{max-width:calc(100vw - 40px);width:100%;box-sizing:border-box}
+  }
+</style>
+
+<div id="boot">сборка сцены…</div>
+<div id="err"></div>
+
+<div class="panel" id="ui" hidden>
+  <p class="hint"><a href="../">← К исследованию</a></p><hr><p class="hd">Сценарии Apple</p>
+  <div class="chips" id="showcase" role="group" aria-label="Сценарии Apple"></div>
+  <p class="hint" id="poseStatus" role="status">Свободное раскрытие</p>
+  <hr>
+  <p class="hd">Раскрытие</p>
+  <label class="chk"><input type="checkbox" id="tTourCamera" checked> камера Apple</label>
+  <div class="row"><label for="fold">раскрытие</label><input type="range" id="fold" min="0" max="1000" value="1000"><output id="foldv">1.00</output></div>
+  <div class="row">
+    <button class="btn" id="play">Проиграть</button>
+    <button class="btn ghost" id="cyc">Туда-обратно</button>
+    <button class="btn ghost" id="reset">Сброс</button>
+  </div>
+  <details id="advanced"><summary>Разбор сцены и настройки</summary>
+  <hr>
+  <p class="hd">Разбор</p>
+  <div class="row"><label>разлёт</label><input type="range" id="explode" min="0" max="1000" value="0"><output id="explodev">0.00</output></div>
+  <div class="chips" id="modes"></div>
+  <label class="chk"><input type="checkbox" id="tSkel"> скелет (кости)</label>
+  <label class="chk"><input type="checkbox" id="tBox"> габариты частей</label>
+  <div id="modeinfo" style="font:11px/1.5 ui-monospace,Menlo,monospace;color:var(--dim);margin:4px 0 0 2px"></div>
+  <hr>
+  <p class="hd">Вид</p>
+  <div class="chips" id="views"></div>
+  <p class="hint">Перетаскивание — поворот. С зажатым <b>Shift</b> или правой кнопкой — сдвиг по экрану. Колесо — приближение. Двойной клик — вернуть в центр.</p>
+  <hr>
+  <p class="hd">Размытие (BlurPass)</p>
+  <label class="chk"><input type="checkbox" id="tBlur" checked> включить</label>
+  <label class="chk"><input type="checkbox" id="tProj" checked> проекция обоев (Wipe)</label>
+  <label class="chk"><input type="checkbox" id="tWipeAuto" checked> вести от раскрытия</label>
+  <div class="row"><label>wipe</label><input type="range" id="wipe" min="0" max="1000" value="0"><output id="wipev">0.00</output></div>
+  <div class="row"><label>позиция</label><input type="range" id="wipePos" min="0" max="1000" value="1000"><output id="wipePosv">1.00</output></div>
+  <hr>
+  <p class="hd">Обои — входы шейдера</p>
+  <div class="row"><label>unlock</label><input type="range" id="unlock" min="0" max="1000" value="0"><output id="unlockv">0.00</output></div>
+  <div class="row"><label>dimming</label><input type="range" id="dim" min="0" max="1000" value="1000"><output id="dimv">1.00</output></div>
+  <div class="row"><label>gyro X</label><input type="range" id="gx" min="-100" max="100" value="0"><output id="gxv">0.000</output></div>
+  <div class="row"><label>gyro Y</label><input type="range" id="gy" min="-100" max="100" value="0"><output id="gyv">0.000</output></div>
+  <div class="row"><label>наклон°</label><input type="range" id="tilt" min="-40" max="40" value="0"><output id="tiltv">0</output></div>
+  <hr>
+  <p class="hd">Слои</p>
+  <label class="chk"><input type="checkbox" id="tIbl" checked> окружение: отражения и EXR</label>
+  <label class="chk"><input type="checkbox" id="tWp" checked> обои живьём на экране</label>
+  <label class="chk"><input type="checkbox" id="tUi" checked> UI-плашка поверх обоев</label>
+  <label class="chk"><input type="checkbox" id="tLut" checked> перевернуть LUT по Y</label>
+  <label class="chk"><input type="checkbox" id="tRig"> камера в системе assetRoot</label>
+  <p class="hd" style="margin-top:11px">Слои обоев</p>
+  <div id="wpLayers"></div>
+  <label class="chk"><input type="checkbox" id="tRt"> проход обоев (сырой RT)</label>
+  <label class="chk"><input type="checkbox" id="tRot"> автоповорот</label>
+  <hr>
+  <div id="stat">—</div>
+  </details>
+</div>
+
+<script type="module" src="./app.js"></script>

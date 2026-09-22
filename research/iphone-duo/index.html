@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>iPhone Duo: как устроена 3D-анимация — Серёжа Томилов</title><meta name="description" content="Интерактивный разбор: геометрия, шарнир, материалы, отражения, живые обои и камера. Реконструкция анимации со страницы Apple.">
+<link rel="canonical" href="https://tomilov.com/research/iphone-duo/">
+<meta property="og:type" content="article"><meta property="og:title" content="iPhone Duo: как устроена 3D-анимация"><meta property="og:description" content="Интерактивный разбор: геометрия, шарнир, материалы, отражения, живые обои и камера. Реконструкция анимации со страницы Apple."><meta property="og:url" content="https://tomilov.com/research/iphone-duo/">
+<meta property="og:image" content="https://tomilov.com/assets/research/iphone-duo-fold.svg">
+<link rel="icon" href="/assets/favicon.png"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500;700&family=Lora:wght@600&family=Manrope:wght@800&display=swap">
+<link rel="stylesheet" href="/styles.css?v=20260813-research-2"><link rel="stylesheet" href="/assets/css/research.css?v=20260909-plasticine-1">
+<style>.duo-hero{display:block;width:100%;height:auto;border-radius:20px}.duo-copy{padding:24px 8px;max-width:760px;line-height:1.7}.duo-copy h2{font-family:var(--font-display);font-size:32px;line-height:1.15;margin-top:36px}.duo-launch{display:inline-block;background:#222;color:#fff;padding:16px 24px;border-radius:10px;text-decoration:none;font:700 14px var(--font-mono)}.duo-copy a:not(.duo-launch){text-decoration:underline}.duo-copy li{margin:10px 0}.duo-note{color:var(--muted);font-size:14px}a:focus-visible{outline:2px solid currentColor;outline-offset:4px}</style>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "iPhone Duo: как устроена 3D-анимация", "description": "Интерактивный разбор: геометрия, шарнир, материалы, отражения, живые обои и камера. Реконструкция анимации со страницы Apple.", "url": "https://tomilov.com/research/iphone-duo/", "datePublished": "2026-09-22", "inLanguage": "ru", "author": {"@type": "Person", "name": "Серёжа Томилов", "url": "https://tomilov.com"}}</script>
+</head><body><main class="page research-page research-article-page" data-page-lang="ru"><header class="site-header" aria-label="Навигация">
+        <a class="brand" href="/">SS/84</a>
+        <nav class="path" aria-label="Разделы">
+          <a href="/screenshots/">Блог</a>
+          <a href="/photos/">Фото</a>
+          <a href="/places/">Места</a>
+          <a href="/research/" aria-current="page" aria-label="Исследования"><span class="desktop-label">Исследования</span><span class="mobile-label">Иссл.</span></a>
+          <a href="/about/"><span class="desktop-name">Серёжа Томилов</span><span class="mobile-name">about</span></a>
+        </nav>
+
+      </header>
+<section class="research-intro"><p class="eyebrow">3D × взаимодействие · 22 сентября 2026</p><h1>iPhone Duo: как устроена 3D-анимация</h1><p>Интерактивный разбор: геометрия, шарнир, материалы, отражения, живые обои и камера. Реконструкция анимации со страницы Apple.</p><p><a class="duo-launch" href="./viewer/">Открыть интерактивную сцену →</a></p></section>
+<img class="duo-hero" src="/assets/research/iphone-duo-fold.svg" width="1200" height="800" alt="Схема складного телефона: геометрия, шарнир и освещение">
+<div class="duo-copy"><p class="duo-note">Сцена загружается отдельно. Нужен браузер с WebGL 2; первая загрузка включает 3D-модель и текстуры. Управление и описание — на русском.</p>
+<h2>Разобрать движение на части</h2><p>За простым движением складного телефона работает несколько независимых систем. Геометрия следует за костями, шарнир притягивается к крайним положениям, отражения меняются вместе с позой, а обои рисуются отдельным проходом.</p>
+<p>Здесь эти системы можно рассмотреть по отдельности и снова собрать вместе. Это рабочее техническое исследование, сделанное по модели, текстурам и данным анимации со <a href="https://www.apple.com/iphone-duo/">страницы Apple</a>.</p>
+<h2>Что попробовать</h2><ol><li><strong>Раскрытие.</strong> Двигайте ползунок: у шарнира собственная пружина и магнитные фиксаторы.</li><li><strong>Готовые позы.</strong> Сравните Landscape, Portrait, Closed, Seated, Standing и Durability — с разными экранами, светом и камерой.</li><li><strong>Свободный ракурс.</strong> Перетащите модель. Включите «камера Apple», чтобы плавно вернуться к ракурсу сценария.</li><li><strong>Разбор сцены.</strong> Раскройте настройки: раздвиньте детали, включите каркас, нормали, AO или отдельные слои обоев.</li></ol>
+<h2>Что удалось восстановить</h2><p>Исходная геометрия и скелет, шесть демонстрационных поз, смена экранов, отражения и контактное затенение, проекция и размытие живых обоев. Пружины переходов и физика шарнира проверены численно по сохранённому коду исходной страницы.</p>
+<h2>Где реконструкция отличается</h2><p>Это самостоятельный просмотрщик на Three.js, а не точная копия страницы Apple. Свободное вращение использует OrbitControls; переход камеры адаптирован к этому управлению. Интерфейс, мобильное кадрирование и растяжение ползунка отличаются от оригинала. Совпадение отдельных расчётов не означает полного визуального совпадения всей анимации.</p>
+<p class="duo-note">Модель, текстуры и изображения экранов происходят со страницы Apple и принадлежат их правообладателям. Реализация исследования независимая и не является официальным продуктом Apple. Three.js 0.165.0 распространяется по <a href="./viewer/vendor/LICENSE">лицензии MIT</a>.</p>
+<p><a href="/research/">← Все исследования</a></p></div></main></body></html>

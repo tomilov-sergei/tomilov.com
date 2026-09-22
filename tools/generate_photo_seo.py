@@ -43,6 +43,7 @@ PHOTO_FILTER_VALUES = ("film", "iphone")
 PHOTO_FILTER_DIRS = {"film", "iphone"}
 TELEGRAM_EXPORT_TZ = ZoneInfo("Europe/Moscow")
 RESEARCH_ARTICLES = (
+    {"path": "/research/iphone-duo/", "lastmod": "2026-09-22"},
     {"path": "/research/speed-and-business/", "lastmod": "2026-08-14"},
     {"path": "/research/aesthetics-and-business/", "lastmod": "2026-08-14"},
 )
