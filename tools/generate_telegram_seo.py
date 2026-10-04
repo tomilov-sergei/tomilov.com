@@ -145,7 +145,10 @@ def render_screenshots_page(posts, lang="ru"):
     <meta name="twitter:title" content="{shared.CHANNEL_TITLE}">
     <meta name="twitter:description" content="{shared.escape_attr(description)}">
     <meta name="twitter:image" content="{shared.SITE_URL}/assets/og.png">
-    <link rel="icon" href="/assets/favicon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="/assets/favicon-192.png">
+    <link rel="icon" type="image/png" sizes="512x512" href="/assets/favicon-512.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500;700&family=Lora:wght@600&family=Manrope:wght@800&display=swap">
     <link rel="stylesheet" href="/styles.css?v={COLLECTION_STYLES_VERSION}">
@@ -273,7 +276,10 @@ def render_post_page(post, newer, older, lang="ru"):
     <meta name="twitter:title" content="{shared.escape_attr(post_title(post, 90, lang))}">
     <meta name="twitter:description" content="{shared.escape_attr(description)}">
     <meta name="twitter:image" content="{shared.escape_attr(social_image)}">
-    <link rel="icon" href="/assets/favicon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="/assets/favicon-192.png">
+    <link rel="icon" type="image/png" sizes="512x512" href="/assets/favicon-512.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500;700&family=Lora:wght@600&family=Manrope:wght@800&display=swap">
     <link rel="stylesheet" href="/styles.css?v={shared.asset_version()}">
@@ -327,7 +333,10 @@ def render_posts_index(posts, lang="ru"):
     <meta name="twitter:title" content="{title} — {shared.CHANNEL_TITLE}">
     <meta name="twitter:description" content="{shared.escape_attr(description)}">
     <meta name="twitter:image" content="{shared.SITE_URL}/assets/og.png">
-    <link rel="icon" href="/assets/favicon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="/assets/favicon-192.png">
+    <link rel="icon" type="image/png" sizes="512x512" href="/assets/favicon-512.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500;700&family=Lora:wght@600&family=Manrope:wght@800&display=swap">
     <link rel="stylesheet" href="/styles.css?v={shared.asset_version()}">

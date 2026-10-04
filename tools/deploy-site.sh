@@ -185,6 +185,7 @@ git archive --format=tar.gz --output="$ARCHIVE" HEAD \
   feed.xml \
   CNAME \
   yandex_251bf4498768ab1a.html \
+  apple-touch-icon.png \
   assets \
   about \
   barcelona-guide \
