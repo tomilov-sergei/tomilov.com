@@ -1,0 +1,9 @@
+/mnt/tomilov-data/telegram-bot-api/logs/telegram-bot-api.log {
+    su www-data www-data
+    size 50M
+    rotate 3
+    compress
+    missingok
+    notifempty
+    copytruncate
+}

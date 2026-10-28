@@ -1,0 +1,5 @@
+[Unit]
+Description=Rotate only tomilov Telegram Bot API logs
+[Service]
+Type=oneshot
+ExecStart=/usr/sbin/logrotate --state /var/lib/tomilov-media/logrotate.status /etc/logrotate.d/tomilov-telegram-bot-api

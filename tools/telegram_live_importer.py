@@ -278,8 +278,9 @@ def download_message_media(message, entries, db):
             local_path = Path(file_path) if CONFIG.bot_api_local_mode else None
 
             if local_path and local_path.is_absolute() and local_path.exists():
-                upload_file_to_s3(key, local_path, content_type=content_type)
                 uploaded_size = local_path.stat().st_size
+                verified_digest = upload_file_to_s3(key, local_path, content_type=content_type)
+                cleanup_verified_local_file(local_path, verified_digest, uploaded_size)
             else:
                 if media_storage.backend() == "s3":
                     uploaded_size = stream_telegram_to_s3(key, file_path, content_type)
@@ -599,6 +600,45 @@ def get_seo_generator_command():
     return None
 
 
+def cleanup_verified_local_file(path, digest, size):
+    """Remove only the exact downloaded file after full S3 verification.
+
+    Bot API working-root files and temp/state trees are never eligible. TDLib's
+    maintainer explicitly permits removal of downloaded files (issue #303).
+    """
+    root_value = os.environ.get("TELEGRAM_CACHE_ROOT")
+    if not root_value:
+        return False
+    root = Path(root_value).resolve()
+    path = Path(path)
+    try:
+        relative = path.relative_to(Path(root_value))
+        # <bot directory>/<download type>/<filename>, never root/binlogs/temp.
+        types = {"photos", "videos", "documents", "animations", "video_notes", "voice", "audio", "thumbnails"}
+        if len(relative.parts) != 3 or relative.parts[1] not in types:
+            return False
+        current = root
+        for part in relative.parts:
+            current = current / part
+            if current.is_symlink():
+                return False
+        path = current
+        before = path.stat()
+        if not path.is_file() or before.st_nlink != 1 or before.st_size != size:
+            return False
+        if media_storage.sha256_file(path) != digest:
+            return False
+        after = path.stat()
+        if (before.st_ino, before.st_mtime_ns, before.st_size) != (after.st_ino, after.st_mtime_ns, after.st_size):
+            return False
+        path.unlink()
+        return True
+    except (ValueError, OSError):
+        # Retention failure must not turn a verified upload into a lost post.
+        print("Telegram verified cache cleanup deferred", file=sys.stderr, flush=True)
+        return False
+
+
 def stream_telegram_to_s3(key, file_path, content_type):
     # Telegram cloud downloads need bounded staging for retryable signed uploads.
     # Local Bot API files use upload_file_to_s3 directly, without a second copy.
@@ -634,7 +674,7 @@ def upload_bytes_to_s3(key, body, content_type):
 def upload_file_to_s3(key, file_path, content_type=None):
     mutable_manifest = key == f"{CONFIG.s3_prefix}/posts.json"
     store = media_storage.Store()
-    store.put_verified(key, file_path, content_type=content_type,
+    return store.put_verified(key, file_path, content_type=content_type,
                        replace=mutable_manifest,
                        cache="no-cache" if mutable_manifest else media_storage.IMMUTABLE)
 

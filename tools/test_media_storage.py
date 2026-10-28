@@ -207,6 +207,22 @@ class RuntimeTests(unittest.TestCase):
             with self.assertRaises(RuntimeError):
                 previews.generate([{'id': 'old', 'src': '/assets/photos/originals/old.jpg'}])
 
+    def test_only_verified_download_cache_file_can_be_removed(self):
+        cache = self.root / "cache"
+        media = cache / "bot" / "videos" / "sample.mp4"
+        media.parent.mkdir(parents=True)
+        media.write_bytes(b"verified")
+        state = cache / "bot" / "state.binlog"
+        state.write_bytes(b"verified")
+        digest = hashlib.sha256(b"verified").hexdigest()
+        with mock.patch.dict(os.environ, {"TELEGRAM_CACHE_ROOT": str(cache)}):
+            self.assertFalse(telegram.cleanup_verified_local_file(state, digest, 8))
+            self.assertFalse(telegram.cleanup_verified_local_file(media, "0" * 64, 8))
+            self.assertTrue(media.exists())
+            self.assertTrue(telegram.cleanup_verified_local_file(media, digest, 8))
+        self.assertTrue(state.exists())
+        self.assertFalse(media.exists())
+
     def test_unknown_backend_fails_closed(self):
         with mock.patch.dict(os.environ, {'MEDIA_STORAGE': 'typo'}):
             with self.assertRaises(RuntimeError):
