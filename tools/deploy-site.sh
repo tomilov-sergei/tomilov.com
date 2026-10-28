@@ -47,6 +47,25 @@ if [[ ! -f "$KEY" ]]; then
   exit 1
 fi
 
+# Production owns the backend marker. A local default must never restore media
+# after cutover. The marker is installed by the cutover operator, not deploy.
+REMOTE_MEDIA_STORAGE=$(ssh -i "$KEY" -o IdentitiesOnly=yes "$SERVER" "if [ -f '$REMOTE_STORAGE_ROOT/shared/.media-storage' ]; then cat '$REMOTE_STORAGE_ROOT/shared/.media-storage'; else printf local; fi")
+case "$REMOTE_MEDIA_STORAGE" in local|s3) ;; *) echo 'Invalid production media backend' >&2; exit 1 ;; esac
+MEDIA_STORAGE="${MEDIA_STORAGE:-$REMOTE_MEDIA_STORAGE}"
+if [[ "$MEDIA_STORAGE" != "$REMOTE_MEDIA_STORAGE" ]]; then
+  echo 'Backend mismatch; use the separate cutover procedure' >&2; exit 1
+fi
+export MEDIA_STORAGE
+if [[ "$MEDIA_STORAGE" == s3 ]]; then
+  for flag in PUSH_LOCAL_PHOTOS PUSH_LOCAL_TELEGRAM SYNC_MEDIA_FROM_REMOTE SYNC_PHOTOS_FROM_REMOTE; do
+    if [[ "${!flag:-0}" != 0 ]]; then
+      echo "$flag is disabled in S3 mode; use verified object publication and locked manifest promotion" >&2
+      exit 1
+    fi
+  done
+  SKIP_MEDIA_SYNC=1
+fi
+
 if [[ "$PHOTOS_ONLY" == "1" ]]; then
   mkdir -p "$LOCAL_PHOTOS_DIR"
   ssh -i "$KEY" -o IdentitiesOnly=yes "$SERVER" "mkdir -p '$REMOTE_ROOT' '$REMOTE_PHOTOS_DIR'
@@ -116,6 +135,7 @@ if [ ! -d '$REMOTE_ROOT/current' ]; then
   exit 1
 fi
 cd '$REMOTE_ROOT/current'
+export MEDIA_STORAGE='$MEDIA_STORAGE'
 python3 tools/backfill_photo_hdr.py --strict
 python3 tools/generate_photo_previews.py --strict
 python3 tools/generate_photo_seo.py
@@ -230,6 +250,7 @@ if [ -d '$REMOTE_STORAGE_ROOT/shared/collector' ]; then
   ln -s '$REMOTE_STORAGE_ROOT/shared/collector' '$REMOTE_STORAGE_ROOT/releases/'\$stamp'/collector'
 fi
 cd '$REMOTE_STORAGE_ROOT/releases/'\$stamp
+export MEDIA_STORAGE='$MEDIA_STORAGE'
 python3 tools/backfill_photo_hdr.py --strict
 python3 tools/generate_photo_previews.py --strict
 python3 tools/generate_telegram_seo.py

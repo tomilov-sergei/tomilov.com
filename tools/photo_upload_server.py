@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 
 import json
+import hashlib
+import media_storage
 import os
 import re
 import secrets
@@ -20,6 +22,8 @@ from pathlib import Path
 
 ROOT_DIR = Path(__file__).resolve().parent.parent
 JSON_LOCK = threading.Lock()
+S3_UPLOAD_LOCK = threading.Lock()
+PHOTO_REQUEST_SLOTS = threading.BoundedSemaphore(2)
 IMAGE_TYPE_EXTENSIONS = {
     "image/jpeg": {".jpg", ".jpeg"},
     "image/png": {".png"},
@@ -55,6 +59,8 @@ def main():
         sys.exit(1)
 
     CONFIG.photos_json_path.parent.mkdir(parents=True, exist_ok=True)
+    if media_storage.backend() == "s3":
+        threading.Thread(target=photo_seo_worker, daemon=True).start()
     server = ThreadingHTTPServer(("127.0.0.1", CONFIG.port), PhotoUploadHandler)
     print(f"Photo upload server listening on 127.0.0.1:{CONFIG.port}{CONFIG.upload_path}", flush=True)
     server.serve_forever()
@@ -69,6 +75,15 @@ class PhotoUploadHandler(BaseHTTPRequestHandler):
         self.send_json(404, {"ok": False, "error": "not_found"})
 
     def do_POST(self):
+        if not PHOTO_REQUEST_SLOTS.acquire(blocking=False):
+            self.send_json(503, {"ok": False, "error": "upload_busy_retry"})
+            return
+        try:
+            self.handle_upload()
+        finally:
+            PHOTO_REQUEST_SLOTS.release()
+
+    def handle_upload(self):
         parsed = urllib.parse.urlparse(self.path)
 
         if parsed.path != CONFIG.upload_path:
@@ -98,7 +113,7 @@ class PhotoUploadHandler(BaseHTTPRequestHandler):
         except ValueError as error:
             self.send_json(400, {"ok": False, "error": str(error)})
         except Exception as error:
-            print(error, file=sys.stderr, flush=True)
+            print(type(error).__name__, file=sys.stderr, flush=True)
             self.send_json(500, {"ok": False, "error": "server_error"})
 
     def parse_multipart(self):
@@ -182,6 +197,9 @@ class PhotoUploadHandler(BaseHTTPRequestHandler):
 
 def save_photo(file_part, fields):
     filename, content_type = normalize_uploaded_file(file_part)
+    if media_storage.backend() == "s3":
+        with S3_UPLOAD_LOCK:
+            return save_photo_s3(file_part, fields, filename, content_type)
 
     now = datetime.now(timezone.utc)
     photo_id = f"{now:%Y%m%d-%H%M%S}-{secrets.token_hex(4)}"
@@ -218,6 +236,102 @@ def save_photo(file_part, fields):
 
     regenerate_seo_pages()
 
+    return photo
+
+
+def photo_seo_pending_path():
+    root = os.environ.get("MEDIA_STATE_DIR")
+    if not root:
+        raise RuntimeError("MEDIA_STATE_DIR is required for S3 photo publication")
+    return Path(root) / "photo-seo-pending.json"
+
+
+def mark_photo_seo_pending():
+    media_storage.atomic_json(photo_seo_pending_path(), {"pending": True})
+
+
+def clear_photo_seo_pending():
+    photo_seo_pending_path().unlink(missing_ok=True)
+
+
+def photo_seo_worker():
+    import time
+    while True:
+        try:
+            with S3_UPLOAD_LOCK:
+                if photo_seo_pending_path().exists():
+                    regenerate_seo_pages()
+                    clear_photo_seo_pending()
+        except Exception as error:
+            print("Photo SEO pending retry: " + type(error).__name__, file=sys.stderr, flush=True)
+        time.sleep(30)
+
+
+def save_photo_s3(file_part, fields, filename, content_type):
+    """Publish only after original and derivatives are durably readable.
+
+    A stable content+fields request ID makes retries (including after a lost HTTP
+    response) safe. Failed uploads retain no original in the local media tree.
+    """
+    import generate_photo_previews as previews
+    body = file_part["body"]
+    content_digest = hashlib.sha256(body).hexdigest()
+    # Token is excluded: authentication material must not enter the manifest.
+    public_fields = {k: fields.get(k, "") for k in ("caption", "hdr", "takenAt", "width", "height", "location")}
+    request_id = hashlib.sha256((content_digest + json.dumps(public_fields, sort_keys=True)).encode()).hexdigest()
+    with JSON_LOCK:
+        existing = next((p for p in read_photos_json().get("photos", []) if p.get("uploadRequestId") == request_id), None)
+    if existing:
+        regenerate_seo_pages()
+        clear_photo_seo_pending()
+        return existing
+    now = datetime.now(timezone.utc)
+    photo_id = "s3-" + request_id[:32]
+    key = f"assets/photos/originals/{photo_id}-{filename}"
+    metadata = extract_photo_metadata(body, content_type, len(body), fields)
+    photo = {
+        "id": photo_id, "uploadRequestId": request_id,
+        "date": normalize_date(fields.get("takenAt") or metadata.get("takenAt") or now.isoformat().replace("+00:00", "Z")),
+        "src": "/" + encode_path(key),
+        "width": parse_int(fields.get("width")) or metadata.get("width"),
+        "height": parse_int(fields.get("height")) or metadata.get("height"),
+        "caption": fields.get("caption", "").strip(), "alt": fields.get("caption", "").strip(),
+        "hdr": parse_boolean(fields.get("hdr")) or detect_hdr_image(body, content_type),
+        "mimeType": content_type, "size": len(body), "location": metadata.get("location"),
+        "technical": metadata.get("technical"), "uploadedAt": now.isoformat().replace("+00:00", "Z"),
+    }
+    store = media_storage.Store()
+    with media_storage.private_temp() as tmp:
+        original = tmp / filename
+        original.write_bytes(body)
+        outputs = [(key, original, content_type)]
+        ffmpeg = shutil.which("ffmpeg")
+        if not ffmpeg:
+            raise RuntimeError("ffmpeg required before publishing photos")
+        targets = [(previews.preview_public_url(photo), previews.PREVIEW_MAX_EDGE, "edge")]
+        if not photo["hdr"]:
+            for width in previews.feed_preview_widths(photo):
+                for extension in ("jpg", "webp"):
+                    targets.append((previews.feed_preview_public_url(photo, width, extension), width, "width"))
+        for url, size, mode in targets:
+            output = tmp / Path(url).name
+            previews.generate_preview(ffmpeg, original, output, size, mode)
+            outputs.append((url.lstrip("/"), output, "image/webp" if output.suffix == ".webp" else "image/jpeg"))
+        receipts = []
+        for object_key, source, mime in outputs:
+            digest = store.put_verified(object_key, source, content_type=mime)
+            receipts.append({"key": object_key, "sha256": digest, "size": source.stat().st_size})
+        photo["mediaReceipt"] = {"schema": 1, "backend": "s3", "hdrChecked": True,
+                                 "previewVersion": 1, "objects": receipts}
+    mark_photo_seo_pending()
+    with JSON_LOCK:
+        db = read_photos_json()
+        db.setdefault("photos", []).insert(0, photo)
+        db["photos"].sort(key=photo_feed_sort_key, reverse=True)
+        db["updatedAt"] = now.isoformat().replace("+00:00", "Z")
+        write_photos_json(db)
+    regenerate_seo_pages()
+    clear_photo_seo_pending()
     return photo
 
 
@@ -352,40 +466,21 @@ def read_photos_json():
 
 
 def write_photos_json(db):
-    temporary = CONFIG.photos_json_path.with_suffix(f"{CONFIG.photos_json_path.suffix}.tmp")
-    temporary.write_text(f"{json.dumps(db, ensure_ascii=False, indent=2)}\n", encoding="utf-8")
-    temporary.replace(CONFIG.photos_json_path)
+    media_storage.atomic_json(CONFIG.photos_json_path, db, mode=0o664)
 
 
 def regenerate_seo_pages():
     if not CONFIG.seo_generator_path.exists():
-        print(f"Photo SEO generation skipped: {CONFIG.seo_generator_path} was not found", file=sys.stderr, flush=True)
-        return
-
+        raise RuntimeError("Photo SEO generator is unavailable")
     command = get_seo_generator_command()
-
     if not command:
-        print(f"Photo SEO generation skipped: unsupported generator {CONFIG.seo_generator_path}", file=sys.stderr, flush=True)
-        return
-
+        raise RuntimeError("Photo SEO generator is unsupported")
     try:
-        subprocess.run(
-            command,
-            cwd=ROOT_DIR,
-            check=True,
-            timeout=60,
-            stdout=subprocess.PIPE,
-            stderr=subprocess.PIPE,
-            text=True,
-        )
-    except subprocess.TimeoutExpired:
-        print("Photo SEO generation failed: timeout", file=sys.stderr, flush=True)
-    except subprocess.CalledProcessError as error:
-        print("Photo SEO generation failed", file=sys.stderr, flush=True)
-        if error.stdout:
-            print(error.stdout, file=sys.stderr, flush=True)
-        if error.stderr:
-            print(error.stderr, file=sys.stderr, flush=True)
+        with media_storage.generation_lock():
+            subprocess.run(command, cwd=ROOT_DIR, check=True, timeout=120,
+                           stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+    except (subprocess.TimeoutExpired, subprocess.CalledProcessError):
+        raise RuntimeError("Photo SEO regeneration failed; retry required") from None
 
 
 def get_seo_generator_command():

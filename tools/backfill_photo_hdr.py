@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 
 import argparse
+import media_storage
+import generate_photo_previews
 import json
 from pathlib import Path
 from urllib.parse import unquote, urlsplit
@@ -26,6 +28,9 @@ def main():
     missing = []
 
     for photo in photos:
+        if media_storage.backend() == "s3":
+            generate_photo_previews.validate_receipt(photo)
+            continue
         if photo.get("hdr") is True:
             continue
 

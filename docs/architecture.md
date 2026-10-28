@@ -129,3 +129,15 @@ Production code must be committed and pushed before deployment. Shared Telegram 
 ## Project Memory Rule
 
 Use this workspace as the canonical memory. Chats are for focused work; important conclusions should be written into `docs/`.
+
+## Opt-in S3 media backend
+
+The migration implementation adds `media_storage.py`, durable Telegram pending
+updates, transactional S3 photo publication and receipt-based photo generation.
+The production `shared/.media-storage` marker controls deploy behavior; service
+environments must agree. Until explicit cutover, the existing local storage
+policy remains active. After cutover, shared JSON remains production-owned and
+binary media lives in S3 behind unchanged URL paths. See
+[ADR 0006](decisions/0006-s3-media-storage.md) and the
+[operations runbook](s3-media-migration-runbook.md) for activation, verification,
+known operational limits and rollback.

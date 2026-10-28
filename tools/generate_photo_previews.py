@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 import argparse
+import media_storage
 import json
 import os
 import re
@@ -42,7 +43,12 @@ def generate(photos, strict=False):
     entries = []
     missing = []
 
+    receipt_cached = 0
     for photo in photos:
+        if media_storage.backend() == "s3":
+            validate_receipt(photo)
+            receipt_cached += len(photo["mediaReceipt"]["objects"]) - 1
+            continue
         source = source_path(photo)
         if not source or not source.exists():
             missing.append(str(photo.get("id") or photo.get("src") or "unknown"))
@@ -57,7 +63,7 @@ def generate(photos, strict=False):
     ffmpeg = shutil.which("ffmpeg")
     failures = []
     generated = 0
-    cached = 0
+    cached = receipt_cached
 
     for photo, source, outputs in entries:
         for output, size, mode in outputs:
@@ -87,6 +93,30 @@ def generate(photos, strict=False):
         raise RuntimeError("Photo preview generation failed:\n" + "\n".join(details))
 
     return summary
+
+
+def validate_receipt(photo):
+    """Generators consume accepted receipts, never hydrate the original archive.
+
+    Network health is checked separately by the production verifier; a receipt is
+    a publication record, not a claim that an object can never disappear.
+    """
+    receipt = photo.get("mediaReceipt") or {}
+    if (receipt.get("schema") != 1 or receipt.get("backend") != "s3"
+            or receipt.get("previewVersion") != 1 or receipt.get("hdrChecked") is not True):
+        raise RuntimeError("Photo requires verified S3 publication receipt")
+    expected = {unquote(photo["src"]).lstrip("/"), preview_public_url(photo).lstrip("/")}
+    if not photo.get("hdr"):
+        for width in feed_preview_widths(photo):
+            for ext in ("jpg", "webp"):
+                expected.add(feed_preview_public_url(photo, width, ext).lstrip("/"))
+    objects = {item["key"]: item for item in receipt.get("objects", [])}
+    if not expected.issubset(objects):
+        raise RuntimeError("Incomplete S3 photo publication receipt")
+    for key in expected:
+        item = objects[key]
+        if item.get("size", 0) <= 0 or not re.fullmatch(r"[0-9a-f]{64}", item.get("sha256", "")):
+            raise RuntimeError("Invalid S3 publication checksum/size")
 
 
 def generate_preview(ffmpeg, source, output, size=PREVIEW_MAX_EDGE, mode="edge"):

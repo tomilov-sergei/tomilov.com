@@ -1,0 +1,157 @@
+# Include inside existing HTTPS server AFTER removing the old live/originals
+# locations. Preserve all unrelated directives, especially Collector.
+# Install only after verification and anonymous HEAD/GET acceptance.
+
+location ^~ /assets/telegram/video_files/ {
+    proxy_pass https://s3.twcstorage.ru/00df5bd5-137f-492a-8d95-c7ee2cc2d851/assets/telegram/video_files/;
+    proxy_set_header Host s3.twcstorage.ru;
+    proxy_set_header Authorization "";
+    proxy_set_header Cookie "";
+    proxy_set_header Range $http_range;
+    proxy_set_header If-Range $http_if_range;
+    proxy_ssl_server_name on;
+    proxy_ssl_name s3.twcstorage.ru;
+    proxy_ssl_verify on;
+    proxy_ssl_trusted_certificate /etc/ssl/certs/ca-certificates.crt;
+    proxy_buffering off;
+    proxy_max_temp_file_size 0;
+    proxy_connect_timeout 10s;
+    proxy_read_timeout 60s;
+    proxy_intercept_errors off;
+    proxy_hide_header Cache-Control;
+    proxy_hide_header Expires;
+    add_header Cache-Control "public, max-age=2592000, immutable";
+    include /etc/nginx/snippets/tomilov-security-headers.conf;
+}
+
+location ^~ /assets/telegram/files/ {
+    proxy_pass https://s3.twcstorage.ru/00df5bd5-137f-492a-8d95-c7ee2cc2d851/assets/telegram/files/;
+    proxy_set_header Host s3.twcstorage.ru;
+    proxy_set_header Authorization "";
+    proxy_set_header Cookie "";
+    proxy_set_header Range $http_range;
+    proxy_set_header If-Range $http_if_range;
+    proxy_ssl_server_name on;
+    proxy_ssl_name s3.twcstorage.ru;
+    proxy_ssl_verify on;
+    proxy_ssl_trusted_certificate /etc/ssl/certs/ca-certificates.crt;
+    proxy_buffering off;
+    proxy_max_temp_file_size 0;
+    proxy_connect_timeout 10s;
+    proxy_read_timeout 60s;
+    proxy_intercept_errors off;
+    proxy_hide_header Cache-Control;
+    proxy_hide_header Expires;
+    add_header Cache-Control "public, max-age=2592000, immutable";
+    include /etc/nginx/snippets/tomilov-security-headers.conf;
+}
+
+location ^~ /assets/telegram/photos/ {
+    proxy_pass https://s3.twcstorage.ru/00df5bd5-137f-492a-8d95-c7ee2cc2d851/assets/telegram/photos/;
+    proxy_set_header Host s3.twcstorage.ru;
+    proxy_set_header Authorization "";
+    proxy_set_header Cookie "";
+    proxy_set_header Range $http_range;
+    proxy_set_header If-Range $http_if_range;
+    proxy_ssl_server_name on;
+    proxy_ssl_name s3.twcstorage.ru;
+    proxy_ssl_verify on;
+    proxy_ssl_trusted_certificate /etc/ssl/certs/ca-certificates.crt;
+    proxy_buffering off;
+    proxy_max_temp_file_size 0;
+    proxy_connect_timeout 10s;
+    proxy_read_timeout 60s;
+    proxy_intercept_errors off;
+    proxy_hide_header Cache-Control;
+    proxy_hide_header Expires;
+    add_header Cache-Control "public, max-age=2592000, immutable";
+    include /etc/nginx/snippets/tomilov-security-headers.conf;
+}
+
+location ^~ /assets/telegram/live/ {
+    proxy_pass https://s3.twcstorage.ru/00df5bd5-137f-492a-8d95-c7ee2cc2d851/assets/telegram/live/;
+    proxy_set_header Host s3.twcstorage.ru;
+    proxy_set_header Authorization "";
+    proxy_set_header Cookie "";
+    proxy_set_header Range $http_range;
+    proxy_set_header If-Range $http_if_range;
+    proxy_ssl_server_name on;
+    proxy_ssl_name s3.twcstorage.ru;
+    proxy_ssl_verify on;
+    proxy_ssl_trusted_certificate /etc/ssl/certs/ca-certificates.crt;
+    proxy_buffering off;
+    proxy_max_temp_file_size 0;
+    proxy_connect_timeout 10s;
+    proxy_read_timeout 60s;
+    proxy_intercept_errors off;
+    proxy_hide_header Cache-Control;
+    proxy_hide_header Expires;
+    add_header Cache-Control "public, max-age=2592000, immutable";
+    include /etc/nginx/snippets/tomilov-security-headers.conf;
+}
+
+location ^~ /assets/photos/originals/ {
+    proxy_pass https://s3.twcstorage.ru/00df5bd5-137f-492a-8d95-c7ee2cc2d851/assets/photos/originals/;
+    proxy_set_header Host s3.twcstorage.ru;
+    proxy_set_header Authorization "";
+    proxy_set_header Cookie "";
+    proxy_set_header Range $http_range;
+    proxy_set_header If-Range $http_if_range;
+    proxy_ssl_server_name on;
+    proxy_ssl_name s3.twcstorage.ru;
+    proxy_ssl_verify on;
+    proxy_ssl_trusted_certificate /etc/ssl/certs/ca-certificates.crt;
+    proxy_buffering off;
+    proxy_max_temp_file_size 0;
+    proxy_connect_timeout 10s;
+    proxy_read_timeout 60s;
+    proxy_intercept_errors off;
+    proxy_hide_header Cache-Control;
+    proxy_hide_header Expires;
+    add_header Cache-Control "public, max-age=2592000, immutable";
+    include /etc/nginx/snippets/tomilov-security-headers.conf;
+}
+
+location ^~ /assets/photos/canvas/ {
+    proxy_pass https://s3.twcstorage.ru/00df5bd5-137f-492a-8d95-c7ee2cc2d851/assets/photos/canvas/;
+    proxy_set_header Host s3.twcstorage.ru;
+    proxy_set_header Authorization "";
+    proxy_set_header Cookie "";
+    proxy_set_header Range $http_range;
+    proxy_set_header If-Range $http_if_range;
+    proxy_ssl_server_name on;
+    proxy_ssl_name s3.twcstorage.ru;
+    proxy_ssl_verify on;
+    proxy_ssl_trusted_certificate /etc/ssl/certs/ca-certificates.crt;
+    proxy_buffering off;
+    proxy_max_temp_file_size 0;
+    proxy_connect_timeout 10s;
+    proxy_read_timeout 60s;
+    proxy_intercept_errors off;
+    proxy_hide_header Cache-Control;
+    proxy_hide_header Expires;
+    add_header Cache-Control "public, max-age=2592000, immutable";
+    include /etc/nginx/snippets/tomilov-security-headers.conf;
+}
+
+location ^~ /assets/photos/feed/ {
+    proxy_pass https://s3.twcstorage.ru/00df5bd5-137f-492a-8d95-c7ee2cc2d851/assets/photos/feed/;
+    proxy_set_header Host s3.twcstorage.ru;
+    proxy_set_header Authorization "";
+    proxy_set_header Cookie "";
+    proxy_set_header Range $http_range;
+    proxy_set_header If-Range $http_if_range;
+    proxy_ssl_server_name on;
+    proxy_ssl_name s3.twcstorage.ru;
+    proxy_ssl_verify on;
+    proxy_ssl_trusted_certificate /etc/ssl/certs/ca-certificates.crt;
+    proxy_buffering off;
+    proxy_max_temp_file_size 0;
+    proxy_connect_timeout 10s;
+    proxy_read_timeout 60s;
+    proxy_intercept_errors off;
+    proxy_hide_header Cache-Control;
+    proxy_hide_header Expires;
+    add_header Cache-Control "public, max-age=2592000, immutable";
+    include /etc/nginx/snippets/tomilov-security-headers.conf;
+}

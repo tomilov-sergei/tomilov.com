@@ -29,57 +29,32 @@ def main():
     parser.add_argument("--part-size", type=int, default=64 * 1024 * 1024)
     parser.add_argument("--acl", default="")
     parser.add_argument("--insecure", action="store_true", help="Disable TLS certificate verification.")
-    parser.add_argument("--force", action="store_true", help="Upload files even when remote size matches.")
+    parser.add_argument("--apply", action="store_true", help="Perform verified uploads; otherwise only report counts.")
+    parser.add_argument("--state-dir", type=Path, help="Private durable multipart journal directory")
+    parser.add_argument("--force", action="store_true", help="Deprecated: overwriting originals is refused")
     args = parser.parse_args()
 
-    access_key = os.environ.get("S3_ACCESS_KEY")
-    secret_key = os.environ.get("S3_SECRET_ACCESS_KEY")
-
-    if not access_key or not secret_key:
-        raise SystemExit("S3_ACCESS_KEY and S3_SECRET_ACCESS_KEY are required")
-
-    client = S3Client(
-        access_key=access_key,
-        secret_key=secret_key,
-        endpoint=args.endpoint,
-        region=args.region,
-        bucket=args.bucket,
-        acl=args.acl,
-        insecure=args.insecure,
-    )
-
+    if args.insecure or args.force:
+        raise SystemExit("Insecure TLS and force overwrite are not allowed")
     source = args.source.resolve()
     files = [path for path in source.rglob("*") if path.is_file()]
-    total_bytes = sum(path.stat().st_size for path in files)
-    uploaded_bytes = 0
-    skipped = 0
-    uploaded = 0
-
-    print(f"Syncing {len(files)} files, {format_bytes(total_bytes)}")
-
+    print(f"Files: {len(files)}; bytes: {sum(path.stat().st_size for path in files)}; apply: {args.apply}")
+    if not args.apply:
+        return
+    if not args.state_dir:
+        raise SystemExit("--state-dir is required")
+    os.environ.update(S3_BUCKET=args.bucket, S3_ENDPOINT=args.endpoint, S3_REGION=args.region)
+    if args.acl:
+        os.environ["S3_MEDIA_ACL"] = args.acl
+    from media_storage import Store
+    store = Store()
     for index, path in enumerate(files, 1):
-        relative = path.relative_to(source).as_posix()
-        key = posixpath.join(args.prefix.strip("/"), relative) if args.prefix else relative
-        size = path.stat().st_size
-
-        if not args.force and client.exists_with_size(key, size):
-            skipped += 1
-            uploaded_bytes += size
-            print(f"[{index}/{len(files)}] skip {key} ({format_bytes(size)})")
-            continue
-
-        print(f"[{index}/{len(files)}] upload {key} ({format_bytes(size)})")
-
-        if size > args.part_size:
-            client.upload_multipart(key, path, args.part_size)
-        else:
-            client.put_object(key, path)
-
-        uploaded += 1
-        uploaded_bytes += size
-        print(f"  done: {format_bytes(uploaded_bytes)} / {format_bytes(total_bytes)}")
-
-    print(f"Uploaded {uploaded}, skipped {skipped}")
+        if path.is_symlink() or any(parent.is_symlink() for parent in path.parents if parent != source):
+            raise SystemExit("Symlink sources refused")
+        key = posixpath.join(args.prefix.strip("/"), path.relative_to(source).as_posix())
+        journal = args.state_dir / (hashlib.sha256(key.encode()).hexdigest() + '.multipart.json')
+        store.put_verified(key, path, journal=journal)
+        print(f"Verified {index}/{len(files)}")
 
 
 class S3Client:

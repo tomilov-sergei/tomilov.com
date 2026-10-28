@@ -2,6 +2,7 @@
 
 import importlib.util
 import json
+import media_storage
 import mimetypes
 import os
 import queue
@@ -66,7 +67,9 @@ def main():
 class WebhookHandler(BaseHTTPRequestHandler):
     def do_GET(self):
         if self.path == "/health":
-            self.send_json(200, {"ok": True})
+            pending = list((CONFIG.data_dir / "pending").glob("*.json"))
+            oldest = max((time.time() - p.stat().st_mtime for p in pending), default=0)
+            self.send_json(200, {"ok": True, "pending": len(pending), "oldestPendingSeconds": int(oldest)})
             return
 
         self.send_json(404, {"ok": False, "error": "not_found"})
@@ -89,10 +92,9 @@ class WebhookHandler(BaseHTTPRequestHandler):
 
             update = json.loads(self.rfile.read(size).decode("utf-8"))
             persist_update(update)
-            UPDATE_QUEUE.put(update)
             self.send_json(200, {"ok": True})
         except Exception as error:
-            print(error, file=sys.stderr, flush=True)
+            print(type(error).__name__, file=sys.stderr, flush=True)
             self.send_json(400, {"ok": False, "error": "bad_request"})
 
     def log_message(self, format, *args):
@@ -107,16 +109,26 @@ class WebhookHandler(BaseHTTPRequestHandler):
         self.wfile.write(body)
 
 
+def process_pending_once():
+    pending = CONFIG.data_dir / "pending"
+    pending.mkdir(parents=True, exist_ok=True)
+    for path in sorted(pending.glob("*.json"), key=lambda p: int(p.stem)):
+        update = json.loads(path.read_text())
+        process_update(update)
+        # Completion is durable before removing the acknowledged payload.
+        media_storage.atomic_json(CONFIG.data_dir / "completed" / path.name, {"update_id": update["update_id"]})
+        path.unlink()
+
+
 def worker_loop():
     while True:
-        update = UPDATE_QUEUE.get()
-
         try:
-            process_update(update)
+            process_pending_once()
         except Exception as error:
-            print(error, file=sys.stderr, flush=True)
-        finally:
-            UPDATE_QUEUE.task_done()
+            print("Telegram pending retry: " + type(error).__name__, file=sys.stderr, flush=True)
+            time.sleep(30)
+        else:
+            time.sleep(1)
 
 
 def process_update(update):
@@ -129,6 +141,8 @@ def process_update(update):
     missing_before = len(db.setdefault("missing", []))
     rich_content = get_message_rich_content(message, db)
     media = collect_rich_media(rich_content) if rich_content else get_message_media(message, db)
+    if len(db["missing"]) != missing_before:
+        raise RuntimeError("Media upload incomplete; update retained for retry")
     text = get_message_text(message)
 
     if not text.strip() and not media and not rich_content:
@@ -267,19 +281,22 @@ def download_message_media(message, entries, db):
                 upload_file_to_s3(key, local_path, content_type=content_type)
                 uploaded_size = local_path.stat().st_size
             else:
-                body = download_telegram_file(file_path)
-                upload_bytes_to_s3(key, body, content_type)
-                uploaded_size = len(body)
+                if media_storage.backend() == "s3":
+                    uploaded_size = stream_telegram_to_s3(key, file_path, content_type)
+                else:
+                    body = download_telegram_file(file_path)
+                    upload_bytes_to_s3(key, body, content_type)
+                    uploaded_size = len(body)
         except Exception as error:
             db.setdefault("missing", []).append({
                 "messageId": message["message_id"],
                 "fileId": entry["telegram_file"].get("file_id"),
                 "type": entry["type"],
                 "size": entry["size"],
-                "error": str(error),
+                "error": type(error).__name__,
                 "recordedAt": datetime.now(timezone.utc).isoformat().replace("+00:00", "Z"),
             })
-            print(error, file=sys.stderr, flush=True)
+            print(type(error).__name__, file=sys.stderr, flush=True)
             continue
 
         media.append({
@@ -543,10 +560,7 @@ def read_posts_json():
 
 
 def write_posts_json(db):
-    CONFIG.posts_json_path.parent.mkdir(parents=True, exist_ok=True)
-    temporary = CONFIG.posts_json_path.with_suffix(f"{CONFIG.posts_json_path.suffix}.tmp")
-    temporary.write_text(f"{json.dumps(db, ensure_ascii=False, indent=2)}\n", encoding="utf-8")
-    temporary.replace(CONFIG.posts_json_path)
+    media_storage.atomic_json(CONFIG.posts_json_path, db, mode=0o664)
 
 
 def upload_posts_json_to_s3():
@@ -555,37 +569,16 @@ def upload_posts_json_to_s3():
 
 def regenerate_seo_pages():
     if not CONFIG.seo_generator_path.exists():
-        print(f"Telegram SEO generation skipped: {CONFIG.seo_generator_path} was not found", file=sys.stderr, flush=True)
-        return
-
+        raise RuntimeError("Telegram SEO generator is unavailable")
     command = get_seo_generator_command()
-
     if not command:
-        print(f"Telegram SEO generation skipped: unsupported generator {CONFIG.seo_generator_path}", file=sys.stderr, flush=True)
-        return
-
+        raise RuntimeError("Telegram SEO generator is unsupported")
     try:
-        result = subprocess.run(
-            command,
-            cwd=ROOT_DIR,
-            check=True,
-            timeout=120,
-            stdout=subprocess.PIPE,
-            stderr=subprocess.PIPE,
-            text=True,
-        )
-        if result.stdout:
-            print(result.stdout, end="", flush=True)
-        if result.stderr:
-            print(result.stderr, file=sys.stderr, end="", flush=True)
-    except subprocess.TimeoutExpired:
-        print("Telegram SEO generation failed: timeout", file=sys.stderr, flush=True)
-    except subprocess.CalledProcessError as error:
-        print("Telegram SEO generation failed", file=sys.stderr, flush=True)
-        if error.stdout:
-            print(error.stdout, file=sys.stderr, flush=True)
-        if error.stderr:
-            print(error.stderr, file=sys.stderr, flush=True)
+        with media_storage.generation_lock():
+            subprocess.run(command, cwd=ROOT_DIR, check=True, timeout=120,
+                           stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+    except (subprocess.TimeoutExpired, subprocess.CalledProcessError):
+        raise RuntimeError("Telegram SEO regeneration failed; retry required") from None
 
 
 def get_seo_generator_command():
@@ -606,6 +599,24 @@ def get_seo_generator_command():
     return None
 
 
+def stream_telegram_to_s3(key, file_path, content_type):
+    # Telegram cloud downloads need bounded staging for retryable signed uploads.
+    # Local Bot API files use upload_file_to_s3 directly, without a second copy.
+    max_bytes = int(os.environ.get("TELEGRAM_MAX_STAGING_BYTES", str(128 * 1024 * 1024)))
+    url = f"{CONFIG.bot_file_base_url}/bot{CONFIG.bot_token}/{file_path}"
+    with media_storage.private_temp() as tmp:
+        path = tmp / "payload"
+        size = 0
+        with urllib.request.urlopen(url, timeout=120) as response, path.open("wb") as output:
+            while chunk := response.read(1024 * 1024):
+                size += len(chunk)
+                if size > max_bytes:
+                    raise RuntimeError("Telegram staging limit exceeded; update retained")
+                output.write(chunk)
+        upload_file_to_s3(key, path, content_type)
+        return size
+
+
 def upload_bytes_to_s3(key, body, content_type):
     suffix = Path(key).suffix or ".bin"
     CONFIG.data_dir.mkdir(parents=True, exist_ok=True)
@@ -621,21 +632,11 @@ def upload_bytes_to_s3(key, body, content_type):
 
 
 def upload_file_to_s3(key, file_path, content_type=None):
-    if not CONFIG.s3_bucket or not CONFIG.s3_access_key or not CONFIG.s3_secret_access_key:
-        raise RuntimeError("S3_BUCKET, S3_ACCESS_KEY and S3_SECRET_ACCESS_KEY are required")
-
-    client = get_s3_client()
-
-    if content_type:
-        original_guess = s3_module().guess_content_type
-        s3_module().guess_content_type = lambda _: content_type
-
-        try:
-            put_or_multipart(client, key, file_path)
-        finally:
-            s3_module().guess_content_type = original_guess
-    else:
-        put_or_multipart(client, key, file_path)
+    mutable_manifest = key == f"{CONFIG.s3_prefix}/posts.json"
+    store = media_storage.Store()
+    store.put_verified(key, file_path, content_type=content_type,
+                       replace=mutable_manifest,
+                       cache="no-cache" if mutable_manifest else media_storage.IMMUTABLE)
 
 
 def put_or_multipart(client, key, file_path):
@@ -802,10 +803,16 @@ def content_type_from_path(file_path):
 
 
 def persist_update(update):
-    update_id = update.get("update_id", int(time.time()))
-    filename = f"{int(time.time() * 1000)}-{update_id}.json"
-    (CONFIG.data_dir / "inbox").mkdir(parents=True, exist_ok=True)
-    (CONFIG.data_dir / "inbox" / filename).write_text(f"{json.dumps(update, ensure_ascii=False, indent=2)}\n", encoding="utf-8")
+    update_id = update.get("update_id")
+    if not isinstance(update_id, int) or update_id < 0:
+        raise ValueError("Invalid update ID")
+    name = f"{update_id}.json"
+    if (CONFIG.data_dir / "completed" / name).exists():
+        return
+    pending = CONFIG.data_dir / "pending"
+    pending.mkdir(parents=True, exist_ok=True)
+    if not (pending / name).exists():
+        media_storage.atomic_json(pending / name, update)
 
 
 def iso_from_unix(value):
