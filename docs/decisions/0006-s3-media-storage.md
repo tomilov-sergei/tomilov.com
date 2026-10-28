@@ -1,6 +1,6 @@
 # 0006: Verified S3 media with production-owned manifests
 
-Date: 2026-10-28. Status: accepted design; production activation pending.
+Date: 2026-10-28. Status: accepted and active in production; verified local media copies removed on 2026-10-28.
 
 ADR 0002 continues to govern `posts.json`, and production shared storage continues to govern `photos.json`. The local working copy is never the default authority for either manifest. When production's `shared/.media-storage` marker is `s3`, verified S3 objects become the authority for media bytes in the approved Telegram/photo prefixes. Before that marker and cutover acceptance, local originals remain authoritative and must be retained.
 

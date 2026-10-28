@@ -224,7 +224,9 @@ node tools/snapshot-framer.mjs
 
 ## Verified S3 media migration
 
-The opt-in S3 backend, resumable migration tools, unchanged media URLs and cutover
+Production uses the verified S3 backend since 2026-10-28. Completion evidence is in
+[the migration report](docs/s3-media-migration-completed-2026-10-28.md).
+Resumable migration tools, unchanged media URLs and cutover
 requirements are documented in [the migration runbook](docs/s3-media-migration-runbook.md).
 Production activation is separate from code deployment; no local-original deletion
 is performed by the migration tools. See [ADR 0006](docs/decisions/0006-s3-media-storage.md).

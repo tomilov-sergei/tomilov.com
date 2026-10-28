@@ -1,6 +1,6 @@
 # S3 media migration: implementation and cutover runbook
 
-Status: implemented on `codex/s3-media-migration`; production cutover and local-original deletion have NOT run. See [accepted plan](s3-media-migration-plan-2026-10-28.md). Scope excludes Downloader, Collector, appcast, Collector synchronization and unrelated storage.
+Status: production S3 cutover and verified local-copy removal completed on 2026-10-28. See [completion evidence](s3-media-migration-completed-2026-10-28.md). See [accepted plan](s3-media-migration-plan-2026-10-28.md). Scope excludes Downloader, Collector, appcast, Collector synchronization and unrelated storage.
 
 ## Evidence from 28 October 2026
 
@@ -14,9 +14,9 @@ Authenticated paginated listing found 2,532 objects / 11,693,960,708 bytes:
 - 189 live media objects / 874,355,300 bytes;
 - posts.json and three small pre-existing test objects.
 
-Thus **all historical Telegram binaries already exist with matching sizes**. Full streamed GET verification subsequently confirmed SHA-256 equality for all **2,339 files / 10,815,687,651 bytes** against production originals. One SSH interruption was resumed from saved receipts after rechecking source fingerprints. No object was rewritten. Private verification evidence SHA-256: `0f62dd864a15e06d1f84ab3db937f407e471698ad66818c4e69d67b1939b714f`. Existing objects must be read and compared, never blindly uploaded again. Personal-photo originals/previews are absent. Versioning is disabled, lifecycle is absent, multipart listing is empty and untruncated. No bucket policy, permissions, tariff, lifecycle or versioning were changed.
+Thus **all historical Telegram binaries already exist with matching sizes**. Full streamed GET verification subsequently confirmed SHA-256 equality for all **2,339 files / 10,815,687,651 bytes** against production originals. One SSH interruption was resumed from saved receipts after rechecking source fingerprints. No object was rewritten. Private verification evidence SHA-256: `0f62dd864a15e06d1f84ab3db937f407e471698ad66818c4e69d67b1939b714f`. Existing objects must be read and compared, never blindly uploaded again. At that initial inventory personal-photo originals/previews were absent; all 443 objects were subsequently uploaded and fully verified. Versioning is disabled, lifecycle is absent, multipart listing is empty and untruncated. No bucket policy, tariff, lifecycle or versioning were changed. Newly migrated public website photos received object-level public-read ACLs.
 
-A private test prefix was used for real 1,031-byte and 33-MiB uploads, including multipart; complete GET SHA-256 checks passed. Only those two newly created test objects were removed afterwards. nginx parsed the proposed media locations successfully in an isolated temporary configuration; nginx was not reloaded. An isolated nginx listener also passed public HEAD, start/middle/end Range, conditional 304 and unsatisfiable 416 probes for video, photo and attachment samples. A real ffmpeg SDR fixture generated and published its four objects into an isolated in-memory store, then generated successfully with no local originals. The initial nginx attempt to open its default log reported a permission warning; explicit temporary-config syntax and test succeeded with exit 0.
+A private test prefix was used for real 1,031-byte and 33-MiB uploads, including multipart; complete GET SHA-256 checks passed. Only those two newly created test objects were removed afterwards. nginx parsed the proposed media locations successfully in an isolated temporary configuration; that initial isolated test did not reload nginx; the subsequent production cutover did. An isolated nginx listener also passed public HEAD, start/middle/end Range, conditional 304 and unsatisfiable 416 probes for video, photo and attachment samples. A real ffmpeg SDR fixture generated and published its four objects into an isolated in-memory store, then generated successfully with no local originals. The initial nginx attempt to open its default log reported a permission warning; explicit temporary-config syntax and test succeeded with exit 0.
 
 The original private credentials were saved, at the user's request, to ignored `.deploy/s3-media.env` in the original checkout with mode 0600. They are not included here or in Git. These are existing account credentials, not newly created least-privilege credentials. Review scope before installing credentials into any additional service.
 
@@ -33,12 +33,12 @@ The implementation retains the project's working SigV4 code instead of adding bo
 ## Preparation, without changing the running site
 
 1. Work from the migration branch, not the dirty original checkout. Commit and push production code before deployment per project rules. Do not overwrite live JSON with the branch's older snapshots.
-2. Record exact current storage/traffic limits and monthly egress from the account. The panel's rounded 10.9 GB is not a full billing record; authenticated listing excludes uncommitted parts, but none were present at audit time. Recheck before copy. Reserve at least 15 GiB of capacity and budget a complete GET of each migrated byte. Do not enable autoscaling, buy anything or enlarge the disk. Current account traffic/auto-upgrade settings still require explicit verification before bulk migration writes.
+2. Record exact current storage/traffic limits and monthly egress from the account. The panel's rounded 10.9 GB is not a full billing record; authenticated listing excludes uncommitted parts, but none were present at audit time. Recheck before copy. Reserve at least 15 GiB of capacity and budget a complete GET of each migrated byte. Do not enable autoscaling, buy anything or enlarge the disk. At execution, the panel showed approximately 50 GB monthly egress after archive verification; migration added only 310 MB. No automatic-upgrade setting was changed; the panel did not expose its precise state. Capacity was separately checked against 100 GB with a 15 GiB reserve.
 3. On VPS use a service/operator account able to read source media and the restricted credential file. Keep state outside web-root, e.g. `/var/lib/tomilov-media/migration/<run-id>` on the root filesystem. Create runtime `tmp` and `state` directories there, owned by the actual service identity, mode 0700. Do not create a second copy of originals on `/mnt/tomilov-data`.
 4. Install the implementation into an isolated tools checkout for migration commands. Load credentials via a private environment file; do not pass secrets as CLI arguments, print `env`, or enable shell tracing. Variables are documented in `ops/media-storage.env.example`. Verify TLS with the host trust store; do not bypass it. On this Mac the default standalone Python CA setup failed; the VPS successfully verified TLS.
 5. While old originals still exist, run existing HDR backfill and strict preview generation in `MEDIA_STORAGE=local` under a publication pause, **before taking inventory**. Missing derivatives are an error. Take a final source/manifest snapshot after generation.
 
-Example command interface (paths below must be owned/prepared by the operator; no commands in this document have been run as a cutover):
+Example command interface (paths below must be owned/prepared by the operator; substitute a fresh run ID for any future migration; the completed production run is recorded separately):
 
 ```sh
 python3 tools/migrate_media_to_s3.py inventory \
@@ -75,7 +75,7 @@ S3 photo generators require publication receipts with all derivatives; they do n
 
 ## Cutover: administrator required
 
-The deploy SSH account cannot change nginx/systemd or read the existing service env files. Do not widen its permissions automatically. Prepare the exact diff from the current server configuration (not a wholesale replacement from an old example), with an administrator executing the final operations.
+The deploy SSH account cannot edit nginx/systemd configuration or read the existing service env files. During execution the existing project SSH key was verified to support direct root access; administrative steps used that existing authorization. Do not widen its permissions automatically. Prepare the exact diff from the current server configuration (not a wholesale replacement from an old example), with an administrator executing the final operations.
 
 1. Pause manual deploys and writers briefly. Ensure webhook retries/durable pending storage protect in-flight events; photo endpoint must explicitly reject/retry during pause. Save current configs and manifests outside web-root; inspect and drain pending work.
 2. Complete final inventory/delta and verification; run public delivery probes against the bucket for **all** media slated for switch. Preserve existing URLs and separately verify legacy live URLs.
@@ -87,10 +87,14 @@ The deploy SSH account cannot change nginx/systemd or read the existing service 
 
 ## Deletion is a separate accepted operation
 
-First prove an independent recovery copy matches the manifest; the old local checkout is not automatically that proof. Run `prune-report`, review its exact keys/counts/bytes and current source fingerprints, and attach public-delivery and runtime acceptance evidence. The report does not unlink anything. No original deletion is implemented or authorized by successfully running copy alone. An operator may remove only the accepted verified paths after approval, preserving metadata, journals and all unrelated assets. Record `df`/allocated-byte deltas and check open descriptors.
+First prove an independent recovery copy matches the manifest; the old local checkout is not automatically that proof. Run `prune-report`, review its exact keys/counts/bytes and current source fingerprints, and attach public-delivery and runtime acceptance evidence. The report does not unlink anything. Copy alone never authorizes original deletion. For the completed run, the user explicitly requested finishing the remaining production work; a separate manifest-bound operator script rechecked all source hashes, path components and inode fingerprints before unlinking exactly the accepted 2,782 files. An operator may remove only the accepted verified paths after approval, preserving metadata, journals and all unrelated assets. Record `df`/allocated-byte deltas and check open descriptors.
 
 Before removal, rollback historical routes to local while retaining routes for newly published S3-only objects. Roll back only to S3-compatible application code and preserve current manifests. After removal, app rollback can keep S3 delivery; returning to disk requires a separately planned restore and capacity. A simple nginx rollback is no longer sufficient.
 
 ## Validation
 
 Local tests cover checksum collisions despite equal sizes, resumable interrupted multipart, HTTP-200 multipart errors, source mutation, symlink/traversal refusal, allowlist boundaries, durable update retry, photo failure/retry, missing publication receipts, backend mismatch, full deploy and PHOTOS_ONLY with zero archive rsync. Existing site checks pass on the clean base checkout (their four pre-existing missing-media entries remain reported). The test suite is discovered by the existing CI workflow; no remote secrets are needed for CI.
+
+## Installed runtime monitoring
+
+`tomilov-media-health.timer` runs every five minutes and writes `/var/lib/tomilov-media/health.json`. A failed service and journal entry identify worker unavailability, pending age over 15 minutes, either filesystem below 512 MiB free, temporary files above 512 MiB or Bot API cache/state above 2 GiB. This is server-local monitoring, not an external notification integration. `tomilov-media-logrotate.timer` rotates the Bot API log hourly at a 50 MiB threshold with three compressed rotations. Investigate failures with `systemctl status tomilov-media-health.service`; never print service credentials or token-bearing cache paths.
