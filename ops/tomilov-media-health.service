@@ -1,0 +1,15 @@
+[Unit]
+Description=Check website media workers, pending age and disk headroom
+After=network.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/python3 /var/www/tomilov.com/current/tools/check_media_runtime.py
+User=root
+Group=root
+UMask=0077
+NoNewPrivileges=true
+ProtectSystem=strict
+ProtectHome=true
+ReadWritePaths=/var/lib/tomilov-media
+PrivateTmp=true
