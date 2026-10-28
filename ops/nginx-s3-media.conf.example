@@ -17,7 +17,8 @@ location ^~ /assets/telegram/video_files/ {
     proxy_max_temp_file_size 0;
     proxy_connect_timeout 10s;
     proxy_read_timeout 60s;
-    proxy_intercept_errors off;
+    proxy_intercept_errors on;
+    error_page 403 =404 @tomilov_s3_missing;
     proxy_hide_header Cache-Control;
     proxy_hide_header Expires;
     add_header Cache-Control "public, max-age=2592000, immutable";
@@ -39,7 +40,8 @@ location ^~ /assets/telegram/files/ {
     proxy_max_temp_file_size 0;
     proxy_connect_timeout 10s;
     proxy_read_timeout 60s;
-    proxy_intercept_errors off;
+    proxy_intercept_errors on;
+    error_page 403 =404 @tomilov_s3_missing;
     proxy_hide_header Cache-Control;
     proxy_hide_header Expires;
     add_header Cache-Control "public, max-age=2592000, immutable";
@@ -61,7 +63,8 @@ location ^~ /assets/telegram/photos/ {
     proxy_max_temp_file_size 0;
     proxy_connect_timeout 10s;
     proxy_read_timeout 60s;
-    proxy_intercept_errors off;
+    proxy_intercept_errors on;
+    error_page 403 =404 @tomilov_s3_missing;
     proxy_hide_header Cache-Control;
     proxy_hide_header Expires;
     add_header Cache-Control "public, max-age=2592000, immutable";
@@ -83,7 +86,8 @@ location ^~ /assets/telegram/live/ {
     proxy_max_temp_file_size 0;
     proxy_connect_timeout 10s;
     proxy_read_timeout 60s;
-    proxy_intercept_errors off;
+    proxy_intercept_errors on;
+    error_page 403 =404 @tomilov_s3_missing;
     proxy_hide_header Cache-Control;
     proxy_hide_header Expires;
     add_header Cache-Control "public, max-age=2592000, immutable";
@@ -105,7 +109,8 @@ location ^~ /assets/photos/originals/ {
     proxy_max_temp_file_size 0;
     proxy_connect_timeout 10s;
     proxy_read_timeout 60s;
-    proxy_intercept_errors off;
+    proxy_intercept_errors on;
+    error_page 403 =404 @tomilov_s3_missing;
     proxy_hide_header Cache-Control;
     proxy_hide_header Expires;
     add_header Cache-Control "public, max-age=2592000, immutable";
@@ -127,7 +132,8 @@ location ^~ /assets/photos/canvas/ {
     proxy_max_temp_file_size 0;
     proxy_connect_timeout 10s;
     proxy_read_timeout 60s;
-    proxy_intercept_errors off;
+    proxy_intercept_errors on;
+    error_page 403 =404 @tomilov_s3_missing;
     proxy_hide_header Cache-Control;
     proxy_hide_header Expires;
     add_header Cache-Control "public, max-age=2592000, immutable";
@@ -149,9 +155,17 @@ location ^~ /assets/photos/feed/ {
     proxy_max_temp_file_size 0;
     proxy_connect_timeout 10s;
     proxy_read_timeout 60s;
-    proxy_intercept_errors off;
+    proxy_intercept_errors on;
+    error_page 403 =404 @tomilov_s3_missing;
     proxy_hide_header Cache-Control;
     proxy_hide_header Expires;
     add_header Cache-Control "public, max-age=2592000, immutable";
     include /etc/nginx/snippets/tomilov-security-headers.conf;
+}
+
+# Private S3 buckets return 403 for absent keys when listing is denied.
+location @tomilov_s3_missing {
+    add_header Cache-Control "no-store" always;
+    include /etc/nginx/snippets/tomilov-security-headers.conf;
+    return 404;
 }
