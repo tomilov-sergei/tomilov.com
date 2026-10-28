@@ -272,11 +272,11 @@ elif [ -f /etc/tomilov-telegram-live.env ]; then
 fi
 ln -sfn '$REMOTE_STORAGE_ROOT/releases/'\$stamp '$REMOTE_ROOT/current'
 if [ \"\$(id -u)\" -eq 0 ]; then
-  chown -R www-data:www-data '$REMOTE_STORAGE_ROOT/releases/'\$stamp '$REMOTE_STORAGE_ROOT/shared'
+  chown -R www-data:www-data '$REMOTE_STORAGE_ROOT/releases/'\$stamp '$REMOTE_TELEGRAM_DIR' '$REMOTE_PHOTOS_DIR' '$REMOTE_BARCELONA_DIR'
   chown -h www-data:www-data '$REMOTE_ROOT/current'
 else
   chmod -R g+rwX '$REMOTE_STORAGE_ROOT/releases/'\$stamp
-  find '$REMOTE_STORAGE_ROOT/shared' -user \"\$(id -un)\" -exec chmod g+rwX {} +
+  find '$REMOTE_TELEGRAM_DIR' '$REMOTE_PHOTOS_DIR' '$REMOTE_BARCELONA_DIR' -user \"\$(id -un)\" -exec chmod g+rwX {} +
 fi
 \$SUDO nginx -t
 \$SUDO systemctl reload nginx
