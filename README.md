@@ -76,6 +76,8 @@ Telegram-архив живёт отдельно в `$REMOTE_STORAGE_ROOT/shared/
 Фото живут в `$REMOTE_STORAGE_ROOT/shared/assets/photos/`, по той же модели shared storage.
 Изображения Barcelona Guide живут в `$REMOTE_STORAGE_ROOT/shared/assets/barcelona-guide/` и подключаются в release через symlink.
 Collector раздаётся отдельно через `$REMOTE_STORAGE_ROOT/shared/collector/`. Если каталог существует, каждый новый release получает ссылку `collector` на него; бинарные пакеты и подписанный appcast не входят в деплой сайта и не заменяются им. Не создавать обычную папку `collector` в Git-архиве сайта.
+
+Личный API «Любимого» Collector (`/collector-sync/v1`) работает отдельным сервисом. Его установленный backend владеет `/etc/nginx/snippets/collector-favorites-sync.conf`; HTTPS-шаблон сохраняет подключение существующих `collector-favorites-sync*.conf`. Пример — `ops/nginx-collector-favorites-sync.conf.example`. Деплой сайта не меняет токены, SQLite и приватные оригиналы в `/var/lib/collector-favorites-sync`. Шаблон production также сохраняет принятый S3 include и существующую карту `$collector_cache_control` Collector; не заменять их прежними локальными media locations.
 Публичные пути остаются прежними через symlink: `$REMOTE_ROOT/current/assets/telegram`, `$REMOTE_ROOT/current/assets/photos` и `$REMOTE_ROOT/current/assets/barcelona-guide`.
 
 По умолчанию production shared storage считается источником правды для `posts.json` и `photos.json`: перед SEO-генерацией деплой скачивает свежие JSON из `$REMOTE_STORAGE_ROOT/shared/assets/**`, создаёт страницы, RSS и `sitemap.xml`, а затем выкладывает новый release. Это нужно, чтобы live-посты из Telegram и новые фото с телефона не терялись при обычном деплое.

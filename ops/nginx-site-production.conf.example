@@ -24,6 +24,9 @@ server {
         text/xml;
 
     include /etc/nginx/snippets/tomilov-security-headers.conf;
+    add_header Cache-Control $collector_cache_control always;
+    # Optional private service, installed and owned separately from this site.
+    include /etc/nginx/snippets/collector-favorites-sync*.conf;
 
     location = /telegram/webhook {
         proxy_pass http://127.0.0.1:8787/telegram/webhook;
@@ -44,23 +47,10 @@ server {
         proxy_set_header X-Forwarded-Proto $scheme;
     }
 
-    location ^~ /assets/photos/originals/ {
-        expires 30d;
-        add_header Cache-Control "public, immutable";
-        include /etc/nginx/snippets/tomilov-security-headers.conf;
-    }
+    include /etc/nginx/snippets/tomilov-s3-media.conf;
 
     location / {
         try_files $uri $uri/ =404;
-    }
-
-    location ^~ /assets/telegram/live/ {
-        proxy_pass https://s3.twcstorage.ru/00df5bd5-137f-492a-8d95-c7ee2cc2d851/assets/telegram/live/;
-        proxy_set_header Host s3.twcstorage.ru;
-        proxy_ssl_server_name on;
-        expires 30d;
-        add_header Cache-Control "public, immutable";
-        include /etc/nginx/snippets/tomilov-security-headers.conf;
     }
 
     location ~* \.(?:css|js|mjs|png|jpg|jpeg|gif|webp|svg|ico|woff2?)$ {

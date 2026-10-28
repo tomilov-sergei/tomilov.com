@@ -1,0 +1,18 @@
+# Installed by the private Collector backend as:
+# /etc/nginx/snippets/collector-favorites-sync.conf
+# The site owns only its optional HTTPS include, not the service or private data.
+location ^~ /collector-sync/ {
+    proxy_pass http://127.0.0.1:8790/;
+    proxy_http_version 1.1;
+    proxy_set_header Host $host;
+    proxy_set_header X-Real-IP $remote_addr;
+    proxy_set_header Authorization $http_authorization;
+    proxy_set_header Connection "";
+    proxy_request_buffering off;
+    proxy_buffering off;
+    client_max_body_size 1024m;
+    client_body_timeout 60s;
+    proxy_read_timeout 300s;
+    proxy_send_timeout 60s;
+    access_log off;
+}
