@@ -230,11 +230,48 @@ and per-process S3 counters. `verifiedBytes` counts completed verification GET
 bodies; `uploadedBodyBytes` counts successful PUT bodies, not provider-billed
 traffic or failed request bytes. Counters reset on service restart. The health
 timer retains 503 diagnostics in `/var/lib/tomilov-media/health.json`.
-The timer detects faults locally; it does **not** send an external notification.
-An external alert destination remains a separate operational setup.
+Telegram notifications were added after this recovery; see the configuration below.
 
 For a targeted code rollback, stop both services, restore the previous release
 symlink and backed-up environment, then restart both. Preserve the latest shared
 manifests and all queue/progress/receipt files; never restore an older posts.json
 over newly published posts. Old importer code does not use progress checkpoints
 and can resume the original expensive retry behavior: diagnose before restarting.
+
+
+## Private Telegram monitoring alerts (2026-11-04)
+
+The health timer now runs every minute (`AccuracySec=5s`). It reports service
+unavailability, importer errors, pending age over 15 minutes, and existing disk,
+temporary-storage and cache thresholds. Importer `last-error.json` is durable;
+a short failure remains visible in health after recovery/restart, so a successful
+retry between polling checks does not silently hide it.
+
+Install `ops/media-alerts.env.example` as `/etc/tomilov-media-alerts.env` with
+root:root ownership and mode 0600. The real credentials stay on the server.
+Production uses the existing Downloader bot and its sole authorized private user;
+notification delivery calls Telegram HTTPS directly and does not depend on either
+bot process being alive. No `getUpdates`, webhook or channel configuration changes
+are needed. Rotate this private alert token copy when rotating the bot token.
+
+An initial fault sends immediately at the next check. An unchanged ongoing fault
+reminds at most once per hour; a materially changed set of conditions is reported.
+Recovery requires two consecutive healthy checks. Short-lived failures without an
+ongoing incident are reported at most hourly. State is persisted in
+`/var/lib/tomilov-media/telegram-alert-state.json` (0600) and protected against
+overlapping invocations. Failure to deliver does not acknowledge the incident;
+the next eligible check retries, respecting Telegram rate limits. A network
+failure after Telegram accepted a message can still produce a duplicate: the API
+has no transaction shared with local state. Neither tokens nor upstream error
+bodies are logged.
+
+`health.json` includes alert delivery status, and delivery failure fails the
+systemd unit. A total host/network failure cannot report itself through this
+same-host monitor; that requires an independent external uptime checker.
+
+To test delivery, run `tools/check_media_runtime.py --test-alert` with the private
+alert environment through an isolated systemd unit with the same sandbox. It
+sends two explicitly labelled test messages (fault/recovery), uses
+`telegram-alert-test.json`, and never changes the real queue or health state.
+Normal healthy checks send nothing. Preserve alert state across releases and
+restarts; deleting it can repeat incident notifications.

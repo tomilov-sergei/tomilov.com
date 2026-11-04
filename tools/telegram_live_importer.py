@@ -119,8 +119,10 @@ def health_status():
         except FileNotFoundError:
             pass
     oldest = int(max(ages, default=0))
+    failure_path = CONFIG.data_dir / "last-error.json"
+    last_failure = json.loads(failure_path.read_text()) if failure_path.exists() else {}
     return {"ok": oldest <= 900 and not WORKER_STATE["lastError"],
-            "pending": len(ages), "oldestPendingSeconds": oldest, "s3": dict(media_storage.TRANSFER_STATS), **WORKER_STATE}
+            "pending": len(ages), "oldestPendingSeconds": oldest, "lastFailure": last_failure, "s3": dict(media_storage.TRANSFER_STATS), **WORKER_STATE}
 
 
 def process_pending_once():
@@ -154,6 +156,13 @@ def worker_loop():
             failures = min(failures + 1, 6)
             delay = min(30 * 2 ** (failures - 1), 900)
             WORKER_STATE.update(lastError=type(error).__name__, retrySeconds=delay)
+            try:
+                media_storage.atomic_json(CONFIG.data_dir / "last-error.json", {
+                    "id": str(time.time_ns()), "occurredAt": int(time.time()),
+                    "errorType": type(error).__name__, "updateId": WORKER_STATE.get("updateId"),
+                    "stage": WORKER_STATE.get("stage")})
+            except OSError:
+                print("Telegram error checkpoint unavailable", file=sys.stderr, flush=True)
             print(f"Telegram pending retry: {type(error).__name__} "
                   f"update={WORKER_STATE.get('updateId')} retrySeconds={delay}", file=sys.stderr, flush=True)
             time.sleep(delay)

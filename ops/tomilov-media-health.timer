@@ -1,9 +1,10 @@
 [Unit]
-Description=Check website media runtime every five minutes
+Description=Check website media runtime every minute
 
 [Timer]
 OnBootSec=2min
-OnUnitActiveSec=5min
+OnUnitActiveSec=1min
+AccuracySec=5s
 Persistent=true
 
 [Install]

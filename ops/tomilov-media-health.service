@@ -4,6 +4,8 @@ After=network.target
 
 [Service]
 Type=oneshot
+EnvironmentFile=-/etc/tomilov-media-alerts.env
+TimeoutStartSec=75
 ExecStart=/usr/bin/python3 /var/www/tomilov.com/current/tools/check_media_runtime.py
 User=root
 Group=root
