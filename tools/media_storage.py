@@ -9,6 +9,7 @@ import importlib.util
 import json
 import mimetypes
 import os
+import stat
 from pathlib import Path
 import tempfile
 import threading
@@ -19,6 +20,7 @@ import xml.etree.ElementTree as ET
 CHUNK = 1024 * 1024
 PART = 32 * CHUNK
 IMMUTABLE = 'public, max-age=2592000, immutable'
+TRANSFER_STATS = {'verifiedBytes': 0, 'uploadedBodyBytes': 0, 'reusedObjects': 0}
 
 
 def backend():
@@ -103,7 +105,10 @@ class Store:
         attempts = 4 if method in ('GET', 'HEAD', 'PUT', 'DELETE') else 1
         for attempt in range(attempts):
             try:
-                return self.client.request(method, key, **kwargs)
+                response = self.client.request(method, key, **kwargs)
+                if method == 'PUT':
+                    TRANSFER_STATS['uploadedBodyBytes'] += len(kwargs.get('body', b''))
+                return response
             except urllib.error.HTTPError as error:
                 if error.code in (404, 403):
                     raise
@@ -126,8 +131,18 @@ class Store:
     def verify(self, key, digest, size):
         with self.request('GET', key) as response:
             actual, count = digest_stream(response, self.limiter)
+            validators = self.object_version(dict(response.headers))
+        TRANSFER_STATS['verifiedBytes'] += count
         if actual != digest or count != size:
             raise RuntimeError('S3 content checksum/size mismatch')
+        return validators
+
+    @staticmethod
+    def object_version(headers):
+        headers = {k.lower(): str(v) for k, v in (headers or {}).items()}
+        if not headers.get('etag') or not headers.get('content-length'):
+            return None
+        return {k: headers.get(k, '') for k in ('etag', 'content-length', 'x-amz-version-id')}
 
     def put_verified(self, key, path, journal=None, content_type=None, cache=IMMUTABLE, replace=False):
         path = Path(path)
@@ -143,15 +158,29 @@ class Store:
         acl = os.environ.get('S3_MEDIA_ACL', os.environ.get('S3_ACL', ''))
         if acl:
             headers['x-amz-acl'] = acl
+        identity = {'key': key, 'sha256': digest, 'size': size,
+                    'bucket': self.client.bucket, 'endpoint': self.client.endpoint}
+        receipt = Path(str(journal) + '.verified.json') if journal else None
         existing = self.head(key)
-        if existing and not replace:
-            self.verify(key, digest, size)  # conflict must never overwrite originals
+        version = self.object_version(existing)
+        verified = json.loads(receipt.read_text()) if receipt and receipt.exists() else {}
+        # A receipt is issued only after a full GET/SHA256 check. ETag is an
+        # opaque object version, never used as a substitute for that checksum.
+        if version and verified == {'identity': identity, 'version': version}:
+            TRANSFER_STATS['reusedObjects'] += 1
+            if journal:
+                journal.unlink(missing_ok=True)
+            return digest
+        remote = {k.lower(): str(v) for k, v in (existing or {}).items()}
+        if existing and (not replace or (remote.get('x-amz-meta-sha256') == digest
+                                         and remote.get('content-length') == str(size))):
+            version = self.verify(key, digest, size)
+            if receipt and version:
+                atomic_json(receipt, {'identity': identity, 'version': version})
             if journal:
                 journal.unlink(missing_ok=True)
             return digest
         state = json.loads(journal.read_text()) if journal and journal.exists() else {}
-        identity = {'key': key, 'sha256': digest, 'size': size,
-                    'bucket': self.client.bucket, 'endpoint': self.client.endpoint}
         if state and state.get('identity') != identity:
             raise RuntimeError('Multipart journal/source mismatch')
         if size <= PART:
@@ -194,7 +223,9 @@ class Store:
         after = path.stat()
         if (before.st_size, before.st_mtime_ns, before.st_ino) != (after.st_size, after.st_mtime_ns, after.st_ino):
             raise RuntimeError('Source changed during upload')
-        self.verify(key, digest, size)
+        version = self.verify(key, digest, size)
+        if receipt and version:
+            atomic_json(receipt, {'identity': identity, 'version': version})
         if journal:
             journal.unlink(missing_ok=True)
         return digest
@@ -233,6 +264,20 @@ def private_temp():
 def generation_lock():
     """Serialize the two live writers' generators (both update the home/feed)."""
     path = Path(os.environ.get('MEDIA_GENERATION_LOCK', '/tmp/tomilov-site-generation.lock'))
-    with path.open('a') as lock:
+    # flock does not require a writable descriptor. A root-created 0644 lock
+    # must remain usable by service users, without chmod/unlink inode races.
+    flags = os.O_NOFOLLOW | os.O_CLOEXEC
+    try:
+        fd = os.open(path, os.O_CREAT | os.O_EXCL | os.O_WRONLY | flags, 0o644)
+    except FileExistsError:
+        pass
+    else:
+        try:
+            os.fchmod(fd, 0o644)
+        finally:
+            os.close(fd)
+    with os.fdopen(os.open(path, os.O_RDONLY | flags), 'r') as lock:
+        if not stat.S_ISREG(os.fstat(lock.fileno()).st_mode):
+            raise RuntimeError('Generation lock must be a regular file')
         fcntl.flock(lock, fcntl.LOCK_EX)
         yield

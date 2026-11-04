@@ -7,6 +7,7 @@ import shutil
 import sys
 import time
 import urllib.request
+import urllib.error
 
 
 def tree_bytes(root):
@@ -26,7 +27,13 @@ def main():
     result = {'checked_at': int(time.time()), 'errors': []}
     for name, port in [('telegram', 8787), ('photos', 8788)]:
         try:
-            with urllib.request.urlopen(f'http://127.0.0.1:{port}/health', timeout=10) as response:
+            try:
+                response = urllib.request.urlopen(f'http://127.0.0.1:{port}/health', timeout=10)
+            except urllib.error.HTTPError as error:
+                if error.code != 503:
+                    raise
+                response = error
+            with response:
                 value = json.load(response)
             result[name] = value
             if not value.get('ok') or value.get('oldestPendingSeconds', 0) > 900:

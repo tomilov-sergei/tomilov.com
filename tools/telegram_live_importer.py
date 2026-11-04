@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 import importlib.util
+import hashlib
 import json
 import media_storage
 import mimetypes
@@ -48,6 +49,8 @@ class Config:
 
 CONFIG = Config()
 UPDATE_QUEUE = queue.Queue()
+WORKER_STATE = {"lastError": None, "retrySeconds": 0}
+PERSIST_LOCK = threading.Lock()
 
 
 def main():
@@ -67,9 +70,8 @@ def main():
 class WebhookHandler(BaseHTTPRequestHandler):
     def do_GET(self):
         if self.path == "/health":
-            pending = list((CONFIG.data_dir / "pending").glob("*.json"))
-            oldest = max((time.time() - p.stat().st_mtime for p in pending), default=0)
-            self.send_json(200, {"ok": True, "pending": len(pending), "oldestPendingSeconds": int(oldest)})
+            health = health_status()
+            self.send_json(200 if health["ok"] else 503, health)
             return
 
         self.send_json(404, {"ok": False, "error": "not_found"})
@@ -109,25 +111,55 @@ class WebhookHandler(BaseHTTPRequestHandler):
         self.wfile.write(body)
 
 
+def health_status():
+    ages = []
+    for path in (CONFIG.data_dir / "pending").glob("*.json"):
+        try:
+            ages.append(time.time() - path.stat().st_mtime)
+        except FileNotFoundError:
+            pass
+    oldest = int(max(ages, default=0))
+    return {"ok": oldest <= 900 and not WORKER_STATE["lastError"],
+            "pending": len(ages), "oldestPendingSeconds": oldest, "s3": dict(media_storage.TRANSFER_STATS), **WORKER_STATE}
+
+
 def process_pending_once():
     pending = CONFIG.data_dir / "pending"
     pending.mkdir(parents=True, exist_ok=True)
     for path in sorted(pending.glob("*.json"), key=lambda p: int(p.stem)):
+        completed = CONFIG.data_dir / "completed" / path.name
+        # Recovery after completion was durable but unlink was interrupted.
+        if completed.exists():
+            path.unlink()
+            continue
         update = json.loads(path.read_text())
+        archive = CONFIG.data_dir / "inbox" / path.name
+        if not archive.exists():
+            media_storage.atomic_json(archive, update)
+        WORKER_STATE["updateId"] = update["update_id"]
         process_update(update)
-        # Completion is durable before removing the acknowledged payload.
-        media_storage.atomic_json(CONFIG.data_dir / "completed" / path.name, {"update_id": update["update_id"]})
-        path.unlink()
+        with PERSIST_LOCK:
+            media_storage.atomic_json(completed, {"update_id": update["update_id"]})
+            path.unlink()
+        WORKER_STATE.update(stage="idle", lastError=None, retrySeconds=0, lastCompletedUpdate=update["update_id"])
+        print(f"Telegram completed update={update['update_id']}", flush=True)
 
 
 def worker_loop():
+    failures = 0
     while True:
         try:
             process_pending_once()
         except Exception as error:
-            print("Telegram pending retry: " + type(error).__name__, file=sys.stderr, flush=True)
-            time.sleep(30)
+            failures = min(failures + 1, 6)
+            delay = min(30 * 2 ** (failures - 1), 900)
+            WORKER_STATE.update(lastError=type(error).__name__, retrySeconds=delay)
+            print(f"Telegram pending retry: {type(error).__name__} "
+                  f"update={WORKER_STATE.get('updateId')} retrySeconds={delay}", file=sys.stderr, flush=True)
+            time.sleep(delay)
         else:
+            failures = 0
+            WORKER_STATE.update(lastError=None, retrySeconds=0)
             time.sleep(1)
 
 
@@ -137,29 +169,46 @@ def process_update(update):
     if not message or not is_target_channel(message.get("chat", {})):
         return
 
-    db = read_posts_json()
-    missing_before = len(db.setdefault("missing", []))
-    rich_content = get_message_rich_content(message, db)
-    media = collect_rich_media(rich_content) if rich_content else get_message_media(message, db)
-    if len(db["missing"]) != missing_before:
-        raise RuntimeError("Media upload incomplete; update retained for retry")
-    text = get_message_text(message)
-
-    if not text.strip() and not media and not rich_content:
+    # Persist publication boundaries so a late SEO failure never repeats media
+    # transfer or manifest publication. Bind state to the exact incoming event.
+    fingerprint = hashlib.sha256(json.dumps(update, sort_keys=True).encode()).hexdigest()
+    checkpoint = CONFIG.data_dir / "progress" / f"{update['update_id']}.json"
+    state = json.loads(checkpoint.read_text()) if checkpoint.exists() else {"fingerprint": fingerprint}
+    if state["fingerprint"] != fingerprint:
+        raise RuntimeError("Update checkpoint/payload mismatch")
+    if "prepared" not in state:
+        WORKER_STATE["stage"] = "media"
+        db = read_posts_json()
+        missing_before = len(db.setdefault("missing", []))
+        rich_content = get_message_rich_content(message, db)
+        media = collect_rich_media(rich_content) if rich_content else get_message_media(message, db)
         if len(db["missing"]) != missing_before:
-            write_posts_json(db)
-
-            if CONFIG.upload_posts_json_to_s3:
-                upload_posts_json_to_s3()
-
-        return
-
-    upsert_post(db, message, text, media, rich_content, bool(update.get("edited_channel_post")))
-    write_posts_json(db)
-
-    if CONFIG.upload_posts_json_to_s3:
-        upload_posts_json_to_s3()
-
+            raise RuntimeError("Media upload incomplete; update retained for retry")
+        text = get_message_text(message)
+        if not text.strip() and not media and not rich_content:
+            return
+        state["prepared"] = {"text": text, "media": media, "rich_content": rich_content,
+                             "importedAt": datetime.now(timezone.utc).isoformat().replace("+00:00", "Z")}
+        media_storage.atomic_json(checkpoint, state)
+    if "manifest" not in state:
+        WORKER_STATE["stage"] = "manifest"
+        db = read_posts_json()
+        prepared = state["prepared"]
+        upsert_post(db, message, prepared["text"], prepared["media"], prepared["rich_content"],
+                    bool(update.get("edited_channel_post")))
+        db["importedAt"] = prepared["importedAt"]
+        write_posts_json(db)
+        state["manifest"] = media_storage.sha256_file(CONFIG.posts_json_path)
+        media_storage.atomic_json(checkpoint, state)
+    if media_storage.sha256_file(CONFIG.posts_json_path) != state["manifest"]:
+        raise RuntimeError("Manifest changed outside pending update; operator review required")
+    if not state.get("published"):
+        WORKER_STATE["stage"] = "publish"
+        if CONFIG.upload_posts_json_to_s3:
+            upload_posts_json_to_s3()
+        state["published"] = True
+        media_storage.atomic_json(checkpoint, state)
+    WORKER_STATE["stage"] = "seo"
     regenerate_seo_pages()
 
 
@@ -255,8 +304,14 @@ def get_message_media(message, db):
 
     if message.get("document"):
         document = message["document"]
-        media_type = media_type_from_mime(document.get("mime_type", ""))
-        entries.append(media_entry(document, media_type))
+        # Telegram exposes animation as document too for compatibility. Dedup
+        # only by Telegram identity; equal filename/size is not evidence.
+        duplicate = any(
+            (document.get("file_unique_id") and document["file_unique_id"] == entry["telegram_file"].get("file_unique_id"))
+            or (document.get("file_id") and document["file_id"] == entry["telegram_file"].get("file_id"))
+            for entry in entries)
+        if not duplicate:
+            entries.append(media_entry(document, media_type_from_mime(document.get("mime_type", ""))))
 
     return download_message_media(message, entries, db)
 
@@ -843,6 +898,11 @@ def content_type_from_path(file_path):
 
 
 def persist_update(update):
+    with PERSIST_LOCK:
+        _persist_update(update)
+
+
+def _persist_update(update):
     update_id = update.get("update_id")
     if not isinstance(update_id, int) or update_id < 0:
         raise ValueError("Invalid update ID")

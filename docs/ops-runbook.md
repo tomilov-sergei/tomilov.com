@@ -200,3 +200,41 @@ python3 -c "from xml.etree import ElementTree as ET; [ET.parse(p) for p in ['sit
 ```
 
 Validate production XML by checking HTTP responses first; malformed XML should also show up in Search Console or RSS readers.
+
+## Telegram retry recovery (2026-11-04)
+
+Both live services must use `MEDIA_GENERATION_LOCK=/var/lib/tomilov-media/generation.lock`.
+Provision the parent directory and a regular 0644 lock once; never unlink or
+replace an active lock. The code opens it read-only for `flock`, so a root-created
+file is usable by `www-data` without broad write permissions. Pause both writers
+when changing this path. The legacy `/tmp` default is supported for development.
+
+Telegram `progress/<update_id>.json` records the prepared media, exact manifest
+SHA-256 and completed S3 publication. A generation failure resumes only SEO.
+`inbox` preserves pending payloads before processing; `completed` is written only
+after SEO succeeds. A completed-but-still-pending update is not replayed. Keep all
+three trees and progress state during rollback; never clear pending to restore
+health. If a manifest changes outside the serial worker while an update is
+unfinished, processing stops for operator review instead of overwriting it.
+
+S3 `.verified.json` receipts bind a full GET/SHA-256 verification to the source
+checksum, size, bucket, endpoint and remote ETag/version. Retries use HEAD only
+when that exact receipt still matches. Metadata alone is insufficient; missing
+receipts/validators or changed versions require a full check. ETag is a version
+validator, not the integrity checksum. Unchanged mutable manifests can also be
+reused. Receipts need persistent `MEDIA_STATE_DIR`; do not purge it as cache.
+
+`/health` returns 503 for a pending item older than 15 minutes or a worker error.
+It includes update/stage, last completion, bounded retry delay (30–900 seconds)
+and per-process S3 counters. `verifiedBytes` counts completed verification GET
+bodies; `uploadedBodyBytes` counts successful PUT bodies, not provider-billed
+traffic or failed request bytes. Counters reset on service restart. The health
+timer retains 503 diagnostics in `/var/lib/tomilov-media/health.json`.
+The timer detects faults locally; it does **not** send an external notification.
+An external alert destination remains a separate operational setup.
+
+For a targeted code rollback, stop both services, restore the previous release
+symlink and backed-up environment, then restart both. Preserve the latest shared
+manifests and all queue/progress/receipt files; never restore an older posts.json
+over newly published posts. Old importer code does not use progress checkpoints
+and can resume the original expensive retry behavior: diagnose before restarting.

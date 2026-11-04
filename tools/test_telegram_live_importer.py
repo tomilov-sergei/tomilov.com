@@ -16,6 +16,13 @@ import telegram_live_importer
 
 
 class TelegramRichMessageTests(unittest.TestCase):
+    def setUp(self):
+        directory = tempfile.TemporaryDirectory()
+        self.addCleanup(directory.cleanup)
+        patch = mock.patch.object(telegram_live_importer.CONFIG, "data_dir", Path(directory.name))
+        patch.start()
+        self.addCleanup(patch.stop)
+
     def rich_update(self):
         return {
             "update_id": 99,
