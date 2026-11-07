@@ -11,6 +11,7 @@ from zoneinfo import ZoneInfo
 
 import generate_home_canvas
 import generate_photo_previews
+import publish_markdown
 
 
 ROOT_DIR = Path(__file__).resolve().parent.parent
@@ -172,15 +173,15 @@ def main():
             photo_dir.mkdir(parents=True, exist_ok=True)
             newer = photos[index - 1] if index > 0 else None
             older = photos[index + 1] if index + 1 < len(photos) else None
-            (photo_dir / "index.html").write_text(render_photo_page(photo, newer, older, lang), encoding="utf-8")
+            publish_markdown.write_page(photo_dir / "index.html", render_photo_page(photo, newer, older, lang))
 
         photos_archive_dir.mkdir(parents=True, exist_ok=True)
-        (photos_dir / "index.html").write_text(render_photos_page(photos, lang), encoding="utf-8")
+        publish_markdown.write_page(photos_dir / "index.html", render_photos_page(photos, lang))
         for filter_value in PHOTO_FILTER_VALUES:
             filter_dir = photos_dir / filter_value
             filter_dir.mkdir(parents=True, exist_ok=True)
-            (filter_dir / "index.html").write_text(render_photos_page(photos, lang, filter_value), encoding="utf-8")
-        (photos_archive_dir / "index.html").write_text(render_photos_archive(photos, lang), encoding="utf-8")
+            publish_markdown.write_page(filter_dir / "index.html", render_photos_page(photos, lang, filter_value))
+        publish_markdown.write_page(photos_archive_dir / "index.html", render_photos_archive(photos, lang))
 
     SITEMAP_PATH.write_text(render_sitemap(posts, photos), encoding="utf-8")
     FEED_PATH.write_text(render_main_feed(posts, photos, "ru"), encoding="utf-8")
@@ -773,6 +774,7 @@ def remove_stale_photo_dirs(photo_ids, photos_dir=PHOTOS_DIR):
     for entry in photos_dir.iterdir():
         if not entry.is_dir() or entry.name == "archive" or entry.name in PHOTO_FILTER_DIRS or entry.name in photo_ids:
             continue
+        publish_markdown.remove_page(entry)
         shutil.rmtree(entry)
 
 

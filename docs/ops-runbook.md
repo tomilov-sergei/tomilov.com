@@ -19,7 +19,7 @@ This runbook covers production checks for `tomilov.com` on the Timeweb VPS.
 - Photo service: `tomilov-photo-upload.service`
 - Nginx compression and security policy: `ops/nginx-site-production.conf.example`
 
-Install the exact production config from a Timeweb root console with `sudo /var/www/tomilov.com/current/tools/install-nginx-hardening.sh`. The installer backs up both files, validates nginx, rolls back automatically on a syntax failure, reloads the service, and runs `python3 tools/check-production.py --strict`. Locations with their own `add_header` directives include the shared header snippet because nginx does not inherit parent headers into such locations.
+Install the exact production config from a Timeweb root console with `sudo /var/www/tomilov.com/current/tools/install-nginx-hardening.sh`. Run it after a full release deploy. The installer backs up the site configuration and snippets, validates and reloads Nginx, then runs `python3 tools/check-production.py --strict --llm`. It restores the previous configuration if validation, reload, or public checks fail. Locations with their own `add_header` directives include the shared header snippet because nginx does not inherit parent headers into such locations.
 
 ## Ubuntu Maintenance
 
@@ -82,6 +82,12 @@ Expected result:
 active
 active
 ```
+
+## Public Markdown
+
+A full deploy runs `tools/publish_markdown.py` against the public sitemap after generating HTML from the production manifests. The release contains `/index.md`, `/en.md`, and a `.md` sibling for each listed page. Live Telegram and photo refreshes update their Markdown copies with the HTML and remove the counterpart of a removed page. `/llms.txt` is the curated index. `/llms-full.txt` combines that index with the About page so readers can start with a single download.
+
+Use `python3 tools/check-production.py --strict --llm` to verify the public HTTP behavior after installing the Nginx configuration. A request for `/about/` with `Accept: text/markdown` returns the same content as `/about.md`. The access log at `/var/log/nginx/tomilov.com.access.log` appends the response MIME type to the combined format. Count `text/markdown` responses and requests for `/llms.txt` or `/llms-full.txt` separately to track actual usage.
 
 ## Telegram Live Import
 

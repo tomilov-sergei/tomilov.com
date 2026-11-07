@@ -7,51 +7,69 @@ if [[ "$(id -u)" -ne 0 ]]; then
 fi
 
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
-SITE_SOURCE="$ROOT_DIR/ops/nginx-site-production.conf.example"
-HEADERS_SOURCE="$ROOT_DIR/ops/nginx-security-headers.conf.example"
-SITE_TARGET="/etc/nginx/sites-available/tomilov.com"
-HEADERS_TARGET="/etc/nginx/snippets/tomilov-security-headers.conf"
 BACKUP_DIR="/etc/nginx/backups/tomilov-$(date +%Y%m%d-%H%M%S)"
+sources=(
+  nginx-site-production.conf.example
+  nginx-security-headers.conf.example
+  nginx-llm-http.conf
+  nginx-llm-quality.conf
+  nginx-llm-server.conf
+)
+targets=(
+  /etc/nginx/sites-available/tomilov.com
+  /etc/nginx/snippets/tomilov-security-headers.conf
+  /etc/nginx/snippets/tomilov-llm-http.conf
+  /etc/nginx/snippets/tomilov-llm-quality.conf
+  /etc/nginx/snippets/tomilov-llm-server.conf
+)
 
-[[ -f "$SITE_SOURCE" ]] || { printf 'Missing %s\n' "$SITE_SOURCE" >&2; exit 1; }
-[[ -f "$HEADERS_SOURCE" ]] || { printf 'Missing %s\n' "$HEADERS_SOURCE" >&2; exit 1; }
+for source in "${sources[@]}"; do
+  [[ -f "$ROOT_DIR/ops/$source" ]] || { printf 'Missing %s\n' "$source" >&2; exit 1; }
+done
+[[ -s "$ROOT_DIR/index.md" && -s "$ROOT_DIR/llms.txt" ]] || { printf 'Deploy the Markdown pages first\n' >&2; exit 1; }
 
 install -d -m 0755 "$BACKUP_DIR" /etc/nginx/snippets
-cp -a "$SITE_TARGET" "$BACKUP_DIR/site.conf"
-if [[ -f "$HEADERS_TARGET" ]]; then
-  cp -a "$HEADERS_TARGET" "$BACKUP_DIR/security-headers.conf"
-fi
-
-install -m 0644 "$SITE_SOURCE" "$SITE_TARGET"
-install -m 0644 "$HEADERS_SOURCE" "$HEADERS_TARGET"
-
-if ! nginx -t; then
-  printf 'nginx validation failed; restoring %s\n' "$BACKUP_DIR" >&2
-  install -m 0644 "$BACKUP_DIR/site.conf" "$SITE_TARGET"
-  if [[ -f "$BACKUP_DIR/security-headers.conf" ]]; then
-    install -m 0644 "$BACKUP_DIR/security-headers.conf" "$HEADERS_TARGET"
-  else
-    rm -f "$HEADERS_TARGET"
+for target in "${targets[@]}"; do
+  if [[ -f "$target" ]]; then
+    cp -a "$target" "$BACKUP_DIR/"
   fi
+done
+
+restore() {
+  printf 'Restoring Nginx configuration from %s\n' "$BACKUP_DIR" >&2
+  local target backup
+  for target in "${targets[@]}"; do
+    backup="$BACKUP_DIR/${target##*/}"
+    if [[ -f "$backup" ]]; then
+      install -m 0644 "$backup" "$target"
+    else
+      rm -f "$target"
+    fi
+  done
   nginx -t
+  systemctl reload nginx
+}
+
+for index in "${!sources[@]}"; do
+  if ! install -m 0644 "$ROOT_DIR/ops/${sources[index]}" "${targets[index]}"; then
+    restore
+    exit 1
+  fi
+done
+
+if ! nginx -t || ! systemctl reload nginx; then
+  restore
   exit 1
 fi
 
-systemctl reload nginx
-printf 'nginx hardening installed; backup: %s\n' "$BACKUP_DIR"
-
-# A graceful reload briefly keeps the previous worker generation alive. Retry
-# the public check so it cannot observe a mix of old and new responses.
-for attempt in {1..10}; do
-  if python3 "$ROOT_DIR/tools/check-production.py" --strict; then
+# A graceful reload can briefly keep the previous worker generation alive.
+for attempt in {1..5}; do
+  if python3 "$ROOT_DIR/tools/check-production.py" --strict --llm; then
+    printf 'Nginx configuration installed; backup: %s\n' "$BACKUP_DIR"
     exit 0
   fi
-
-  if [[ "$attempt" -eq 10 ]]; then
-    printf 'production check still failing after %s attempts\n' "$attempt" >&2
-    exit 1
-  fi
-
-  printf 'production check not ready (attempt %s/10); retrying...\n' "$attempt"
   sleep 2
 done
+
+restore
+exit 1

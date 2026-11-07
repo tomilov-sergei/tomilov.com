@@ -1,0 +1,28 @@
+# tomilov.com
+
+> Личный сайт Серёжи Томилова, дизайнера цифровых продуктов и руководителя команд. Блог о дизайне и технологиях, фотографии, исследования и путеводители. Personal site of Seryozha Tomilov, a digital product designer and team lead.
+
+## Основные страницы
+
+- [Главная](https://tomilov.com/index.md): разделы сайта.
+- [О Серёже Томилове](https://tomilov.com/about.md): работа, выступления и контакты.
+- [Screenshot of the Day](https://tomilov.com/screenshots.md): блог о дизайне, продуктах и технологиях.
+- [Личная лаборатория](https://tomilov.com/research.md): интерактивные исследования и лонгриды.
+- [Фото](https://tomilov.com/photos.md): фотолента с подписями и данными о съёмке.
+- [Что делать в Барселоне](https://tomilov.com/barcelona-guide.md): маршруты и места.
+
+## English
+
+- [Home](https://tomilov.com/en.md): site sections.
+- [About Seryozha Tomilov](https://tomilov.com/en/about.md): work, talks, and contact details.
+- [Screenshot of the Day](https://tomilov.com/en/screenshots.md): design, products, and technology.
+- [Photos](https://tomilov.com/en/photos.md): photo feed with captions and camera details.
+- [Personal lab](https://tomilov.com/en/research.md): index of experiments and long reads.
+
+## Optional
+
+- [Архив блога](https://tomilov.com/screenshots/posts.md): ссылки на отдельные публикации.
+- [Архив фотографий](https://tomilov.com/photos/archive.md): ссылки на отдельные фотографии.
+- [Скорость и бизнес](https://tomilov.com/research/speed-and-business.md): исследования быстродействия интерфейсов.
+- [Красота и бизнес](https://tomilov.com/research/aesthetics-and-business.md): исследования эстетики и восприятия интерфейсов.
+- [Анатомия движения. iPhone Duo](https://tomilov.com/research/iphone-duo.md): интерактивное исследование 3D-модели.

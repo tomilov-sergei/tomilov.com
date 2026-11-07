@@ -8,6 +8,7 @@ from pathlib import Path
 from urllib.parse import urlsplit
 
 import generate_photo_previews
+import publish_markdown
 
 
 ROOT_DIR = Path(__file__).resolve().parent.parent
@@ -280,7 +281,7 @@ def update_home_page(path, geometry, items, lang):
         return f"{indent}{START_MARKER}\n{body}\n{indent}{END_MARKER}"
 
     source = GENERATED_PATTERN.sub(replace_generated, source, count=1)
-    path.write_text(source, encoding="utf-8")
+    publish_markdown.write_page(path, source)
 
 
 def render_nodes(items, geometry, lang):

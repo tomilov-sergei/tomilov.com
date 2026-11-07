@@ -8,6 +8,7 @@ from zoneinfo import ZoneInfo
 
 import generate_photo_seo as shared
 import generate_home_canvas
+import publish_markdown
 
 
 ROOT_DIR = Path(__file__).resolve().parent.parent
@@ -50,11 +51,11 @@ def main():
             post_dir.mkdir(parents=True, exist_ok=True)
             newer = posts[index - 1] if index > 0 else None
             older = posts[index + 1] if index + 1 < len(posts) else None
-            (post_dir / "index.html").write_text(render_post_page(post, newer, older, lang), encoding="utf-8")
+            publish_markdown.write_page(post_dir / "index.html", render_post_page(post, newer, older, lang))
 
         posts_index_dir.mkdir(parents=True, exist_ok=True)
-        (posts_index_dir / "index.html").write_text(render_posts_index(posts, lang), encoding="utf-8")
-        (screenshots_dir / "index.html").write_text(render_screenshots_page(posts, lang), encoding="utf-8")
+        publish_markdown.write_page(posts_index_dir / "index.html", render_posts_index(posts, lang))
+        publish_markdown.write_page(screenshots_dir / "index.html", render_screenshots_page(posts, lang))
 
     SITEMAP_PATH.write_text(render_sitemap(posts, photos), encoding="utf-8")
     FEED_PATH.write_text(render_main_feed(posts, photos, "ru"), encoding="utf-8")
@@ -779,6 +780,7 @@ def remove_stale_post_dirs(post_ids, screenshots_dir=SCREENSHOTS_DIR):
     for entry in screenshots_dir.iterdir():
         if not entry.is_dir() or not entry.name.isdigit() or entry.name in post_ids:
             continue
+        publish_markdown.remove_page(entry)
         shutil.rmtree(entry)
 
 
